@@ -14,9 +14,14 @@ export const Endpoint = {
     cities:(idDepartament)=>{return `${BASEURL}/cities&state=${idDepartament}`;},
     signUp:`${BASEURL}/sign-up`,
     login:`${BASEURL}/login`,
-    dataUser:`${BASEURL}/profile`,
+    dataUser:`${BASEURL}/list-profile-user`,
     forgetPassword:`${BASEURL}/forget-password`,
     logout:`${BASEURL}/logout`,
+    banks:`${BASEURL}/banks`,
+    typeAccount:`${BASEURL}/banks-types-account`,
+    findPeople:`${BASEURL}/find-people-dni-user`,
+    testCardiovascular:`${BASEURL}/test-cardiovascular-user`,
+    
     
 };
 

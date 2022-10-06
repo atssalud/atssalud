@@ -37,7 +37,7 @@ const BankDataScreen = (props) => {
     const navigation = async(rute)=>{
         if (rute === 'atras'){navigator.navigate('PerfilScreen')}
         else{
-            navigator.navigate('EditBankDataScreen',{dataUser:data})}
+            navigator.navigate('EditbankDataScreen',{dataUser:data})}
     }
 
   return (
@@ -47,11 +47,11 @@ const BankDataScreen = (props) => {
         <View style={Styles.borderContainer}>
             <View style={styles.cData}>
                 <Text style={styles.textCampo}>Número de cuenta: </Text>
-                <Text style={styles.textData}>{(data.cuenta)? data.bank: 'No registrado'}</Text>
+                <Text style={styles.textData}>{(data.bank_account)? data.bank_account: 'No registrado'}</Text>
             </View>
             <View style={styles.cData}>
                 <Text style={styles.textCampo}>Tipo de cuneta: </Text>
-                <Text style={styles.textData}>{(data.bank_account) ? (data.bank_account === '1')? 'Ahorro' : 'Corriente':'No registrado'}</Text>
+                <Text style={styles.textData}>{(data.type_account_name) ? data.type_account_name :'No registrado'}</Text>
             </View>
             <View style={styles.cData2}>
                 <Text style={styles.textCampo}>Banco: </Text>

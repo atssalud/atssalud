@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View,Text,TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Button from '../../components/Button';
 import WindowAlert from '../../components/WindowAlert';
@@ -12,24 +12,33 @@ import { Colors } from '../../theme/Colors';
 import { Styles } from '../../theme/GlobalStyle';
 import ListOptions from '../../components/ListOptions'
 import { Fonts } from '../../theme/Fonts';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CatchmentScreen =()=>{
 
     const navigator = useNavigation()
-    const dni =[{'id':'1','dni':'Cédula de ciudadania'},{'id':'2','dni':'Tarjeta de Identidad'},{'id':'3','dni':'Pasaporte'}]
 
     const [alert,setAlert]= useState(false)
     const [errorAlert,setErrorAlert]= useState(false)
     const [fieldError,setFieldError]= useState(false)
+    const [dniTypes,setDniTypes]= useState()
+    const [token,setToken]=useState()
 
-    const {tipoDocumento,numDocumento,onChange} = useForm({
-        tipoDocumento:'',
-        numDocumento:'',
+    const {typeDni,idDni,numberDni,onChange} = useForm({
+        typeDni:'CC',
+        idDni:'1',
+        numberDni:''
     })
 
     const [error, setError] = useState({
         correo: "",
     })
+
+    useEffect(() => {
+        getDniTypes()
+        getToken()
+    }, [])
+    
 
     // const validator =()=>{
     //     console.log(correo)
@@ -46,34 +55,39 @@ const CatchmentScreen =()=>{
     //     setError(errors)
     // }
 
+    const getDniTypes = async()=>{
+        try {
+          const res = await http('get',Endpoint.dniTypes)
+          setDniTypes(res)
+        } catch (error) {
+          console.log('error',error)
+        }
+    }
+
+    const getToken =async()=>{
+        const userToken = await AsyncStorage.getItem('token')
+        setToken(userToken)
+    
+    }
+
     const send=async()=>{
 
         const data={
-            "email":correo
+            "token":token,
+            "dni":numberDni,
+            "dni_type":idDni
         }
         try {
-            const resp= await http('post',Endpoint.recoverPassword,data)
+            const resp= await http('post',Endpoint.findPeople,data)
+            navigator.navigate('FirstDataCatchmentScreen',{data:resp.data})
             console.log('resp',resp)
-            if(resp.data === 'El email no existe.'){
-                setErrorAlert(true)
-            }else{
-                setAlert(true)
-            }
+            
         } catch (error) {
             console.log('error',error)
             setErrorAlert(true)
         }
     }
-    const contentErrorAlert=
-        <View style={styles.cAlert}>
-            <Image
-                source={require('../../assets/icons/modal-alert-Icon.png')}
-                style={styles.imageAlert}
-            />
-            <Text style={styles.title}>Notificación</Text>
-            <Text style={styles.textAlertError}>Este correo no esta asociado a ninguna cuenta</Text>
-        </View>
-
+   
     const contentAlert=
     <View style={styles.cAlert}>
         <Image
@@ -82,30 +96,18 @@ const CatchmentScreen =()=>{
         />
         <Text style={styles.title}>Notificación</Text>
         <View style={styles.ctextAlert}>
-            <Text style={styles.textAlert}>Tu solicitud ha sido enviada</Text>
-            <Text style={styles.textAlert}>satisfactoriamente, revisa tu corro</Text>
+            <Text style={styles.textAlert}>Este usuario ya ha sido evaluado</Text>
         </View>
     </View>
 
-    const contentFieldError=
-    <View style={styles.cAlert}>
-        <Image
-            source={require('../../assets/icons/modal-alert-Icon.png')}
-            style={styles.imageAlert}
-        />
-        <Text style={styles.title}>Notificación</Text>
-        <Text style={styles.textAlertError}>Ha ocurrido un error, intenta nuevamente</Text>
-    </View>
-
-
 
     const close=()=>{
-        navigator.navigate('LoginScreen')
+        console.log('hola')
     }
 
     const itemSelect=(key,value)=>{
         console.log(key,value)
-        setUserRegister({...userRegister, profession:value}) 
+        onChange(key,'idDni')
     }
 
     return(
@@ -113,24 +115,18 @@ const CatchmentScreen =()=>{
         <View style={styles.container}>
         
             <View style={Styles.borderContainer}>
-                {/* <ListOptions
+                <ListOptions
                     label='Tipo de documento'
-                    options={dni}
+                    options={dniTypes}
                     itemSelect={itemSelect}
-                /> */}
-                <TextInput
-                    label='Tipo de documento'
-                    value={tipoDocumento}
-                    name='correo'
-                    onChangeText={(value)=>onChange(value,'tipoDocumento')}
-                    placeholder='Cédula de ciudadania'
-                    line='blue'
+                    placeholder={typeDni}
+                    isSelect={true}
                 />
                 <TextInput
                     label='Número de documento'
-                    value={numDocumento}
+                    value={numberDni}
                     name='correo'
-                    onChangeText={(value)=>onChange(value,'numDocumento')}
+                    onChangeText={(value)=>onChange(value,'numberDni')}
                     placeholder='1042143543'
                     line='blue'
                 />
@@ -140,44 +136,18 @@ const CatchmentScreen =()=>{
                 <View style={styles.cBtn}>
                     <TouchableOpacity
                         style={styles.Btn}
-                        onPress={()=>navigator.navigate('FirstDataCatchmentScreen')}
+                        onPress={()=>send()}
                     >
                         <Text style={styles.tBtn}>Buscar</Text>
                     </TouchableOpacity>
                 </View>
             </View>
             {
-                (errorAlert) ?
-                    <WindowAlert
-                    bool={true}
-                    closeAlert={setErrorAlert}
-                    content={contentErrorAlert}
-                    width={50}
-                    height={3}
-                    btnText={'Aceptar'}
-                    btnFunction={close}
-                    />
-                : null
-            }
-            {
                 (alert) ?
                     <WindowAlert
                     bool={true}
                     closeAlert={setAlert}
                     content={contentAlert}
-                    width={50}
-                    height={3}
-                    btnText={'Aceptar'}
-                    btnFunction={close}
-                    />
-                : null
-            }
-            {
-                (fieldError) ?
-                    <WindowAlert
-                    bool={true}
-                    closeAlert={setFieldError}
-                    content={contentFieldError}
                     width={50}
                     height={3}
                     btnText={'Aceptar'}

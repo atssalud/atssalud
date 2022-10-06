@@ -12,6 +12,11 @@ import FirstDataCatchmentScreen from '../screens/catchment/FirstDataCatchmentScr
 import SecondDataCatchmentScreen from '../screens/catchment/SecondDataCatchmentScreen';
 import AlertScreen from '../screens/alert/AlertScreen';
 import BankDataScreen from '../screens/profile/bankData/BankDataScreen';
+import EditbankDataScreen from '../screens/profile/bankData/EditbankDataScreen';
+import EditMyDataScreen from '../screens/profile/myData/EditMyDataScreen';
+import TypeAlertScreen from '../screens/catchment/TypeAlertScreen';
+import TestCardiovascularScreen from '../screens/catchment/TestCardiovascularScreen';
+import ViewAlertScreen from '../screens/catchment/ViewAlertScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -60,8 +65,11 @@ const Navigator = () => {
               <Stack.Screen name="AlertScreen" component={AlertScreen}/>
               <Stack.Screen name="MyDataScreen" component={MyDataScreen} options={{title: 'Mis datos',}} />
               <Stack.Screen name="BankDataScreen" component={BankDataScreen} options={{title: 'Mis datos bancarios',}} />
-              {/* <Stack.Screen name="EditMyDataScreen" component={EditMyDataScreen} options={{title: 'Editar Mis Datos',}} /> */}
-              {/* <Stack.Screen name="EditbankDataScreen" component={EditbankDataScreen} options={{title: 'Mis datos bancarios',}} /> */}
+              <Stack.Screen name="EditMyDataScreen" component={EditMyDataScreen} options={{title: 'Editar Mis Datos',}} />
+              <Stack.Screen name="EditbankDataScreen" component={EditbankDataScreen} options={{title: 'Mis datos bancarios',}} />
+              <Stack.Screen name="TypeAlertScreen" component={TypeAlertScreen} options={{title: 'Alertas a evaluar',}} />
+              <Stack.Screen name="TestCardiovascularScreen" component={TestCardiovascularScreen} options={{title: 'Test Cardiovascular',}} />
+              <Stack.Screen name="ViewAlertScreen" component={ViewAlertScreen} options={{title: 'Resultado Test',}} />
               </>
             )
         }

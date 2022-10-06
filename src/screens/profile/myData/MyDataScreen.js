@@ -103,12 +103,18 @@ const MyDataScreen = (props) => {
                 <Text style={styles.textData}>{data.phone}</Text>
             </View>
             <View style={styles.cData}>
+                <Text style={styles.textCampo}>Eps: </Text>
+                <Text style={styles.textData}>{data.company_name}</Text>
+            </View>
+            <View style={styles.cData}>
                 <Text style={styles.textCampo}>Correo: </Text>
                 <Text style={styles.textData}>{data.email}</Text>
             </View>
             <View style={styles.cData2}>
-                <Text style={styles.textCampo}>Eps: </Text>
-                <Text style={styles.textData}>{data.company_name}</Text>
+                <Text style={styles.textCampo}>Contraseña: </Text>
+                <TouchableOpacity>
+                    <Text style={styles.tcambiarContraseña}>Cambiar contraseña</Text>
+                </TouchableOpacity>
             </View>
             <Button
                 title="Editar"
@@ -134,8 +140,8 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     image:{
-        width: 100,
-        height: 100,
+        width: 120,
+        height: 120,
         borderRadius:100,
         borderWidth:4,
         borderColor:Colors.PRIMARY_COLOR,
@@ -206,5 +212,11 @@ const styles = StyleSheet.create({
         color:Colors.BLUE_GREY,
         fontFamily:Fonts.BOLD,
         fontSize:16
+    },
+    tcambiarContraseña:{
+        fontFamily:Fonts.REGULAR,
+        fontSize:16,
+        color:Colors.PRIMARY_COLOR,
+        marginTop:1
     }
 })

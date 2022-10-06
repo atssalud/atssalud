@@ -14,7 +14,7 @@ const ListOptions = (props) => {
 
     const [chooseData, setChooseData] = useState((placeholder) ? placeholder: 'Seleccionar')
     const [isModalVisible, setIsModalVisible] = useState(false)
-    const [isSelect, setIsSelect] = useState(false)
+    const [isSelect, setIsSelect] = useState((props.isSelect)?props.isSelect:false)
 
     const changeModalVisibility = (bool)=>{
         setIsModalVisible(bool)

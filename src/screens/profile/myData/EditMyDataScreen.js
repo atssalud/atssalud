@@ -2,16 +2,15 @@ import React,{useState,useEffect} from 'react'
 import {View,Text,Image,TouchableOpacity,StyleSheet,Alert,ScrollView} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import { InputText } from '../components/InputText';
 import { useForm } from '../../../hooks/useForm';
-import InputDate from '../../../components/InputDate';
 import ListOptions from '../../../components/ListOptions';
-import dataCities from '../../../services/Cities.json'
 import http from '../../../services/http';
-import { Endpoint } from '../../../constants/API';
+import { Endpoint } from '../../../environment/Api';
 import WindowPhoto from '../../../components/WindowPhoto';
 import { Colors } from '../../../theme/Colors';
 import { Fonts } from '../../../theme/Fonts';
+import TextInputs from '../../../components/TextInput';
+import Button from '../../../components/Button';
 
 const EditMyDataScreen = (props) => {
 
@@ -19,50 +18,69 @@ const EditMyDataScreen = (props) => {
     //colocar como obligatorio el campo de ciudad de nacimiento para
     // que deje realizar los cambios
 
-    const data = props.route.params.data
-    const photos = props.route.params.photo
-    console.log('data3', data)
+    const data = props.route.params.dataUser
+    const photos = data.avatar
+    const initialDepartament=data.state
+
     const navigator= useNavigation()
-    const [cities, setCities] = useState(dataCities)
-    const [idCity, setIdCity] = useState(data.ciudad_id)
-    const [city, setCity] = useState(data.ciudad)
-    const [dateBirthday, setBirthday] = useState(data.birthday)
+
+    const [cities, setCities] = useState()
+    const [departaments, setDepartaments] = useState()
+    const [eps,setEps]= useState()
+
+    const [id_eps, setIdEps] = useState(data.company)
+    const [id_departament, setIdDepartament] = useState(data.state)
+    const [id_city, setIdCity] = useState(data.city)
     const [changePhoto, setCahngePhoto] = useState()
     const [type, setType] = useState()
-    const [expedicionDni, setExpedicionDni] = useState()
-    const [idExpedicionDni, setIdExpedicionDni] = useState()
     
-    const {nombres,apellidos,identificacion,direccion,celular,email,birthday,ciudad,ciudad_id,expedicion_id,expedicion,onChange} = useForm({
-        nombres:data.nombres,
-        apellidos:data.apellidos,
-        identificacion:data.identificacion,
-        direccion:data.direccion,
-        celular:data.celular,
-        email:data.email,
-        birthday:dateBirthday,
-        ciudad:city,
-        ciudad_id:idCity,
-        expedicion:expedicionDni,
-        expedicion_id:idExpedicionDni
+
+    const {address,city,idCity,state,idState,phone,idCompany,company,onChange} = useForm({
+        idState:id_departament,
+        address:data.address,
+        city:'',
+        idCity:'',
+        state:data.state_name,
+        phone:data.phone,
+        company:data.company_name,
+        idCompany:id_eps,
     })
 
     useEffect(() => {
-        
-        navigator.setOptions({
-            headerRight:()=>(
-                <TouchableOpacity
-                    style={styles.btnHeader}
-                    onPress={()=>saveData()}
-                >
-                    <Text style={styles.textHeader}>Guardar</Text>
-                </TouchableOpacity>
-            ),
-    
-        })
+        getDepartaments()
+        getEps()
+        if (idState){
+            getCities()
+        }
+    }, [idState])
 
-    },[type,navigator,saveData,nombres,apellidos,direccion,celular,email,dateBirthday,idCity])
 
-    
+    const getDepartaments = async()=>{
+        try {
+          const res = await http('get',Endpoint.departaments)
+          setDepartaments(res)
+        } catch (error) {
+          console.log('error',error)
+        }
+    }
+    const getEps = async()=>{
+        try {
+          const res = await http('get',Endpoint.eps)
+          setEps(res)
+        } catch (error) {
+          console.log('error',error)
+        }
+    }
+    const getCities = async(id)=>{
+        console.log({idState})
+        try {
+          const res = await http('get',Endpoint.cities(idState))
+          console.log('cities',res)
+          setCities(res)
+        } catch (error) {
+          console.log('error',error)
+        }
+    }
 
     const saveDocuments = async(tipo)=>{
         if(tipo){
@@ -96,58 +114,53 @@ const EditMyDataScreen = (props) => {
     const saveData = async ()=>{
 
         const update={
-            'direccion':direccion,
-            'celular':celular,
-            'email':email,
-            'birthday':dateBirthday,
-            'ciudad_id':idCity,
+            'address':address,
+            'city':idCity,
+            'state':idState,
+            'phone':phone,
+            'company':idCompany,
         }
 
         console.log(update)
 
-        try {
-            const res = await http('put',Endpoint.ownerDetails(data.identificacion),update);
-            saveDocuments(type)
-            console.log('respuesta',res)
-            Alert.alert(
-                'Actualizando Datos',
-                'Se ha actualizado de forma exitosa',
-                [
-                    { text: 'OK',
-                    onPress: () => navigator.replace('MyDataScreen',{item:data.identificacion,photo:(changePhoto)?changePhoto.uri:(photos)? photos:null})},
-                ]
-            )
-        } catch (error) {
-            console.error('error',error)
-        }
+        // try {
+        //     const res = await http('put',Endpoint.ownerDetails(data.identificacion),update);
+        //     saveDocuments(type)
+        //     console.log('respuesta',res)
+        //     Alert.alert(
+        //         'Actualizando Datos',
+        //         'Se ha actualizado de forma exitosa',
+        //         [
+        //             { text: 'OK',
+        //             onPress: () => navigator.replace('MyDataScreen',{item:data.identificacion,photo:(changePhoto)?changePhoto.uri:(photos)? photos:null})},
+        //         ]
+        //     )
+        // } catch (error) {
+        //     console.error('error',error)
+        // }
 
     }
 
     const onChangeText=(value,text)=>{
         onChange(value,text)
     };
-
-    const cityBirth=(key,value,key2,value2)=>{
-        console.log(key,value,key2,value2)
-        setCity(value)
-        setIdCity(key)
-    }
-    const selectBirthday=(value)=>{
+    const selectEps=(id,value)=>{
         console.log('valuee',value)
-        setBirthday(value)
+        onChange(id,'idCompany')
+    }
+    const selectDepartament=(id,value)=>{
+        console.log('id',id)
+        onChange(id,'idState')
+    }
+    const selectCity=(id,value)=>{
+        console.log('valuee',value)
+        onChange(id,'idCity')
     }
 
     const title=
     <View style={styles.cText}>
-        <Text style={styles.title}>Click Para Subir Tu</Text>
-        <Text style={styles.title}>Foto</Text>
+        <Text style={styles.title}>Cambiar foto</Text>
     </View>
-
-    const lugarExpedicion=(key,value)=>{
-        console.log(key,value)
-        setExpedicionDni(value)
-        setIdExpedicionDni(key)
-    }
 
   return (
 
@@ -185,78 +198,43 @@ const EditMyDataScreen = (props) => {
         </View>
         
         <View style={styles.cTextInput}>
-            <InputText
-                title="Nombres"
-                value={nombres}
-                name='nombres'
-                onChangeText={onChangeText}
-                width='all'
+            <ListOptions
+                label='Departamento:'
+                options={departaments}
+                itemSelect={selectDepartament}
+                placeholder={state}
+                isSelect={true}
             />
-            <InputText
-                title="Apellidos"
-                value={apellidos}
-                name='apellidos'
-                onChangeText={onChangeText}
-                width='all'
-            />
-
-            <View>
-                <Text style={[styles.tLabel,{color:Colors.FONT_COLOR}]}>Lugar expedición Documento:</Text>
-                <ListOptions
+            <ListOptions
+                label='Ciudad:'
                 options={cities}
-                itemSelect={lugarExpedicion}
-                id={'id'}
-                value={'nombre'}
-                text={expedicion_id}
+                itemSelect={selectCity}
+                placeholder={city}
             />
-            </View>
-
-            <View>
-                <Text style={styles.tLabel}>Cédula:</Text>
-                <Text style={styles.text}>{identificacion}</Text>
-            </View>
-
-            <InputText
-                title="Dirección"
-                value={direccion}
-                name='direccion'
-                onChangeText={onChangeText}
-                width='all'
+            <TextInputs
+                label='Direccion'
+                placeholder="cra 48 # 31-54"
+                onChangeText= {(value)=>onChangeText(value,'address')}
+                value={address}
             />
-            <InputText
-                title="Celular"
-                value={celular}
-                name='celular'
-                onChangeText={onChangeText}
-                width='all'
+            <TextInputs
+                label='Celular'
+                placeholder="3014567890"
+                onChangeText= {(value)=>onChangeText(value,'phone')}
+                value={phone}
             />
-            <InputText
-                title="Correo"
-                value={email}
-                name='email'
-                onChangeText={onChangeText}
-                width='all'
+            <ListOptions
+                label='Eps:'
+                options={eps}
+                itemSelect={selectEps}
+                placeholder={company}
+                isSelect={true}
             />
-
-            <View style={styles.cData}>
-                <Text style={[styles.tLabel,{color:Colors.FONT_COLOR}]}>Fecha de nacimiento:</Text>
-                <InputDate
-                    text={birthday}
-                    type={'date'}
-                    dateSelect={selectBirthday}
-                />
-            </View>
-            
-            <View style={styles.cData}>
-                <Text style={[styles.tLabel,{color:Colors.FONT_COLOR}]}>Ciudad de nacimiento:</Text>
-                <ListOptions
-                    options={cities}
-                    itemSelect={cityBirth}
-                    id={'id'}
-                    value={'nombre'}
-                    text={ciudad}
-                />
-            </View>
+            <Button
+                title="Guardar"
+                onPress={()=> saveData()} 
+                fill='solid'
+            />
         </View>
     </ScrollView>
   )
@@ -264,8 +242,8 @@ const EditMyDataScreen = (props) => {
 export default EditMyDataScreen
 const styles = StyleSheet.create({
     container:{
-        marginHorizontal:10,
-        marginVertical:10
+        marginHorizontal:20,
+        marginVertical:20
     },
     cTextInput:{
         marginHorizontal:5,
@@ -297,8 +275,8 @@ const styles = StyleSheet.create({
         fontFamily:Fonts.REGULAR
     },
     image:{
-        width: 100,
-        height: 100,
+        width: 120,
+        height: 120,
         borderRadius:100,
         borderWidth:4,
         borderColor:Colors.PRIMARY_COLOR,
@@ -308,6 +286,7 @@ const styles = StyleSheet.create({
     cImageText:{
         flexDirection:'row',
         alignItems: 'center',
+        justifyContent:'center'
     },
     cText:{
         marginLeft:20
