@@ -57,7 +57,7 @@ const TestCardiovascularScreen = (props) => {
         try {
             const resp = await http('post',Endpoint.testCardiovascular,data)
             console.log(resp.data)
-            navigator.navigate('ViewAlertScreen',{data:resp.data})
+            navigator.replace('ViewAlertScreen',{data:resp.data})
             
             
         } catch (error) {

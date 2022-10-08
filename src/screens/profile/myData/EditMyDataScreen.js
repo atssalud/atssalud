@@ -11,6 +11,7 @@ import { Colors } from '../../../theme/Colors';
 import { Fonts } from '../../../theme/Fonts';
 import TextInputs from '../../../components/TextInput';
 import Button from '../../../components/Button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditMyDataScreen = (props) => {
 
@@ -33,9 +34,9 @@ const EditMyDataScreen = (props) => {
     const [id_city, setIdCity] = useState(data.city)
     const [changePhoto, setCahngePhoto] = useState()
     const [type, setType] = useState()
-    
+    const [token,setToken]=useState()
 
-    const {address,city,idCity,state,idState,phone,idCompany,company,onChange} = useForm({
+    const {last_name,first_name,profession,dni,dni_type,address,city,idCity,state,idState,phone,idCompany,company,onChange} = useForm({
         idState:id_departament,
         address:data.address,
         city:'',
@@ -44,9 +45,15 @@ const EditMyDataScreen = (props) => {
         phone:data.phone,
         company:data.company_name,
         idCompany:id_eps,
+        dni:data.dni,
+        dni_type:data.dni_type,
+        first_name:data.first_name,
+        last_name:data.last_name,
+        profession:data.profession,
     })
 
     useEffect(() => {
+        getToken()
         getDepartaments()
         getEps()
         if (idState){
@@ -54,7 +61,11 @@ const EditMyDataScreen = (props) => {
         }
     }, [idState])
 
-
+    const getToken =async()=>{
+        const userToken = await AsyncStorage.getItem('token')
+        setToken(userToken)
+    
+      }
     const getDepartaments = async()=>{
         try {
           const res = await http('get',Endpoint.departaments)
@@ -114,30 +125,36 @@ const EditMyDataScreen = (props) => {
     const saveData = async ()=>{
 
         const update={
-            'address':address,
-            'city':idCity,
-            'state':idState,
-            'phone':phone,
-            'company':idCompany,
+            "token":token,
+            "dni":dni,
+            "dni_type":dni_type,
+            "first_name":first_name,
+            "last_name":last_name,
+            "address":address,
+            "city":idCity,
+            "state":idState,
+            "phone":phone,
+            "profession":"63",
+            "company":idCompany
         }
 
         console.log(update)
 
-        // try {
-        //     const res = await http('put',Endpoint.ownerDetails(data.identificacion),update);
-        //     saveDocuments(type)
-        //     console.log('respuesta',res)
-        //     Alert.alert(
-        //         'Actualizando Datos',
-        //         'Se ha actualizado de forma exitosa',
-        //         [
-        //             { text: 'OK',
-        //             onPress: () => navigator.replace('MyDataScreen',{item:data.identificacion,photo:(changePhoto)?changePhoto.uri:(photos)? photos:null})},
-        //         ]
-        //     )
-        // } catch (error) {
-        //     console.error('error',error)
-        // }
+        try {
+            const res = await http('put',Endpoint.editDataUser,update);
+            saveDocuments(type)
+            console.log('respuesta',res)
+            Alert.alert(
+                'Actualizando Datos',
+                'Se ha actualizado de forma exitosa',
+                [
+                    { text: 'OK',
+                    onPress: () => navigator.replace('MyDataScreen')},
+                ]
+            )
+        } catch (error) {
+            console.error('error',error)
+        }
 
     }
 

@@ -15,6 +15,8 @@ export const Endpoint = {
     signUp:`${BASEURL}/sign-up`,
     login:`${BASEURL}/login`,
     dataUser:`${BASEURL}/list-profile-user`,
+    editDataUser:`${BASEURL}/update-profile-user`,
+    editDataBankUser:`${BASEURL}/update-databank-user`,
     forgetPassword:`${BASEURL}/forget-password`,
     logout:`${BASEURL}/logout`,
     banks:`${BASEURL}/banks`,
