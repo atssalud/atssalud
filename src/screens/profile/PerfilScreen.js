@@ -31,9 +31,7 @@ const PerfilScreen = () => {
   
   const getToken =async()=>{
     const userToken = await AsyncStorage.getItem('token')
-    if(!token){
-      getUser(userToken)
-    }
+    getUser(userToken)
     setToken(userToken)
 
   }

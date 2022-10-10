@@ -30,30 +30,13 @@ const CatchmentScreen =()=>{
         numberDni:''
     })
 
-    const [error, setError] = useState({
-        correo: "",
-    })
+    const [error, setError] = useState()
 
     useEffect(() => {
         getDniTypes()
         getToken()
     }, [])
     
-
-    // const validator =()=>{
-    //     console.log(correo)
-    //     const expReg=/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/
-
-    //     const errors={}
-        
-    //     if (expReg.test(correo)=== false){
-    //         errors.correo = 'Campo vacio'
-    //     }else{
-    //         send()
-    //     }
-        
-    //     setError(errors)
-    // }
 
     const getDniTypes = async()=>{
         try {
@@ -79,7 +62,12 @@ const CatchmentScreen =()=>{
         }
         try {
             const resp= await http('post',Endpoint.findPeople,data)
-            navigator.navigate('FirstDataCatchmentScreen',{data:resp.data})
+            if(resp.errors){
+                setError(resp.errors)
+            }else{
+                navigator.navigate('FirstDataCatchmentScreen',{data:resp.data})
+            }
+
             console.log('resp',resp)
             
         } catch (error) {
@@ -130,8 +118,9 @@ const CatchmentScreen =()=>{
                     placeholder='1042143543'
                     line='blue'
                 />
-                {error.correo === '' ? null :
-                    <Text style={styles.textValid}>{error.correo}</Text>
+                {(error)?
+                    (error.dni==='')?null:
+                    <Text style={styles.textValid}>{error.dni}</Text>: null
                 }
                 <View style={styles.cBtn}>
                     <TouchableOpacity
@@ -193,9 +182,11 @@ const styles = StyleSheet.create({
     },
     textValid:{
         fontSize: 14,
+        fontFamily:Fonts.BOLD,
         color:"#ff5d2f",
         marginLeft:4,
-        marginTop:-20
+        marginTop:-10,
+        marginBottom:5
     },
     text:{
         color:'black',

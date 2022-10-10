@@ -40,7 +40,7 @@ const MyDataScreen = (props) => {
         //     navigator.replace('Tabs', { screen: 'PerfilScreen' })}
         if (rute === 'atras'){navigator.navigate('PerfilScreen')}
         else{
-        navigator.navigate('EditMyDataScreen',{dataUser:data})}
+        navigator.replace('EditMyDataScreen',{dataUser:data})}
     }
     if(data){
         var nombre=data.first_name.split(' ')

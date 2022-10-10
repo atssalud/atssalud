@@ -20,6 +20,7 @@ const TestCardiovascularScreen = (props) => {
     const siNo=[{'id':'0','item':'No'},{'id':'1','item':'Si'}]
     
     const [token,setToken]=useState()
+    const [error, setError] = useState()
 
     useEffect(() => {
         getToken()
@@ -33,11 +34,11 @@ const TestCardiovascularScreen = (props) => {
     const {gender,age,id,total_cholesterol,hdl,systolic_pressure,smoking,diabetes,onChange} = useForm({
         gender:data.genero,
         age:data.edad,
-        total_cholesterol,
-        hdl,
-        systolic_pressure,
-        smoking,
-        diabetes,
+        total_cholesterol:'',
+        hdl:'',
+        systolic_pressure:'',
+        smoking:'',
+        diabetes:'',
         id:data.id
     })
 
@@ -56,8 +57,12 @@ const TestCardiovascularScreen = (props) => {
         console.log({data})
         try {
             const resp = await http('post',Endpoint.testCardiovascular,data)
-            console.log(resp.data)
-            navigator.replace('ViewAlertScreen',{data:resp.data})
+            console.log(resp)
+            if(resp.errors){
+                setError(resp.errors)
+            }else{
+                navigator.replace('ViewAlertScreen',{data:resp.data})
+            }
             
             
         } catch (error) {
@@ -86,13 +91,20 @@ const TestCardiovascularScreen = (props) => {
             </View>  
         </View>
         <View style={{flexDirection:'row',}}>
+            <View>
             <TextInputs
                 label='Colesterol Total'
                 placeholder="150"
                 onChangeText= { (value) => onChange(value,'total_cholesterol') }
                 value={total_cholesterol}
                 dimension='middle'
-            /> 
+            />
+            {(error)?
+                (error.total_cholesterol==='')?null:
+                <Text style={styles.textValid}>{error.total_cholesterol}</Text>: null
+            }
+            </View>
+            <View>
             <TextInputs
                 label='HDL'
                 placeholder="45"
@@ -100,15 +112,27 @@ const TestCardiovascularScreen = (props) => {
                 value={hdl}
                 dimension='middle'
             />
+            {(error)?
+                (error.hdl==='')?null:
+                <Text style={styles.textValid}>{error.hdl}</Text>: null
+            }
+            </View>
         </View>
         <View style={{flexDirection:'row',}}>
+            <View>
             <TextInputs
                 label='P.Sistólica'
                 placeholder="120"
                 onChangeText= { (value) => onChange(value,'systolic_pressure') }
                 value={systolic_pressure}
                 dimension='middle'
-            /> 
+            />
+            {(error)?
+                (error.systolic_pressure==='')?null:
+                <Text style={styles.textValid}>{error.systolic_pressure}</Text>: null
+            }
+            </View>
+            <View style={{marginTop:2}}>
             <ListOptions
                 label='Fumador'
                 options={siNo}
@@ -116,8 +140,14 @@ const TestCardiovascularScreen = (props) => {
                 dimension='middle'
                 placeholder={'No'}
                 />
+            {(error)?
+                (error.smoking==='')?null:
+                <Text style={styles.textValid}>{error.smoking}</Text>: null
+            }
+            </View>
         </View>
         <View style={{flexDirection:'row',}}>
+        <View>
             <ListOptions
                 label='Diabético'
                 options={siNo}
@@ -125,6 +155,11 @@ const TestCardiovascularScreen = (props) => {
                 dimension='middle'
                 placeholder={'No'}
                 />
+            {(error)?
+                (error.diabetes==='')?null:
+                <Text style={styles.textValid}>{error.diabetes}</Text>: null
+            }
+            </View>
         </View>
         <View style={styles.cButton}>  
             <Button
@@ -163,5 +198,13 @@ const styles=StyleSheet.create({
         marginBottom:15,
         width:Width/3
 
-    }
+    },
+    textValid:{
+        fontSize: 11,
+        fontFamily:Fonts.BOLD,
+        color:"#ff5d2f",
+        marginLeft:4,
+        marginTop:-10,
+        marginBottom:5
+    },
 })

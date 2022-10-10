@@ -20,7 +20,7 @@ import http from '../../services/http';
 const FirstDataCatchmentScreen = (props) => {
 
     const navigator = useNavigation()
-    const genero=[{'id':'1', 'item':'M'},{'id':'2', 'item':'F'}]
+    const genero=[{'id':'M', 'item':'Masculino'},{'id':'F', 'item':'Femenino'}]
     const [errorAlert,setErrorAlert]= useState(false)
     const [alert,setAlert]= useState(false)
 
@@ -37,7 +37,7 @@ const FirstDataCatchmentScreen = (props) => {
         departamento:(data)?data.state_name:'',
         ciudad:(data)?data.city_name:'',
         correo:(data)?data.email:'',
-        fechaNacimiento:(data)?data.date_birth:'',
+        fechaNacimiento:(data)?data.birthday:'',
         genero:(data)?data.gender:'',
         edad:(data)?data.age:'',
         id:data.id

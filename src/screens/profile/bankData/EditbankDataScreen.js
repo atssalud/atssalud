@@ -9,6 +9,7 @@ import { Colors } from '../../../theme/Colors';
 import { Fonts } from '../../../theme/Fonts';
 import TextInputs from '../../../components/TextInput';
 import Button from '../../../components/Button';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const EditbankDataScreen = (props) => {
     const data = props.route.params.dataUser
@@ -17,14 +18,29 @@ const EditbankDataScreen = (props) => {
     const [bank, setBank] = useState(data.bank_name)
     const [idBank, setIdBank] = useState(data.bank)
     const [accountType, setAccountType] = useState(data.type_account_name)
-    const [idAccountType, setIdAccountType] = useState(data.type_account_name)
+    const [idAccountType, setIdAccountType] = useState(data.type_account)
     const [nameBank, setNameBank] = useState()
     const [typeAccount, setTypeAccount] = useState()
-    
+    const [error, setError] = useState()
+    const token =data.token
 
     useEffect(() => {
         getTypeAccount()
         getNameBank()
+        navigator.setOptions({
+            headerLeft:()=>(
+                <TouchableOpacity
+                    onPress={()=> navigator.replace('BankDataScreen',{dataUser:data})}
+                >
+                    <Icon
+                        name="chevron-left"
+                        color= {'white'}
+                        size={24}
+                    />
+                </TouchableOpacity>
+            ),
+    
+        })
     }, [])
     
     const getTypeAccount = async()=>{
@@ -44,7 +60,7 @@ const EditbankDataScreen = (props) => {
         }
     }
 
-    const {banco,cuenta,tipo_cuenta,onChange} = useForm({
+    const {banco,cuenta,tipo_cuenta,idTipoCuenta,idBanco,onChange} = useForm({
         banco:(bank)?bank:'',
         cuenta:(data.bank_account)?data.bank_account:'',
         tipo_cuenta:(accountType)?accountType:'',
@@ -56,30 +72,50 @@ const EditbankDataScreen = (props) => {
 
     
         const update={
-            'banco':bank,
-            cuenta,
-            'tipo_cuenta':accountType,
+            'token':data.token,
+            'bank':idBanco,
+            'bank_account':cuenta,
+            'type_account':idTipoCuenta,
         }
 
         console.log('dataa',update)
         // console.log('data',data.identificacion)
 
-        // try {
-        //     const res = await http('put',Endpoint.ownerDetails(data.identificacion),update);
-        //     console.log('respuesta',res)
-        //     Alert.alert(
-        //         'Actualizando Datos',
-        //         'Se ha actualizado de forma exitosa',
-        //         [
-        //             { text: 'OK',
-        //             onPress: () => navigator.replace('BankDataScreen',{item:data.identificacion})},
-        //         ]
-        //     )
-        // } catch (error) {
-        //     console.error('error',error)
-        // }
+        try {
+            const resp = await http('put',Endpoint.editDataBankUser,update);
+            console.log('respuesta',resp)
+            if(resp.errors){
+                setError(resp.errors)
+            }else{
+                
+                Alert.alert(
+                    'Actualizando Datos',
+                    'Se ha actualizado de forma exitosa',
+                    [
+                        { text: 'OK',
+                        onPress: () => getUser()},
+                    ]
+                )
+            }
+        } catch (error) {
+            console.error('error',error)
+        }
         
     }
+    const getUser = async()=>{
+    
+        try { 
+          const data={
+            'token':token
+          }
+          const res = await http('post',Endpoint.dataUser,data)
+          console.log('res',res)
+          navigator.replace('Tabs', { screen: 'PerfilScreen' })
+          
+        } catch (error) {
+            console.log('error',error);
+            }
+      }
 
     const onChangeText=(value,text)=>{
         onChange(value,text)
@@ -87,13 +123,11 @@ const EditbankDataScreen = (props) => {
 
     const selectBank=(id,value)=>{
         console.log('valuee',value)
-        setBank(value)
-        setIdBank(id)
+        onChange(id,'idBanco')
     }
     const selectAccount=(id,value)=>{
         console.log('valuee',value,id)
-        setAccountType(value)
-        setIdAccountType(id)
+        onChange(id,'idTipoCuenta')
     }
 
   return (
@@ -106,6 +140,10 @@ const EditbankDataScreen = (props) => {
                 onChangeText= {(value)=>onChangeText(value,'cuenta')}
                 value={cuenta}
             />
+            {(error)?
+                (error.bank_account==='')?null:
+                <Text style={styles.textValid}>{error.bank_account}</Text>: null
+            }
             <ListOptions
                 label='Tipo de cuenta:'
                 options={typeAccount}
@@ -182,6 +220,14 @@ const styles = StyleSheet.create({
     },
     cData:{
         marginBottom:20
-    }
+    },
+    textValid:{
+        fontSize: 14,
+        fontFamily:Fonts.BOLD,
+        color:"#ff5d2f",
+        marginLeft:4,
+        marginTop:-10,
+        marginBottom:5
+    },
 })
 

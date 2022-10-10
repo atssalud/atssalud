@@ -1,9 +1,9 @@
 import React,{useState,useEffect} from 'react'
 import {View,Text,Image,TouchableOpacity,StyleSheet,Alert,ScrollView} from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from '../../../hooks/useForm';
 import ListOptions from '../../../components/ListOptions';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import http from '../../../services/http';
 import { Endpoint } from '../../../environment/Api';
 import WindowPhoto from '../../../components/WindowPhoto';
@@ -35,6 +35,7 @@ const EditMyDataScreen = (props) => {
     const [changePhoto, setCahngePhoto] = useState()
     const [type, setType] = useState()
     const [token,setToken]=useState()
+    const [error, setError] = useState()
 
     const {last_name,first_name,profession,dni,dni_type,address,city,idCity,state,idState,phone,idCompany,company,onChange} = useForm({
         idState:id_departament,
@@ -59,13 +60,27 @@ const EditMyDataScreen = (props) => {
         if (idState){
             getCities()
         }
+        navigator.setOptions({
+            headerLeft:()=>(
+                <TouchableOpacity
+                    onPress={()=> navigator.replace('MyDataScreen',{dataUser:data})}
+                >
+                    <Icon
+                        name="chevron-left"
+                        color= {'white'}
+                        size={24}
+                    />
+                </TouchableOpacity>
+            ),
+    
+        })
     }, [idState])
 
     const getToken =async()=>{
         const userToken = await AsyncStorage.getItem('token')
         setToken(userToken)
     
-      }
+    }
     const getDepartaments = async()=>{
         try {
           const res = await http('get',Endpoint.departaments)
@@ -141,22 +156,44 @@ const EditMyDataScreen = (props) => {
         console.log(update)
 
         try {
-            const res = await http('put',Endpoint.editDataUser,update);
+            const resp = await http('put',Endpoint.editDataUser,update);
             saveDocuments(type)
-            console.log('respuesta',res)
-            Alert.alert(
-                'Actualizando Datos',
-                'Se ha actualizado de forma exitosa',
-                [
-                    { text: 'OK',
-                    onPress: () => navigator.replace('MyDataScreen')},
-                ]
-            )
+            console.log('respuesta',resp)
+            if(resp.errors){
+                setError(resp.errors)
+            }else{
+                
+                Alert.alert(
+                    'Actualizando Datos',
+                    'Se ha actualizado de forma exitosa',
+                    [
+                        { text: 'OK',
+                        onPress: () => getUser()},
+                    ]
+                )
+            }
         } catch (error) {
             console.error('error',error)
         }
 
     }
+
+    const getUser = async()=>{
+    
+        try { 
+          const data={
+            'token':token
+          }
+          const res = await http('post',Endpoint.dataUser,data)
+          console.log('res',res)
+          navigator.replace('Tabs', { screen: 'PerfilScreen' })
+          
+        } catch (error) {
+            console.log('error',error);
+            }
+      }
+
+
 
     const onChangeText=(value,text)=>{
         onChange(value,text)
@@ -222,24 +259,40 @@ const EditMyDataScreen = (props) => {
                 placeholder={state}
                 isSelect={true}
             />
+            {(error)?
+                (error.state==='')?null:
+                <Text style={styles.textValid}>{error.state}</Text>: null
+            }
             <ListOptions
                 label='Ciudad:'
                 options={cities}
                 itemSelect={selectCity}
                 placeholder={city}
             />
+            {(error)?
+                (error.city==='')?null:
+                <Text style={styles.textValid}>{error.city}</Text>: null
+            }
             <TextInputs
                 label='Direccion'
                 placeholder="cra 48 # 31-54"
                 onChangeText= {(value)=>onChangeText(value,'address')}
                 value={address}
             />
+            {(error)?
+                (error.address==='')?null:
+                <Text style={styles.textValid}>{error.address}</Text>: null
+            }
             <TextInputs
                 label='Celular'
                 placeholder="3014567890"
                 onChangeText= {(value)=>onChangeText(value,'phone')}
                 value={phone}
             />
+            {(error)?
+                (error.phone==='')?null:
+                <Text style={styles.textValid}>{error.phone}</Text>: null
+            }
             <ListOptions
                 label='Eps:'
                 options={eps}
@@ -247,6 +300,10 @@ const EditMyDataScreen = (props) => {
                 placeholder={company}
                 isSelect={true}
             />
+            {(error)?
+                (error.company==='')?null:
+                <Text style={styles.textValid}>{error.company}</Text>: null
+            }
             <Button
                 title="Guardar"
                 onPress={()=> saveData()} 
@@ -336,5 +393,13 @@ const styles = StyleSheet.create({
     },
     title:{
         fontFamily:Fonts.BOLD
-    }
+    },
+    textValid:{
+        fontSize: 14,
+        fontFamily:Fonts.BOLD,
+        color:"#ff5d2f",
+        marginLeft:4,
+        marginTop:-10,
+        marginBottom:5
+    },
 })

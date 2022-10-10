@@ -37,7 +37,7 @@ const BankDataScreen = (props) => {
     const navigation = async(rute)=>{
         if (rute === 'atras'){navigator.navigate('PerfilScreen')}
         else{
-            navigator.navigate('EditbankDataScreen',{dataUser:data})}
+            navigator.replace('EditbankDataScreen',{dataUser:data})}
     }
 
   return (
