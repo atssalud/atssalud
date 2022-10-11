@@ -52,7 +52,7 @@ export const AuthProvider = ({children})=>{
         try {
             const resp = await http('post',Endpoint.login,data)
             console.log('resp',resp)
-            if (resp.errors){
+            if (resp.message){
                 dispatch({
                     type:'addError',
                     payload:error.errors|| 'Usuario o Contraseña incorrecta',

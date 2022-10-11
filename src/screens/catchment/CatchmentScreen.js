@@ -60,6 +60,7 @@ const CatchmentScreen =()=>{
             "dni":numberDni,
             "dni_type":idDni
         }
+        console.log({data})
         try {
             const resp= await http('post',Endpoint.findPeople,data)
             if(resp.errors){

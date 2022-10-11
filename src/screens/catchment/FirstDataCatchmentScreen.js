@@ -16,46 +16,59 @@ import { Fonts } from '../../theme/Fonts';
 import Button from '../../components/Button';
 import ListOptions from '../../components/ListOptions';
 import http from '../../services/http';
+import InputDate from '../../components/InputDate';
 
 const FirstDataCatchmentScreen = (props) => {
 
     const navigator = useNavigation()
-    const genero=[{'id':'M', 'item':'Masculino'},{'id':'F', 'item':'Femenino'}]
+    const genero=[{'id':'M', 'item':'M'},{'id':'F', 'item':'F'}]
     const [errorAlert,setErrorAlert]= useState(false)
     const [alert,setAlert]= useState(false)
+    const today= new Date()
 
     const data = props.route.params.data
-    console.log(data.id)
+    console.log('rr',props.token)
 
     const [userRegister, setUserRegister] = useState({
-        nombre:(data)?data.first_name:'',
-        apellido:(data)?data.last_name:'',
-        tipoIdentificacion:(data)?data.dni_type:'',
-        numIdentificacion:(data)?data.dni:'',
-        direccion:(data)?data.address:'',
-        celular:(data)?data.phone:'',
-        departamento:(data)?data.state_name:'',
-        ciudad:(data)?data.city_name:'',
-        correo:(data)?data.email:'',
-        fechaNacimiento:(data)?data.birthday:'',
-        genero:(data)?data.gender:'',
-        edad:(data)?data.age:'',
-        id:data.id
+        nombre:(data.lenght === undefined)?'':data.first_name,
+        apellido:(data.lenght === undefined)?'':data.last_name,
+        tipoIdentificacion:(data.lenght === undefined)?'':data.dni_type_name,
+        idTipoIdentificacion:(data.lenght === undefined)?'':data.dni_type,
+        numIdentificacion:(data .lenght=== undefined)?'':data.dni,
+        direccion:(data.lenght=== undefined)?'':data.address,
+        celular:(data.lenght === undefined)?'':data.phone,
+        departamento:(data.lenght === undefined)?'':data.state_name,
+        ciudad:(data.lenght === undefined)?'':data.city_name,
+        correo:(data.lenght === undefined)?'':data.email,
+        fechaNacimiento:(data.lenght === undefined)?'':data.birthday,
+        genero:(data.lenght === undefined)?'':data.gender,
+        edad:(data.birthday)?today.getFullYear()-data.birthday.split('-')[0]:'',
+        ciudad_id:(data.lenght === undefined)?'':data.city,
+        departamento_id:(data.lenght === undefined)?'':data.state,
     })
 
-    
+    console.log('fecha', data.lenght === undefined)
+
+   
     const [departaments,setDepartaments]= useState()
     const [cities,setCities]= useState()
     const [dniTypes,setDniTypes]= useState()
     const [eps,setEps]= useState()
+    const [error, setError] = useState()
+    const [token,setToken]=useState()
 
     useEffect(() => {
         getDniTypes()
         getDepartaments()
         getEps()
-    }, [userRegister.departamento])
+        getToken()
+    }, [])
 
-
+    const getToken =async()=>{
+        const userToken = await AsyncStorage.getItem('token')
+        setToken(userToken)
+    
+    }
     const getDepartaments = async()=>{
         try {
           const res = await http('get',Endpoint.departaments)
@@ -90,71 +103,51 @@ const FirstDataCatchmentScreen = (props) => {
           console.log('error',error)
         }
     }
-    // const [error, setError] = useState({
-    //     name:'',
-    //     email:'',
-    //     password:'',
-    //     phone:'',
-    //     profession:'',
-    // })
 
-
-    // const handleRegister=() =>{
-    //     const expReg=/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/
-    //     const errors={}
-    //     if(userRegister.name.trim().length < 3 ){
-    //         errors.name = 'Cedula inválida.'
-    //     }
-    //     if (expReg.test(userRegister.email)=== false){
-    //         errors.email = 'Correo inválido'
-    //     }
-    //     if(userRegister.password.trim().length <6){
-    //         errors.password = 'La contraseña debe ser mayor a 5 caracteres'
-    //     }
-    //     if(userRegister.phone.trim().length != 10){
-    //         errors.phone = 'Celular inválido.'
-    //     }
-    //     if(userRegister.profession.trim().length !== 6){
-    //         errors.profession = 'Seleccione una profesión'
-    //     }
-    //     if(userRegister.name.trim().length > 3 && expReg.test(userRegister.email)=== true &&
-    //     userRegister.password.trim().length > 5 && userRegister.phone.trim().length === 10 &&
-    //     userRegister.password.trim().length > 3){
-    //         register()
-    //     }
-        
-    //     setError(errors)
-    // }
+    const dateSelect =(date)=>{
+        const edad = today.getFullYear()-date.split('-')[0]
+        setUserRegister({...userRegister, fechaNacimiento:date, edad:edad})
+        console.log(date)
+    }
 
     const register = async()=>{
     
-        const data={
+        const datos={
+            'token':token,
             'first_name':userRegister.nombre,
             'last_name':userRegister.apellido,
-            'dni_type':userRegister.tipoIdentificacion,
+            'dni_type':userRegister.idTipoIdentificacion,
             'dni':userRegister.numIdentificacion,
             'address':userRegister.direccion,
             'phone':userRegister.celular,
-            'state_name':userRegister.departamento,
-            'city_name':userRegister.ciudad,
+            'state':userRegister.departamento_id,
+            'city':userRegister.ciudad_id,
             'email':userRegister.correo,
-            'date_birth':userRegister.fechaNacimiento,
-            'sex':userRegister.genero,
-            'age':userRegister.edad,
+            'birthday':userRegister.fechaNacimiento,
+            'gender':userRegister.genero,
         }
 
-        console.log(data)
-        navigator.navigate('TypeAlertScreen',{data:userRegister})
+        console.log('hola',datos)
+        
+        if (data.lenght === undefined){
+            try {
+                const resp = await http('post',Endpoint.createPatient, datos);
+                console.log('resp',resp)
+                if(resp.errors){
+                    setError(resp.errors)
+                }else{
+                    navigator.navigate('TypeAlertScreen',{data:userRegister})
+                }
+    
+            } catch (error) {
+                console.log('error',error)
+                setErrorAlert(true)
+            }
+        }else{
+            navigator.navigate('TypeAlertScreen',{data:userRegister,token:token})
 
-        // try {
-        //     const resp = await http('post',Endpoint.preRegister, data);
-        //     console.log('resp',resp)
-        //     setAlert(true)
+        }
 
-        // } catch (error) {
-        //     console.log('error',error)
-        //     setErrorAlert(true)
-        // }
     }
 
     const contentErrorAlert=
@@ -185,24 +178,24 @@ const FirstDataCatchmentScreen = (props) => {
 
     const typeDniSelect=(key,value)=>{
         console.log(key,value)
-        setUserRegister({...userRegister, tipoIdentificacion:key}) 
+        setUserRegister({...userRegister, idTipoIdentificacion:key}) 
     }
     const departamentSelect=(key,value)=>{
         console.log(key,value)
-        setUserRegister({...userRegister, departamento:key})
+        setUserRegister({...userRegister, departamento_id:key,departamento:value})
         getCities() 
     }
     const citySelect=(key,value)=>{
         console.log(key,value)
-        setUserRegister({...userRegister, ciudad:key}) 
+        setUserRegister({...userRegister, ciudad_id:key,ciudad:value}) 
     }
     const tipogeneroSelect=(key,value)=>{
         console.log(key,value)
-        setUserRegister({...userRegister, genero:value}) 
+        setUserRegister({...userRegister, genero:key}) 
     }
 
     var {height}=Dimensions.get('window')
-    var dimension=height/3
+    
 
   return (
     <View style={styles.container}>
@@ -211,100 +204,130 @@ const FirstDataCatchmentScreen = (props) => {
         <ScrollView style={Styles.borderContainer}>
 
             <View>
-                <View style={{flexDirection:'row',}}>
-                    <TextInputs
-                        label='Nombre'
-                        placeholder="Juan José"
-                        onChangeText= { (value) => setUserRegister({...userRegister ,nombre:value}) }
-                        value={userRegister.nombre}
-                        dimension='middle'
-                    /> 
-                    <TextInputs
-                        label='Apellido'
-                        placeholder="Andrade Perez"
-                        onChangeText= { (value) => setUserRegister({...userRegister ,apellido:value}) }
-                        value={userRegister.apellido}
-                        dimension='middle'
-                    />
-                </View>
-                <View style={{flexDirection:'row',}}>
-                    <ListOptions
-                        label='Tipo identificación'
-                        options={dniTypes}
-                        itemSelect={typeDniSelect}
-                        dimension='middle'
-                        placeholder={userRegister.tipoIdentificacion}
-                        isSelect={(userRegister.tipoIdentificacion)? true:false}
-                    />
-                    
-                    <TextInputs
-                        label='Num identificación'
-                        placeholder="1234567890"
-                        onChangeText= { (value) => setUserRegister({...userRegister ,numIdentificacion:value}) }
-                        value={userRegister.numIdentificacion}
-                        dimension='middle'
-                    />
-                </View>
-                <View style={{flexDirection:'row',}}>
-                    <ListOptions
-                        label='Genero'
-                        options={genero}
-                        itemSelect={tipogeneroSelect}
-                        dimension='middle'
-                        placeholder={userRegister.genero}
-                        isSelect={(userRegister.genero)? true:false}
-                    />
-                    <TextInputs
-                        label='Edad'
-                        placeholder="15"
-                        onChangeText= { (value) => setUserRegister({...userRegister ,edad:value}) }
-                        value={userRegister.edad}
-                        dimension='middle'
-                    />
-                </View>
-                <View style={{flexDirection:'row',}}>
-                    <TextInputs
-                        label='Fecha Nacimiento'
-                        placeholder="12/03/1990"
+                <TextInputs
+                    label='Nombre'
+                    placeholder="Juan José"
+                    onChangeText= { (value) => setUserRegister({...userRegister ,nombre:value}) }
+                    value={userRegister.nombre}
 
-                        onChangeText= { (value) => setUserRegister({...userRegister ,fechaNacimiento:value}) }
-                        value={userRegister.fechaNacimiento}
-                        dimension='middle'
-                    />
-                    <TextInputs
-                        label='Celular'
-                        placeholder="3014567890"
-                        onChangeText= { (value) => setUserRegister({...userRegister ,celular:value}) }
-                        value={userRegister.celular}
-                        dimension='middle'
-                    />
+                />
+                {(error)?
+                    (error.first_name==='')?null:
+                    <Text style={styles.textValid}>{error.first_name}</Text>: null
+                }
+                    
+                <TextInputs
+                    label='Apellido'
+                    placeholder="Andrade Perez"
+                    onChangeText= { (value) => setUserRegister({...userRegister ,apellido:value}) }
+                    value={userRegister.apellido}
+
+                />
+                {(error)?
+                    (error.last_name==='')?null:
+                    <Text style={styles.textValid}>{error.last_name}</Text>: null
+                }
+
+                <ListOptions
+                    label='Tipo identificación'
+                    options={dniTypes}
+                    itemSelect={typeDniSelect}
+
+                    placeholder={userRegister.tipoIdentificacion}
+                    isSelect={(userRegister.tipoIdentificacion)? true:false}
+                />
+                {(error)?
+                    (error.dni_type==='')?null:
+                    <Text style={styles.textValid}>{error.dni_type}</Text>: null
+                }
+
+                <TextInputs
+                    label='Num identificación'
+                    placeholder="1234567890"
+                    onChangeText= { (value) => setUserRegister({...userRegister ,numIdentificacion:value}) }
+                    value={userRegister.numIdentificacion}
+
+                />
+                {(error)?
+                    (error.dni==='')?null:
+                    <Text style={styles.textValid}>{error.dni}</Text>: null
+                }
+
+                <ListOptions
+                    label='Genero'
+                    options={genero}
+                    itemSelect={tipogeneroSelect}
+
+                    placeholder={userRegister.genero}
+                    isSelect={(userRegister.genero)? true:false}
+                />
+                {(error)?
+                    (error.gender==='')?null:
+                    <Text style={styles.textValid}>{error.gender}</Text>: null
+                }
+                
+                <InputDate
+                    label='F.de nacimiento'
+                    dateSelect={dateSelect}
+                    type={'date'}
+
+                    text={userRegister.fechaNacimiento}
+                />
+                {(error)?
+                    (error.birthday==='')?null:
+                    <Text style={styles.textValid}>{error.birthday}</Text>: null
+                }
+
+                <View style={[styles.cText]}>
+                    <Text style={styles.text}>Edad:</Text> 
+                    <Text style={(userRegister.edad)?styles.tEdad:styles.subtitle2}>{(userRegister.edad)?userRegister.edad:'25'}</Text>
                 </View>
-                <View style={{flexDirection:'row',}}>
-                    <ListOptions
-                        label='Departamento'
-                        options={departaments}
-                        itemSelect={departamentSelect}
-                        dimension='middle'
-                        placeholder={userRegister.departamento}
-                        isSelect={(userRegister.departamento)? true:false}
-                    />
+                {(userRegister.edad)?null:
+                    <Text style={styles.textValid}>La edad es requerida</Text>
+                }
+                
+                
+                <TextInputs
+                    label='Celular'
+                    placeholder="3014567890"
+                    onChangeText= { (value) => setUserRegister({...userRegister ,celular:value}) }
+                    value={userRegister.celular}
+
+                />
+                {(error)?
+                    (error.phone==='')?null:
+                    <Text style={styles.textValid}>{error.phone}</Text>: null
+                }
+
+                <ListOptions
+                    label='Departamento'
+                    options={departaments}
+                    itemSelect={departamentSelect}
+
+                    placeholder={userRegister.departamento}
+                    isSelect={(userRegister.departamento)? true:false}
+                />
+                {(error)?
+                    (error.state==='')?null:
+                    <Text style={styles.textValid}>{error.state}</Text>: null
+                }
+                    
                     {(userRegister.departamento)?
+                        <View>
                         <ListOptions
                         label='Ciudad'
                         options={cities}
                         itemSelect={citySelect}
-                        dimension='middle'
                         placeholder={userRegister.ciudad}
                         isSelect={(userRegister.ciudad)? true:false}
                         />
-                    
+                        {(error)?
+                            (error.city==='')?null:
+                            <Text style={styles.textValid}>{error.city}</Text>: null
+                        }
+                        </View>
                         :
-                        // <TextInputs
-                        //     label='Ciudad'
-                        //     placeholder="Seleccione"
-                        //     dimension='middle'
-                        //     value={userRegister.ciudad}
-                        // />
+                        <View>
                         <View style={styles.cText}>
                             <Text style={styles.text}>Ciudad</Text>
                             <View style={{flexDirection:'row',justifyContent:'space-between'}}>
@@ -317,35 +340,42 @@ const FirstDataCatchmentScreen = (props) => {
                                 />
                             </View>
                         </View>
-                
+                        {(error)?
+                            (error.city==='')?null:
+                            <Text style={styles.textValid}>{error.city}</Text>: null
+                        }
+                        </View>
                     }
-                    
-                </View>
-                <View style={{flexDirection:'row',}}>
-    
+                
                     <TextInputs
                         label='Dirección'
                         placeholder="cra 6b #34-45"
                         onChangeText= { (value) => setUserRegister({...userRegister ,direccion:value}) }
                         value={userRegister.direccion}
-                        dimension='middle'
+    
                     />
-                </View> 
+                    {(error)?
+                        (error.address==='')?null:
+                        <Text style={styles.textValid}>{error.address}</Text>: null
+                    }
                 
-                <View style={{flexDirection:'row',}}>
                     <TextInputs
                         label='Correo'
                         placeholder="ejemplo@gmail.com"
                         onChangeText= { (value) => setUserRegister({...userRegister ,correo:value}) }
                         value={userRegister.correo}
                     />
-                </View>
+                    {(error)?
+                        (error.email==='')?null:
+                        <Text style={styles.textValid}>{error.email}</Text>: null
+                    }
+                    
                 
             </View>
 
             <View style={styles.cButton}>  
                 <Button 
-                    title="Siguiente"
+                    title={(data)?"Siguiente":"Registrar"}
                     onPress={()=>register()} 
                     fill='solid'
                 /> 
@@ -437,24 +467,38 @@ const styles=StyleSheet.create({
         fontSize:15,
         color:Colors.FONT_COLOR
     },
+    tEdad:{
+        fontFamily:Fonts.REGULAR,
+        fontSize:15,
+        color:Colors.FONT_COLOR,
+        marginTop:10,
+        marginBottom:15
+    },
     subtitle:{
         fontFamily:Fonts.REGULAR,
         fontSize:15,
-        color:Colors.FONT_COLOR
+        color:Colors.FONT_COLOR,
+        marginBottom:15
     },
     subtitle2:{
         fontFamily:Fonts.REGULAR,
         fontSize:16,
         color:Colors.GREY_LIGHT,
-        marginTop:10
+        marginTop:10,
+        marginBottom:15
     },
     cText:{
         borderBottomWidth:2,
         borderColor:Colors.GREY_LIGHT,
         marginBottom:15,
-        width:Width/3
 
-    }
+    },
+    textValid:{
+        fontSize: 14,
+        fontFamily:Fonts.BOLD,
+        color:"#ff5d2f",
+        marginBottom:10
+    },
 
 
 })

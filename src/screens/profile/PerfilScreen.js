@@ -32,16 +32,16 @@ const PerfilScreen = () => {
   const getToken =async()=>{
     const userToken = await AsyncStorage.getItem('token')
     getUser(userToken)
-    setToken(userToken)
 
   }
 
   const getUser = async(token)=>{
-    
+    setToken(token)
     try { 
       const data={
         'token':token
       }
+      console.log(data)
       const res = await http('post',Endpoint.dataUser,data)
       console.log('resp',res)
       setDataUser(res.data)
@@ -66,10 +66,11 @@ const PerfilScreen = () => {
     </View>
   
   const close =async()=>{
-    const data={
-      'token':token
-    }
+    
     try {
+      const data={
+        'token':token
+      }
       const resp = await http('post',Endpoint.logout,data)
       console.log(resp)
       if(resp.success === true){

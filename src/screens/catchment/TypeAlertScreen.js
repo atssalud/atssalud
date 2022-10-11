@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { Styles } from '../../theme/GlobalStyle';
@@ -6,11 +6,40 @@ import { Fonts } from '../../theme/Fonts';
 import { Colors } from '../../theme/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ButtonImage } from '../../components/ButtonImage';
+import http from '../../services/http';
+import { Endpoint } from '../../environment/Api';
 
 const TypeAlertScreen = (props) => {
   const data= props.route.params.data
-  console.log('dataa',data)
+  const token= props.route.params.token
   const navigator = useNavigation()
+  const [dataPeople,setDataPeople]=useState()
+
+  useEffect(() => {
+    if(data){
+      findPeople()
+    }
+  }, [])
+
+  const findPeople=async()=>{
+
+    const datos={
+        "token":token,
+        "dni":data.numIdentificacion,
+        "dni_type":data.idTipoIdentificacion
+    }
+    console.log({data})
+    try {
+        const resp= await http('post',Endpoint.findPeople,datos)
+        console.log('resp',resp)
+        setDataPeople(resp.data)
+        
+    } catch (error) {
+        console.log('error',error)
+    }
+}
+  
+
   return (
     <View style={style.container}>
       {(data.edad>17)?
@@ -18,7 +47,7 @@ const TypeAlertScreen = (props) => {
         nameImage='heartbeat'
         text='Cardiovascular'
         size={30}
-        btnFunction={()=>navigator.navigate('TestCardiovascularScreen',{data:data})}
+        btnFunction={()=>navigator.navigate('TestCardiovascularScreen',{data:dataPeople,edad:data.edad})}
       />
       :null
       }

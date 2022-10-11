@@ -32,7 +32,6 @@ const TextInputs = ({
             onSubmitEditing={onSubmitEditing}
             secureTextEntry={secureTextEntry}
             style={styles.text}
-            
         />
     </View>
   )

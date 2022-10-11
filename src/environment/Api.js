@@ -21,10 +21,10 @@ export const Endpoint = {
     logout:`${BASEURL}/logout`,
     banks:`${BASEURL}/banks`,
     typeAccount:`${BASEURL}/banks-types-account`,
-    findPeople:`${BASEURL}/find-people-dni-user`,
+    findPeople:`${BASEURL}/find-patient-dni`,
     testCardiovascular:`${BASEURL}/test-cardiovascular-user`,
-    
-    
+    createPatient :`${BASEURL}/create-patient`,
+   
 };
 
 const Api = axios.create(Endpoint)

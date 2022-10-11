@@ -1,8 +1,9 @@
 import React,{useState} from 'react'
-import {Text,Platform,TouchableOpacity,SafeAreaView,StyleSheet, View} from 'react-native'
+import {Text,Platform,TouchableOpacity,SafeAreaView,StyleSheet, View, Dimensions} from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Colors } from '../theme/Colors';
 import { Fonts } from '../theme/Fonts';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const InputDate = (props) => {
     const typeSelect=props.typeSelect
@@ -12,6 +13,7 @@ const InputDate = (props) => {
     const [text, setText] = useState((props.text) ? props.text : 'Seleccionar')
     const [textData, setTextData] = useState()
     const [textTime, setTextTime] = useState('Seleccionar')
+    const dimension=props.dimension
 
     const onChange = (event, selectDate)=>{
         const currentDate = selectDate || date;
@@ -19,7 +21,7 @@ const InputDate = (props) => {
         setDate(currentDate);
 
         let tempDate = new Date(currentDate)
-        let fDate = tempDate.getFullYear()+'/'+ (tempDate.getMonth()+1) + '/' + tempDate.getDate()
+        let fDate = tempDate.getFullYear()+'-'+ (tempDate.getMonth()+1) + '-' + tempDate.getDate()
         let fTime = tempDate.getHours() + ':' + tempDate.getMinutes()
         setTextData(fDate)
         setTextTime(fTime)
@@ -37,22 +39,30 @@ const InputDate = (props) => {
     }
   return (
       <>
-        <SafeAreaView style={[styles.dateContainer,{borderBottomColor:(props.error)?Colors.PRIMARY_COLOR:Colors.BLUE_GREY},]}>
+        <SafeAreaView style={[(dimension ==='middle')?styles.dimension:null]}>
             {(props.type === 'date') ?
-            
-            <TouchableOpacity
-            onPress={()=> showMode('date')}
-            style={styles.buttonDate}
-            >
-            <View style={styles.ctext}>
-                <Text style={(!textData) ? styles.dateText : styles.dateText2}>{(textData)?textData:text}</Text>
-                {/* <Icon
-                name='chevron-down-outline'
-                color={Colors.PRIMARY_COLOR}
-                size={25}
-                /> */}
+
+            <View>
+                {   (props.label)?
+                    <Text style={styles.label}>{props.label}</Text>
+                    :null
+                }
+
+                <TouchableOpacity
+                onPress={()=> showMode('date')}
+                style={styles.buttonDate}
+                >
+                
+                    <Text style={(!textData) ? (text !== 'Seleccionar')?styles.dateText2 :styles.dateText : styles.dateText2}>{(textData)?textData:text}</Text>
+                    <Icon
+                        name='chevron-down'
+                        color={Colors.GREY}
+                        size={20}
+                        style={{marginRight:10,marginTop:12}}
+                    />
+                
+                </TouchableOpacity>
             </View>
-            </TouchableOpacity>
             :
             <TouchableOpacity
             onPress={()=> showMode('time')}
@@ -81,26 +91,40 @@ const InputDate = (props) => {
 
 export default  InputDate;
 
+const Width= Dimensions.get('window').width
+
 const styles = StyleSheet.create({
 
-    dateContainer:{
-        borderBottomWidth:2,
-        marginLeft:4
-    },
+    
     buttonDate:{
-        alignSelf:'stretch',
+        justifyContent:'space-between',
+        borderBottomWidth:2,
+        borderBottomColor:Colors.GREY_LIGHT,
+        flexDirection:'row',
+        marginBottom:15
     },
     dateText:{
-        fontSize: 18,
-        marginVertical:10,
+        fontSize: 16,
+        marginVertical:12,
         fontFamily:Fonts.REGULAR,
-        color:Colors.GREY_PLACEHOLDER
+        color:Colors.GREY_PLACEHOLDER,
+        marginBottom:15
     },
     dateText2:{
-        fontSize: 18,
-        marginVertical:10,
+        fontSize: 16,
+        marginVertical:12,
         fontFamily:Fonts.REGULAR,
-        color:Colors.BLUE_GREY
+        color:Colors.BLUE_GREY,
+        marginBottom:15
+    },
+    dimension:{
+        width:Width/3,
+        marginRight:40
+    },
+    label:{
+        fontFamily:Fonts.BOLD,
+        fontSize:15,
+        color:Colors.FONT_COLOR,
     },
 
 });

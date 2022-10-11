@@ -16,6 +16,7 @@ const TestCardiovascularScreen = (props) => {
 
     const navigator = useNavigation()
     const data = props.route.params.data
+    const edad = props.route.params.edad
 
     const siNo=[{'id':'0','item':'No'},{'id':'1','item':'Si'}]
     
@@ -32,8 +33,8 @@ const TestCardiovascularScreen = (props) => {
     }
 
     const {gender,age,id,total_cholesterol,hdl,systolic_pressure,smoking,diabetes,onChange} = useForm({
-        gender:data.genero,
-        age:data.edad,
+        gender:data.gender,
+        age:edad,
         total_cholesterol:'',
         hdl:'',
         systolic_pressure:'',
