@@ -30,24 +30,24 @@ const FirstDataCatchmentScreen = (props) => {
     console.log('rr',props.token)
 
     const [userRegister, setUserRegister] = useState({
-        nombre:(data.lenght === undefined)?'':data.first_name,
-        apellido:(data.lenght === undefined)?'':data.last_name,
-        tipoIdentificacion:(data.lenght === undefined)?'':data.dni_type_name,
-        idTipoIdentificacion:(data.lenght === undefined)?'':data.dni_type,
-        numIdentificacion:(data .lenght=== undefined)?'':data.dni,
-        direccion:(data.lenght=== undefined)?'':data.address,
-        celular:(data.lenght === undefined)?'':data.phone,
-        departamento:(data.lenght === undefined)?'':data.state_name,
-        ciudad:(data.lenght === undefined)?'':data.city_name,
-        correo:(data.lenght === undefined)?'':data.email,
-        fechaNacimiento:(data.lenght === undefined)?'':data.birthday,
-        genero:(data.lenght === undefined)?'':data.gender,
+        nombre:(Object.keys(data).length === 0)?'':data.first_name,
+        apellido:(Object.keys(data).length === 0)?'':data.last_name,
+        tipoIdentificacion:(Object.keys(data).length === 0)?'':data.dni_type_name,
+        idTipoIdentificacion:(Object.keys(data).length === 0)?'':data.dni_type,
+        numIdentificacion:(Object.keys(data).length === 0)?'':data.dni,
+        direccion:(Object.keys(data).length === 0)?'':data.address,
+        celular:(Object.keys(data).length === 0)?'':data.phone,
+        departamento:(Object.keys(data).length === 0)?'':data.state_name,
+        ciudad:(Object.keys(data).length === 0)?'':data.city_name,
+        correo:(Object.keys(data).length === 0)?'':data.email,
+        fechaNacimiento:(Object.keys(data).length === 0)?'':data.birthday,
+        genero:(Object.keys(data).length === 0)?'':data.gender,
         edad:(data.birthday)?today.getFullYear()-data.birthday.split('-')[0]:'',
-        ciudad_id:(data.lenght === undefined)?'':data.city,
-        departamento_id:(data.lenght === undefined)?'':data.state,
+        ciudad_id:(Object.keys(data).length === 0)?'':data.city,
+        departamento_id:(Object.keys(data).length === 0)?'':data.state,
     })
 
-    console.log('fecha', data.lenght === undefined)
+    console.log('fecha', )
 
    
     const [departaments,setDepartaments]= useState()
@@ -129,7 +129,7 @@ const FirstDataCatchmentScreen = (props) => {
 
         console.log('hola',datos)
         
-        if (data.lenght === undefined){
+        if (Object.keys(data).length === 0){
             try {
                 const resp = await http('post',Endpoint.createPatient, datos);
                 console.log('resp',resp)

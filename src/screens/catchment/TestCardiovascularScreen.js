@@ -164,7 +164,7 @@ const TestCardiovascularScreen = (props) => {
         </View>
         <View style={styles.cButton}>  
             <Button
-                title="Evaluar"
+                title="Calcular"
                 onPress={()=>send()} 
                 fill='solid'
             /> 

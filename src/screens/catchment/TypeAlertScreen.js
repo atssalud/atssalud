@@ -51,6 +51,15 @@ const TypeAlertScreen = (props) => {
       />
       :null
       }
+      {(data.edad<18)?
+        <ButtonImage
+        nameImage='child'
+        text='Asma'
+        size={30}
+        btnFunction={()=>navigator.navigate('TestAsthmaScreen',{data:dataPeople,edad:data.edad})}
+      />
+      :null
+      }
       
     </View>
   )

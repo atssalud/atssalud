@@ -17,6 +17,7 @@ import EditMyDataScreen from '../screens/profile/myData/EditMyDataScreen';
 import TypeAlertScreen from '../screens/catchment/TypeAlertScreen';
 import TestCardiovascularScreen from '../screens/catchment/TestCardiovascularScreen';
 import ViewAlertScreen from '../screens/catchment/ViewAlertScreen';
+import TestAsthmaScreen from '../screens/catchment/TestAsthmaScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -70,6 +71,7 @@ const Navigator = () => {
               <Stack.Screen name="TypeAlertScreen" component={TypeAlertScreen} options={{title: 'Alertas a evaluar',}} />
               <Stack.Screen name="TestCardiovascularScreen" component={TestCardiovascularScreen} options={{title: 'Test Cardiovascular',}} />
               <Stack.Screen name="ViewAlertScreen" component={ViewAlertScreen} options={{title: 'Resultado Test',}} />
+              <Stack.Screen name="TestAsthmaScreen" component={TestAsthmaScreen} options={{title: 'Test Asma',}} />
               </>
             )
         }
