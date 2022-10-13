@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import http from '../../services/http';
 import { useNavigation } from '@react-navigation/native';
 
-const TestAsthmaScreen = (props) => {
+const TestEpocScreen = (props) => {
     const [answer,setAnswer]=useState()
     const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
@@ -136,7 +136,7 @@ const TestAsthmaScreen = (props) => {
     </ScrollView>
   )
 }
-export default TestAsthmaScreen;
+export default TestEpocScreen;
 
 const styles= StyleSheet.create({
     container:{

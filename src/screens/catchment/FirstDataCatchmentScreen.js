@@ -27,6 +27,7 @@ const FirstDataCatchmentScreen = (props) => {
     const today= new Date()
 
     const data = props.route.params.data
+    const dni = props.route.params.dni
     console.log('rr',props.token)
 
     const [userRegister, setUserRegister] = useState({
@@ -34,7 +35,7 @@ const FirstDataCatchmentScreen = (props) => {
         apellido:(Object.keys(data).length === 0)?'':data.last_name,
         tipoIdentificacion:(Object.keys(data).length === 0)?'':data.dni_type_name,
         idTipoIdentificacion:(Object.keys(data).length === 0)?'':data.dni_type,
-        numIdentificacion:(Object.keys(data).length === 0)?'':data.dni,
+        numIdentificacion:(Object.keys(data).length === 0)?dni:data.dni,
         direccion:(Object.keys(data).length === 0)?'':data.address,
         celular:(Object.keys(data).length === 0)?'':data.phone,
         departamento:(Object.keys(data).length === 0)?'':data.state_name,
@@ -136,7 +137,7 @@ const FirstDataCatchmentScreen = (props) => {
                 if(resp.errors){
                     setError(resp.errors)
                 }else{
-                    navigator.navigate('TypeAlertScreen',{data:userRegister})
+                    navigator.navigate('TypeAlertScreen',{data:userRegister,token:token})
                 }
     
             } catch (error) {
@@ -178,7 +179,7 @@ const FirstDataCatchmentScreen = (props) => {
 
     const typeDniSelect=(key,value)=>{
         console.log(key,value)
-        setUserRegister({...userRegister, idTipoIdentificacion:key}) 
+        setUserRegister({...userRegister, idTipoIdentificacion:key,tipoIdentificacion:value}) 
     }
     const departamentSelect=(key,value)=>{
         console.log(key,value)

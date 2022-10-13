@@ -14,13 +14,13 @@ const TypeAlertScreen = (props) => {
   const token= props.route.params.token
   const navigator = useNavigation()
   const [dataPeople,setDataPeople]=useState()
-
+  
   useEffect(() => {
     if(data){
       findPeople()
     }
   }, [])
-
+  console.log('enviodata',data)
   const findPeople=async()=>{
 
     const datos={
@@ -28,7 +28,7 @@ const TypeAlertScreen = (props) => {
         "dni":data.numIdentificacion,
         "dni_type":data.idTipoIdentificacion
     }
-    console.log({data})
+    console.log({datos})
     try {
         const resp= await http('post',Endpoint.findPeople,datos)
         console.log('resp',resp)
@@ -42,7 +42,7 @@ const TypeAlertScreen = (props) => {
 
   return (
     <View style={style.container}>
-      {(data.edad>17)?
+      {(data.edad>44)?
         <ButtonImage
         nameImage='heartbeat'
         text='Cardiovascular'
@@ -51,12 +51,21 @@ const TypeAlertScreen = (props) => {
       />
       :null
       }
-      {(data.edad<18)?
+      {(data.edad<8)?
         <ButtonImage
         nameImage='child'
         text='Asma'
         size={30}
         btnFunction={()=>navigator.navigate('TestAsthmaScreen',{data:dataPeople,edad:data.edad})}
+      />
+      :null
+      }
+      {(data.edad>39)?
+        <ButtonImage
+        nameImage='medkit'
+        text='Epoc'
+        size={30}
+        btnFunction={()=>navigator.navigate('TestEpocScreen',{data:dataPeople,edad:data.edad})}
       />
       :null
       }

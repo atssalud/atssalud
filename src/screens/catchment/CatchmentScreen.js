@@ -66,7 +66,7 @@ const CatchmentScreen =()=>{
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                navigator.navigate('FirstDataCatchmentScreen',{data:resp.data})
+                navigator.navigate('FirstDataCatchmentScreen',{data:resp.data,dni:numberDni})
             }
 
             console.log('resp',resp)

@@ -25,7 +25,7 @@ const ViewAlertScreen = (props) => {
           />:null
         }
         {
-          (data.risk_level==='MUY ALTO' )?
+          (data.risk_level==='MUY ALTO' || data.risk_level==='ALTO' )?
           <Image
             source={require("../../assets/images/alto.png")}
             style={styles.image}
