@@ -31,7 +31,8 @@ const ViewAlertScreen = (props) => {
             style={styles.image}
           />:null
         }
-        <Text style={styles.text}>{data.risk_percentage+'%'}</Text>
+  
+        <Text style={styles.text}>{(data.risk_percentage)?data.risk_percentage+'%':data.risk_message}</Text>
         <Button 
             title="Evaluar otro paciente"
             onPress={()=>navigator.navigate('CatchmentScreen')} 

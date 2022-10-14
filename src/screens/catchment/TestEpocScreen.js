@@ -37,7 +37,7 @@ const TestEpocScreen = (props) => {
         }
         console.log({data})
         try {
-            const resp = await http('post',Endpoint.listItemTestAsthma,data)
+            const resp = await http('post',Endpoint.listItemTestEpoc,data)
             console.log(resp)
             setQuestions(resp.data)
             listadoPreguntas(resp.data)
@@ -79,8 +79,8 @@ const TestEpocScreen = (props) => {
         }
         console.log({datos})
         try {
-            const resp= await http('post',Endpoint.sendTestAsthma,datos)
-            console.log(resp)
+            const resp= await http('post',Endpoint.sendTestEpoc,datos)
+            console.log({resp})
             if(resp.errors){
                 setError(resp.errors)
             }else{

@@ -24,8 +24,11 @@ export const Endpoint = {
     findPeople:`${BASEURL}/find-patient-dni`,
     testCardiovascular:`${BASEURL}/test-cardiovascular`,
     createPatient :`${BASEURL}/create-patient`,
+    editPatient :`${BASEURL}/update-patient`,
     listItemTestAsthma :`${BASEURL}/list-items-test-childrem-asthma`,
     sendTestAsthma:`${BASEURL}/test-childrem-asthma`,
+    listItemTestEpoc :`${BASEURL}/list-items-test-epoc`,
+    sendTestEpoc:`${BASEURL}/test-epoc`,
 }   
 
 const Api = axios.create(Endpoint)

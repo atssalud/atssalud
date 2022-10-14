@@ -127,8 +127,22 @@ const FirstDataCatchmentScreen = (props) => {
             'birthday':userRegister.fechaNacimiento,
             'gender':userRegister.genero,
         }
-
-        console.log('hola',datos)
+        const updateDatos={
+            'token':token,
+            'first_name':userRegister.nombre,
+            'last_name':userRegister.apellido,
+            'dni_type':userRegister.idTipoIdentificacion,
+            'dni':userRegister.numIdentificacion,
+            'address':userRegister.direccion,
+            'phone':userRegister.celular,
+            'state':userRegister.departamento_id,
+            'city':userRegister.ciudad_id,
+            'email':userRegister.correo,
+            'birthday':userRegister.fechaNacimiento,
+            'gender':userRegister.genero,
+            'id':data.id
+        }
+       
         
         if (Object.keys(data).length === 0){
             try {
@@ -145,11 +159,28 @@ const FirstDataCatchmentScreen = (props) => {
                 setErrorAlert(true)
             }
         }else{
+
+            console.log({updateDatos})
             navigator.navigate('TypeAlertScreen',{data:userRegister,token:token})
+
+            // try {
+            //     const resp = await http('post',Endpoint.editPatient, datos);
+            //     console.log('resp',resp)
+            //     if(resp.errors){
+            //         setError(resp.errors)
+            //     }else{
+            //         navigator.navigate('TypeAlertScreen',{data:userRegister,token:token})
+            //     }
+    
+            // } catch (error) {
+            //     console.log('error',error)
+            //     setErrorAlert(true)
+            // }
 
         }
 
     }
+
 
     const contentErrorAlert=
         <View style={styles.cAlert}>
