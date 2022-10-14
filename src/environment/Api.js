@@ -22,7 +22,7 @@ export const Endpoint = {
     banks:`${BASEURL}/banks`,
     typeAccount:`${BASEURL}/banks-types-account`,
     findPeople:`${BASEURL}/find-patient-dni`,
-    testCardiovascular:`${BASEURL}/test-cardiovascular-user`,
+    testCardiovascular:`${BASEURL}/test-cardiovascular`,
     createPatient :`${BASEURL}/create-patient`,
     listItemTestAsthma :`${BASEURL}/list-items-test-childrem-asthma`,
     sendTestAsthma:`${BASEURL}/test-childrem-asthma`,
