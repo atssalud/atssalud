@@ -19,6 +19,7 @@ import TestCardiovascularScreen from '../screens/catchment/TestCardiovascularScr
 import ViewAlertScreen from '../screens/catchment/ViewAlertScreen';
 import TestAsthmaScreen from '../screens/catchment/TestAsthmaScreen';
 import TestEpocScreen from '../screens/catchment/TestEpocScreen';
+import ListHistoryRiskUserScreen from '../screens/catchment/ListHistoryRiskUserScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +75,7 @@ const Navigator = () => {
               <Stack.Screen name="ViewAlertScreen" component={ViewAlertScreen} options={{title: 'Resultado Test',}} />
               <Stack.Screen name="TestAsthmaScreen" component={TestAsthmaScreen} options={{title: 'Test Asma',}} />
               <Stack.Screen name="TestEpocScreen" component={TestEpocScreen} options={{title: 'Test Epoc',}} />
+              <Stack.Screen name="ListHistoryRiskUserScreen" component={ListHistoryRiskUserScreen} options={{title: 'Historial',}} />
               </>
             )
         }

@@ -161,21 +161,21 @@ const FirstDataCatchmentScreen = (props) => {
         }else{
 
             console.log({updateDatos})
-            navigator.navigate('TypeAlertScreen',{data:userRegister,token:token})
+            // navigator.navigate('TypeAlertScreen',{data:userRegister,token:token})
 
-            // try {
-            //     const resp = await http('post',Endpoint.editPatient, datos);
-            //     console.log('resp',resp)
-            //     if(resp.errors){
-            //         setError(resp.errors)
-            //     }else{
-            //         navigator.navigate('TypeAlertScreen',{data:userRegister,token:token})
-            //     }
+            try {
+                const resp = await http('put',Endpoint.editPatient,updateDatos);
+                console.log('resp',resp)
+                if(resp.errors){
+                    setError(resp.errors)
+                }else{
+                    navigator.navigate('TypeAlertScreen',{data:userRegister,token:token})
+                }
     
-            // } catch (error) {
-            //     console.log('error',error)
-            //     setErrorAlert(true)
-            // }
+            } catch (error) {
+                console.log('error',error)
+                setErrorAlert(true)
+            }
 
         }
 

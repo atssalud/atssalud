@@ -182,7 +182,7 @@ const PerfilScreen = () => {
             nameImage='user'
             text='Historial'
             size={30}
-            // btnFunction={()=>navigator.navigate('BankDataScreen',{item:user.user.cedula})}
+            btnFunction={()=>navigator.navigate('ListHistoryRiskUserScreen',{token:token})}
           />
         </View>
         <View style={styles.cBtnSalir}>

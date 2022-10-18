@@ -149,7 +149,7 @@ const CatchmentScreen =()=>{
     )
 }
 
-export default CatchmentScreen
+export default CatchmentScreen;
 
 const styles = StyleSheet.create({
     container:{

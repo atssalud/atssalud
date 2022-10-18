@@ -52,7 +52,8 @@ const styles=StyleSheet.create({
   text:{
     fontFamily:Fonts.BOLD,
     fontSize:30,
-    color:Colors.FONT_COLOR
+    color:Colors.FONT_COLOR,
+    alignItems:'center',
   },
   image:{
     width:300,

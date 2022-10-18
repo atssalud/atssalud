@@ -2,6 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BASEURL = 'https://ewcweb.site/alert-risks';
+// const BASEURL = 'http://157.230.219.132/api';
 
 
 export const Endpoint = {
@@ -23,12 +24,13 @@ export const Endpoint = {
     typeAccount:`${BASEURL}/banks-types-account`,
     findPeople:`${BASEURL}/find-patient-dni`,
     testCardiovascular:`${BASEURL}/test-cardiovascular`,
-    createPatient :`${BASEURL}/create-patient`,
-    editPatient :`${BASEURL}/update-patient`,
+    createPatient:`${BASEURL}/create-patient`,
+    editPatient:`${BASEURL}/update-patient`,
     listItemTestAsthma :`${BASEURL}/list-items-test-childrem-asthma`,
     sendTestAsthma:`${BASEURL}/test-childrem-asthma`,
     listItemTestEpoc :`${BASEURL}/list-items-test-epoc`,
     sendTestEpoc:`${BASEURL}/test-epoc`,
+    historial:`${BASEURL}/list-history-risk-user`,
 }   
 
 const Api = axios.create(Endpoint)
