@@ -31,8 +31,9 @@ const ViewAlertScreen = (props) => {
             style={styles.image}
           />:null
         }
-  
-        <Text style={styles.text}>{(data.risk_percentage)?data.risk_percentage+'%':data.risk_message}</Text>
+        <View style={styles.cText}>
+          <Text style={styles.text}>{(data.risk_percentage)?data.risk_percentage+'%':data.risk_message}</Text>
+        </View>
         <Button 
             title="Evaluar otro paciente"
             onPress={()=>navigator.navigate('CatchmentScreen')} 
@@ -51,12 +52,16 @@ const styles=StyleSheet.create({
   },
   text:{
     fontFamily:Fonts.BOLD,
-    fontSize:30,
+    fontSize:25,
     color:Colors.FONT_COLOR,
-    alignItems:'center',
+    marginBottom:40
   },
   image:{
     width:300,
     height:200
+  },
+  cText:{
+    justifyContent:'center',
+    alignItems:'center'
   }
 })

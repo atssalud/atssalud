@@ -189,7 +189,8 @@ const UsuarioRegisterScreen = () => {
     var dimension=height/3
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container} >
         <StatusBar barStyle='dark-content' />
         
         <View style={{justifyContent:'center',alignItems:'center',marginTop:10, height:dimension/2}}>
@@ -384,7 +385,7 @@ const UsuarioRegisterScreen = () => {
             : null
         }
        
-        
+       </View>   
     </ScrollView>
   )
 }
@@ -392,7 +393,7 @@ export default UsuarioRegisterScreen;
 
 const styles=StyleSheet.create({
     container:{
-        marginHorizontal:50,
+        marginHorizontal:30,
         marginVertical:20,
     },
     viewCheckboxContainer:{

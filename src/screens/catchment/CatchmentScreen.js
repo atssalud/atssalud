@@ -63,10 +63,15 @@ const CatchmentScreen =()=>{
         console.log({data})
         try {
             const resp= await http('post',Endpoint.findPeople,data)
+            console.log(resp.data)
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                navigator.navigate('FirstDataCatchmentScreen',{data:resp.data,dni:numberDni})
+                if(Object.keys(resp.data).length === 0){
+                    navigator.navigate('FirstDataCatchmentScreen',{data:resp.data,dni:numberDni})
+                }else{
+                    navigator.navigate('DataPatientScreen',{data:resp.data,dni:numberDni})
+                }
             }
 
             console.log('resp',resp)

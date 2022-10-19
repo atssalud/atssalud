@@ -1,24 +1,19 @@
-import React,{useState,useContext,useEffect} from 'react'
-import {View,SafeAreaView,Image,Text,StyleSheet,Platform,TouchableOpacity,ScrollView,KeyBoard,Alert,Linking, StatusBar, Dimensions} from 'react-native'
-import CheckBox from '@react-native-community/checkbox';
-import { useForm } from '../../hooks/useForm';
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
-import { API, Endpoint } from '../../environment/Api';
-import { AuthContext } from '../../context/AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import WindowAlert from '../../components/WindowAlert';
-import { Colors } from '../../theme/Colors';
-import { Styles } from '../../theme/GlobalStyle';
-import TextInputs from '../../components/TextInput';
-import { Fonts } from '../../theme/Fonts';
-import Button from '../../components/Button';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useNavigation } from '@react-navigation/native'
+import React, { useEffect, useState } from 'react'
+import { Image, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
+import { Endpoint } from '../../environment/Api'
+import http from '../../services/http'
+import { Colors } from '../../theme/Colors'
+import { Fonts } from '../../theme/Fonts'
+import { Styles } from '../../theme/GlobalStyle'
 import ListOptions from '../../components/ListOptions';
-import http from '../../services/http';
-import InputDate from '../../components/InputDate';
+import TextInputs from '../../components/TextInput';
+import Button from '../../components/Button'
+import WindowAlert from '../../components/WindowAlert'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const FirstDataCatchmentScreen = (props) => {
+const UpdateDataPatientScreen = (props) => {
 
     const navigator = useNavigation()
     const genero=[{'id':'M', 'item':'M'},{'id':'F', 'item':'F'}]
@@ -27,22 +22,20 @@ const FirstDataCatchmentScreen = (props) => {
     const today= new Date()
 
     const data = props.route.params.data
-    const dni = props.route.params.dni
-    console.log('rr',props.token)
 
     const [userRegister, setUserRegister] = useState({
-        nombre:'',
-        apellido:'',
-        tipoIdentificacion:'',
-        idTipoIdentificacion:'',
-        numIdentificacion:'',
+        nombre:data.first_name,
+        apellido:data.last_name,
+        tipoIdentificacion:data.dni_type_name,
+        idTipoIdentificacion:data.dni_type,
+        numIdentificacion:(Object.keys(data).length === 0)?dni:data.dni,
         direccion:'',
         celular:'',
         departamento:'',
         ciudad:'',
         correo:'',
-        fechaNacimiento:'',
-        genero:'',
+        fechaNacimiento:data.birthday,
+        genero:data.gender,
         edad:(data.birthday)?today.getFullYear()-data.birthday.split('-')[0]:'',
         ciudad_id:'',
         departamento_id:'',
@@ -105,15 +98,8 @@ const FirstDataCatchmentScreen = (props) => {
         }
     }
 
-    const dateSelect =(date)=>{
-        const edad = today.getFullYear()-date.split('-')[0]
-        setUserRegister({...userRegister, fechaNacimiento:date, edad:edad})
-        console.log(date)
-    }
-
     const register = async()=>{
-    
-        const datos={
+        const updateDatos={
             'token':token,
             'first_name':userRegister.nombre,
             'last_name':userRegister.apellido,
@@ -126,10 +112,11 @@ const FirstDataCatchmentScreen = (props) => {
             'email':userRegister.correo,
             'birthday':userRegister.fechaNacimiento,
             'gender':userRegister.genero,
+            'id':data.id
         }
        
         try {
-            const resp = await http('post',Endpoint.createPatient, datos);
+            const resp = await http('put',Endpoint.editPatient,updateDatos);
             console.log('resp',resp)
             if(resp.errors){
                 setError(resp.errors)
@@ -151,7 +138,7 @@ const FirstDataCatchmentScreen = (props) => {
                 source={require('../../assets/icons/modal-alert-Icon.png')}
                 style={styles.imageAlert}
             />
-            <Text style={styles.title}>Notificación</Text>
+            <Text style={styles.titleAlert}>Notificación</Text>
             <Text style={styles.textAlertError}>!Ha ocurrido un error¡ , Registro no exitoso</Text>
         </View>
 
@@ -161,9 +148,9 @@ const FirstDataCatchmentScreen = (props) => {
             source={require('../../assets/icons/checkCircle.png')}
             style={styles.imageAlert}
         />
-        <Text style={styles.title}>Notificación</Text>
+        <Text style={styles.titleAlert}>Notificación</Text>
         <View style={styles.ctextAlert}>
-            <Text style={styles.textAlert}>Se ha registrado exitosamente</Text>
+            <Text style={styles.textAlert}>Se ha actualizado exitosamente</Text>
         </View>
     </View>
 
@@ -172,11 +159,6 @@ const FirstDataCatchmentScreen = (props) => {
     }
     const closeError=()=>{
         console.log('error')
-    }
-
-    const typeDniSelect=(key,value)=>{
-        console.log(key,value)
-        setUserRegister({...userRegister, idTipoIdentificacion:key,tipoIdentificacion:value}) 
     }
     const departamentSelect=(key,value)=>{
         console.log(key,value)
@@ -187,12 +169,6 @@ const FirstDataCatchmentScreen = (props) => {
         console.log(key,value)
         setUserRegister({...userRegister, ciudad_id:key,ciudad:value}) 
     }
-    const tipogeneroSelect=(key,value)=>{
-        console.log(key,value)
-        setUserRegister({...userRegister, genero:key}) 
-    }
-
-    var {height}=Dimensions.get('window')
     
 
   return (
@@ -200,92 +176,7 @@ const FirstDataCatchmentScreen = (props) => {
         <StatusBar barStyle='dark-content' />
 
         <ScrollView style={Styles.borderContainer}>
-
             <View>
-                <TextInputs
-                    label='Nombre'
-                    placeholder="Juan José"
-                    onChangeText= { (value) => setUserRegister({...userRegister ,nombre:value}) }
-                    value={userRegister.nombre}
-
-                />
-                {(error)?
-                    (error.first_name==='')?null:
-                    <Text style={styles.textValid}>{error.first_name}</Text>: null
-                }
-                    
-                <TextInputs
-                    label='Apellido'
-                    placeholder="Andrade Perez"
-                    onChangeText= { (value) => setUserRegister({...userRegister ,apellido:value}) }
-                    value={userRegister.apellido}
-
-                />
-                {(error)?
-                    (error.last_name==='')?null:
-                    <Text style={styles.textValid}>{error.last_name}</Text>: null
-                }
-
-                <ListOptions
-                    label='Tipo identificación'
-                    options={dniTypes}
-                    itemSelect={typeDniSelect}
-
-                    placeholder={userRegister.tipoIdentificacion}
-                    isSelect={(userRegister.tipoIdentificacion)? true:false}
-                />
-                {(error)?
-                    (error.dni_type==='')?null:
-                    <Text style={styles.textValid}>{error.dni_type}</Text>: null
-                }
-
-                <TextInputs
-                    label='Num identificación'
-                    placeholder="1234567890"
-                    onChangeText= { (value) => setUserRegister({...userRegister ,numIdentificacion:value}) }
-                    value={userRegister.numIdentificacion}
-
-                />
-                {(error)?
-                    (error.dni==='')?null:
-                    <Text style={styles.textValid}>{error.dni}</Text>: null
-                }
-
-                <ListOptions
-                    label='Genero'
-                    options={genero}
-                    itemSelect={tipogeneroSelect}
-
-                    placeholder={userRegister.genero}
-                    isSelect={(userRegister.genero)? true:false}
-                />
-                {(error)?
-                    (error.gender==='')?null:
-                    <Text style={styles.textValid}>{error.gender}</Text>: null
-                }
-                
-                <InputDate
-                    label='F.de nacimiento'
-                    dateSelect={dateSelect}
-                    type={'date'}
-
-                    text={userRegister.fechaNacimiento}
-                />
-                {(error)?
-                    (error.birthday==='')?null:
-                    <Text style={styles.textValid}>{error.birthday}</Text>: null
-                }
-
-                <View style={[styles.cText]}>
-                    <Text style={styles.text}>Edad:</Text> 
-                    <Text style={(userRegister.edad)?styles.tEdad:styles.subtitle2}>{(userRegister.edad)?userRegister.edad:'25'}</Text>
-                </View>
-                {(error)?
-                    (error.birthday==='')?null:
-                    <Text style={styles.textValid}>La edad es requerida</Text>: null
-                }
-                
-                
                 <TextInputs
                     label='Celular'
                     placeholder="3014567890"
@@ -374,7 +265,7 @@ const FirstDataCatchmentScreen = (props) => {
 
             <View style={styles.cButton}>  
                 <Button 
-                    title={"Registrar"}
+                    title={"Actualizar"}
                     onPress={()=>register()} 
                     fill='solid'
                 /> 
@@ -411,9 +302,7 @@ const FirstDataCatchmentScreen = (props) => {
     </View>
   )
 }
-export default FirstDataCatchmentScreen;
-
-const Width=Dimensions.get('window').width
+export default UpdateDataPatientScreen;
 
 const styles=StyleSheet.create({
     container:{
@@ -516,12 +405,17 @@ const styles=StyleSheet.create({
     cAlert:{
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop:10
+      marginTop:20
     },
     titleAlert:{
       color:Colors.FONT_COLOR,
       fontSize:16,
       fontFamily:Fonts.BOLD
+    },
+    title:{
+        color:Colors.BLUE_GREY,
+        fontSize:16,
+        fontFamily:Fonts.REGULAR
     },
 
 
