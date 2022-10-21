@@ -41,9 +41,16 @@ const ListHistoryRiskUserScreen = (props) => {
 
     const renderLoader=()=>{
         return(
-            <View style={styles.loader}>
-                <ActivityIndicator size={'large'} color={Colors.PRIMARY_COLOR}/>
-            </View>
+            <>
+                {
+                    (Object.keys(historyRisk).length<11)?
+                    <View style={{marginTop:10}}></View>
+                    :
+                    <View style={styles.loader}>
+                        <ActivityIndicator size={'large'} color={Colors.PRIMARY_COLOR}/>
+                    </View>
+                }
+            </>
         )
     }
 
@@ -78,14 +85,25 @@ const ListHistoryRiskUserScreen = (props) => {
     }
 
   return (
-    <FlatList
-        data={historyRisk}
-        renderItem={renderItem}
-        keyExtractor={(item,id)=> id}
-        ListFooterComponent={renderLoader}
-        onEndReached={loadMoreItem}
-        onEndReachedThreshold={0}
-    />
+    <>
+        {
+            (Object.keys(historyRisk).length === 0)?
+            <View style={styles.cTest}>
+                <Text style={styles.title2}>No ha realizado ningún registro</Text>
+                <Text style={styles.title2}>de pacientes</Text>
+            </View>
+            :
+
+            <FlatList
+                data={historyRisk}
+                renderItem={renderItem}
+                keyExtractor={(item,id)=> id}
+                ListFooterComponent={renderLoader}
+                onEndReached={loadMoreItem}
+                onEndReachedThreshold={0}
+            />
+        }
+    </>
 
   )
 }
@@ -102,8 +120,18 @@ const styles=StyleSheet.create({
     title:{
         fontFamily:Fonts.BOLD,
     },
+    title2:{
+        fontFamily:Fonts.BOLD,
+        fontSize:20
+    },
     loader:{
         marginVertical:16,
         alignItems:'center'
-    }
+    },
+    cTest:{
+        justifyContent:'center',
+        alignItems:'center',
+        flex:1
+    },
+
 })

@@ -22,6 +22,7 @@ import TestEpocScreen from '../screens/catchment/TestEpocScreen';
 import ListHistoryRiskUserScreen from '../screens/catchment/ListHistoryRiskUserScreen';
 import UpdateDataPatientScreen from '../screens/catchment/UpdateDataPatientScreen';
 import DataPatientScreen from '../screens/catchment/DataPatientScreen';
+import TestMentalHealthScreen from '../screens/catchment/TestMentalHealthScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -80,6 +81,7 @@ const Navigator = () => {
               <Stack.Screen name="ListHistoryRiskUserScreen" component={ListHistoryRiskUserScreen} options={{title: 'Historial',}} />
               <Stack.Screen name="UpdateDataPatientScreen" component={UpdateDataPatientScreen} options={{title: 'Actualizar Datos',}} />
               <Stack.Screen name="DataPatientScreen" component={DataPatientScreen} options={{title: 'Datos del Paciente',}} />
+              <Stack.Screen name="TestMentalHealthScreen" component={TestMentalHealthScreen} options={{title: 'Test Salud Mental',}} />
               </>
             )
         }

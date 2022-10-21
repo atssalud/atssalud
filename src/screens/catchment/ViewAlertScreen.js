@@ -34,6 +34,16 @@ const ViewAlertScreen = (props) => {
         <View style={styles.cText}>
           <Text style={styles.text}>{(data.risk_percentage)?data.risk_percentage+'%':data.risk_message}</Text>
         </View>
+        {
+          (data.risk_anxiety)?
+          <View style={styles.cText}>
+          <Text style={styles.text}>Riesgo de ansiedad: {data.risk_anxiety}</Text>
+          <Text style={styles.text}>Riesgo de depresión: {data.risk_depression}</Text>
+          <Text style={styles.text}>Nivel de Riesgo: {data.risk_level}</Text>
+          <Text style={styles.text}>Scrore: {data.risk_score}</Text>
+        </View>:null
+        }
+
         <Button 
             title="Evaluar otro paciente"
             onPress={()=>navigator.navigate('CatchmentScreen')} 

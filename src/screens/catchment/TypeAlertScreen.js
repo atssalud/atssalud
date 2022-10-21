@@ -69,6 +69,15 @@ const TypeAlertScreen = (props) => {
       />
       :null
       }
+      {(data.edad>40)?
+        <ButtonImage
+        nameImage='medkit'
+        text='Salud Mental'
+        size={30}
+        btnFunction={()=>navigator.navigate('TestMentalHealthScreen',{data:dataPeople,edad:data.edad})}
+      />
+      :null
+      }
       
     </View>
   )
