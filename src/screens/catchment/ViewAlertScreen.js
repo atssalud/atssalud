@@ -37,10 +37,22 @@ const ViewAlertScreen = (props) => {
         {
           (data.risk_anxiety)?
           <View style={styles.cText}>
-          <Text style={styles.text}>Riesgo de ansiedad: {data.risk_anxiety}</Text>
-          <Text style={styles.text}>Riesgo de depresión: {data.risk_depression}</Text>
-          <Text style={styles.text}>Nivel de Riesgo: {data.risk_level}</Text>
-          <Text style={styles.text}>Scrore: {data.risk_score}</Text>
+            <View style={styles.cRTest}>
+              <Text style={styles.text}>Riesgo de ansiedad: </Text>
+              <Text style={styles.text2}>{data.risk_anxiety}</Text>
+            </View>
+            <View style={styles.cRTest}>
+              <Text style={styles.text}>Riesgo de depresión: </Text>
+              <Text style={styles.text2}>{data.risk_depression}</Text>
+            </View>
+            <View style={styles.cRTest}>
+              <Text style={styles.text}>Nivel de Riesgo: </Text>
+              <Text style={styles.text2}>{data.risk_level}</Text>
+            </View>
+            <View style={styles.cRTest}>
+              <Text style={styles.text}>Scrore: </Text>
+              <Text style={styles.text2}>{data.risk_score}</Text>
+            </View>
         </View>:null
         }
 
@@ -60,18 +72,27 @@ const styles=StyleSheet.create({
     alignItems:'center',
     flex:1
   },
+  cText:{
+    marginBottom:40,
+    justifyContent:'center',
+    alignItems:'center'
+  },
   text:{
     fontFamily:Fonts.BOLD,
-    fontSize:25,
+    fontSize:20,
     color:Colors.FONT_COLOR,
-    marginBottom:40
+    
+  },
+  text2:{
+    fontFamily:Fonts.REGULAR,
+    fontSize:19,
+    color:Colors.FONT_COLOR,
   },
   image:{
     width:300,
     height:200
   },
-  cText:{
-    justifyContent:'center',
-    alignItems:'center'
+  cRTest:{
+    flexDirection:'row'
   }
 })

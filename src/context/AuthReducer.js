@@ -1,7 +1,7 @@
 
 
 export const AuthReducer = (state,action)=>{
-
+    console.log('action',action)
     switch (action.type) {
         case 'addError':
             return {
