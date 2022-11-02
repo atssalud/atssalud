@@ -1,10 +1,10 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// const BASEURL = 'https://ewcweb.site/alert-risks';
-
-// const BASEURL = 'http://157.230.219.132/api-test';
-const BASEURL = 'http://157.230.219.132/api';
+// const BASEURL = 'https://attsalud.com/api';
+const BASEURL = 'http://157.230.219.132/api-test';
+// const BASEURL = 'https://www.atssalud.com/api-test';
+// const BASEURL = 'https://www.atssalud.com/api';
 
 
 export const Endpoint = {
@@ -38,7 +38,6 @@ export const Endpoint = {
 }   
 
 const Api = axios.create(Endpoint)
-// const Api = axios.create({BASEURL})
 Api.interceptors.request.use(
     async (config)=>{
         const token = await AsyncStorage.getItem('token')

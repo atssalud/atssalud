@@ -14,6 +14,7 @@ const Button = ({
 }) => {
    
     _COLOR = color;
+    console.log('color',_COLOR)
     _SIZE = size;
     return (
         <View style={ styles.buttonWrapper } >

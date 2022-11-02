@@ -1,5 +1,6 @@
 import React from 'react';
 import {View,ActivityIndicator} from 'react-native';
+import { Colors } from '../theme/Colors';
 
 
 const LoadingScreen = () => {
@@ -7,7 +8,7 @@ const LoadingScreen = () => {
     <View style = {{ flex: 1,justifyContent: 'center',alignItems: 'center',}}>
       <ActivityIndicator
         size={50}
-        color="#ff5d2f"
+        color={Colors.PRIMARY_COLOR}
       />
     </View>
   )

@@ -28,14 +28,16 @@ const FirstDataCatchmentScreen = (props) => {
 
     const data = props.route.params.data
     const dni = props.route.params.dni
+    const idDni = props.route.params.idDni
+    const typeDni = props.route.params.typeDni
     console.log('rr',props.token)
 
     const [userRegister, setUserRegister] = useState({
         nombre:'',
         apellido:'',
-        tipoIdentificacion:'',
-        idTipoIdentificacion:'',
-        numIdentificacion:'',
+        tipoIdentificacion:typeDni,
+        idTipoIdentificacion:idDni,
+        numIdentificacion:dni,
         direccion:'',
         celular:'',
         departamento:'',
@@ -225,31 +227,23 @@ const FirstDataCatchmentScreen = (props) => {
                     (error.last_name==='')?null:
                     <Text style={styles.textValid}>{error.last_name}</Text>: null
                 }
+                <View style={styles.cText}>
+                    <Text style={styles.text}>Tipo identificación</Text>
+                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                        <Text style={styles.subtitle}>{typeDni}</Text>
+                        <Icon
+                            name='chevron-down'
+                            color={Colors.GREY}
+                            size={20}
+                            style={{marginRight:10,marginTop:10}}
+                        />
+                    </View>
+                </View>
 
-                <ListOptions
-                    label='Tipo identificación'
-                    options={dniTypes}
-                    itemSelect={typeDniSelect}
-
-                    placeholder={userRegister.tipoIdentificacion}
-                    isSelect={(userRegister.tipoIdentificacion)? true:false}
-                />
-                {(error)?
-                    (error.dni_type==='')?null:
-                    <Text style={styles.textValid}>{error.dni_type}</Text>: null
-                }
-
-                <TextInputs
-                    label='Num identificación'
-                    placeholder="1234567890"
-                    onChangeText= { (value) => setUserRegister({...userRegister ,numIdentificacion:value}) }
-                    value={userRegister.numIdentificacion}
-
-                />
-                {(error)?
-                    (error.dni==='')?null:
-                    <Text style={styles.textValid}>{error.dni}</Text>: null
-                }
+                <View style={[styles.cText]}>
+                    <Text style={styles.text}>Num de indentificación:</Text> 
+                    <Text style={styles.tEdad}>{dni}</Text>
+                </View>
 
                 <ListOptions
                     label='Genero'
@@ -477,7 +471,8 @@ const styles=StyleSheet.create({
         fontFamily:Fonts.REGULAR,
         fontSize:15,
         color:Colors.FONT_COLOR,
-        marginBottom:15
+        marginBottom:15,
+        marginTop:10
     },
     subtitle2:{
         fontFamily:Fonts.REGULAR,

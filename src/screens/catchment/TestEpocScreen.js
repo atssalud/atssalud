@@ -18,6 +18,7 @@ const TestEpocScreen = (props) => {
     const [error, setError] = useState()
 
     const data = props.route.params.data
+    const datos = props.route.params.datos
 
     const navigator=useNavigation()
 
@@ -72,19 +73,19 @@ const TestEpocScreen = (props) => {
     }
 
     const send=async()=>{
-        const datos={
+        const send={
             "token":token,
             "people_id":data.id,
             "test":answer
         }
         console.log({datos})
         try {
-            const resp= await http('post',Endpoint.sendTestEpoc,datos)
+            const resp= await http('post',Endpoint.sendTestEpoc,send)
             console.log({resp})
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                navigator.replace('ViewAlertScreen',{data:resp.data})
+                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Riesgo EPOC'})
             }
             
         } catch (error) {

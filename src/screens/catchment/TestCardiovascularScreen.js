@@ -16,7 +16,7 @@ const TestCardiovascularScreen = (props) => {
 
     const navigator = useNavigation()
     const data = props.route.params.data
-    const edad = props.route.params.edad
+    const datos = props.route.params.datos
 
     const siNo=[{'id':'0','item':'No'},{'id':'1','item':'Si'}]
     
@@ -34,7 +34,7 @@ const TestCardiovascularScreen = (props) => {
 
     const {gender,age,id,total_cholesterol,hdl,systolic_pressure,smoking,diabetes,onChange} = useForm({
         gender:data.gender,
-        age:edad,
+        age:datos.edad,
         total_cholesterol:'',
         hdl:'',
         systolic_pressure:'',
@@ -62,7 +62,7 @@ const TestCardiovascularScreen = (props) => {
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                navigator.replace('ViewAlertScreen',{data:resp.data})
+                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Riesgo Cardivascular'})
             }
             
             

@@ -28,9 +28,10 @@ const UpdateDataPatientScreen = (props) => {
         apellido:data.last_name,
         tipoIdentificacion:data.dni_type_name,
         idTipoIdentificacion:data.dni_type,
-        numIdentificacion:(Object.keys(data).length === 0)?dni:data.dni,
+        numIdentificacion:data.dni,
         direccion:'',
         celular:'',
+        telefono:'',
         departamento:'',
         ciudad:'',
         correo:'',
@@ -87,10 +88,10 @@ const UpdateDataPatientScreen = (props) => {
           console.log('error',error)
         }
     }
-    const getCities = async()=>{
-        console.log('dep',userRegister.state)
+    const getCities = async(id)=>{
+        console.log('dep',userRegister.departamento_id)
         try {
-          const res = await http('get',Endpoint.cities(userRegister.departamento))
+          const res = await http('get',Endpoint.cities(id))
           console.log('cities',res)
           setCities(res)
         } catch (error) {
@@ -98,7 +99,35 @@ const UpdateDataPatientScreen = (props) => {
         }
     }
 
+    const [errorPhone,setErrorPhone]=useState({
+        celular:'',
+        telefono:'',
+    })
+    const handlePhone =()=>{
+        const errors={}
+        if(userRegister.celular.trim().length === 0){
+            errors.celular='El célular es requerido'
+        }
+        if(userRegister.celular.trim().length !==10){
+            errors.celular='El célular debe tener 10 dígitos'
+        }
+        if(isNaN(userRegister.telefono) === true){
+            errors.celular='El celular deber ser un número'
+        }
+        if(userRegister.telefono){
+
+            if(userRegister.telefono.trim().length !==10){
+                errors.telefono='El teléfono debe tener 10 dígitos'
+            }
+            if(isNaN(userRegister.telefono) === true){
+                errors.telefono='El teléfono deber ser un número'
+            }
+        }
+        setErrorPhone(errors)
+    }
+
     const register = async()=>{
+        
         const updateDatos={
             'token':token,
             'first_name':userRegister.nombre,
@@ -118,6 +147,7 @@ const UpdateDataPatientScreen = (props) => {
         try {
             const resp = await http('put',Endpoint.editPatient,updateDatos);
             console.log('resp',resp)
+            handlePhone()
             if(resp.errors){
                 setError(resp.errors)
             }else{
@@ -155,6 +185,7 @@ const UpdateDataPatientScreen = (props) => {
     </View>
 
     const close=()=>{
+        console.log('userRegister',userRegister)
         navigator.navigate('TypeAlertScreen',{data:userRegister,token:token})
     }
     const closeError=()=>{
@@ -163,7 +194,7 @@ const UpdateDataPatientScreen = (props) => {
     const departamentSelect=(key,value)=>{
         console.log(key,value)
         setUserRegister({...userRegister, departamento_id:key,departamento:value})
-        getCities() 
+        getCities(key) 
     }
     const citySelect=(key,value)=>{
         console.log(key,value)
@@ -187,6 +218,17 @@ const UpdateDataPatientScreen = (props) => {
                 {(error)?
                     (error.phone==='')?null:
                     <Text style={styles.textValid}>{error.phone}</Text>: null
+                }
+                <TextInputs
+                    label='Teléfono'
+                    placeholder="3014567890"
+                    onChangeText= { (value) => setUserRegister({...userRegister ,telefono:value}) }
+                    value={userRegister.telefono}
+
+                />
+                {(errorPhone)?
+                    (errorPhone.telefono==='')?null:
+                    <Text style={styles.textValid}>{errorPhone.telefono}</Text>: null
                 }
 
                 <ListOptions
