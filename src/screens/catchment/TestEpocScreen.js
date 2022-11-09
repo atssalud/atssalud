@@ -9,6 +9,8 @@ import { Endpoint } from '../../environment/Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import http from '../../services/http';
 import { useNavigation } from '@react-navigation/native';
+import TestSkeletonScreen from '../skeleton/TestSkeletonScreen';
+import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 
 const TestEpocScreen = (props) => {
     const [answer,setAnswer]=useState()
@@ -16,6 +18,8 @@ const TestEpocScreen = (props) => {
     const [questions,setQuestions]=useState()
     const [token,setToken]=useState()
     const [error, setError] = useState()
+    const [isSearch, setIsSearch] = useState(true)
+    const [isSearchResult, setIsSearchResult] = useState(false)
 
     const data = props.route.params.data
     const datos = props.route.params.datos
@@ -42,6 +46,7 @@ const TestEpocScreen = (props) => {
             console.log(resp)
             setQuestions(resp.data)
             listadoPreguntas(resp.data)
+            setIsSearch(false)
         } catch (error) {
             console.log('error',error)
         }
@@ -73,6 +78,7 @@ const TestEpocScreen = (props) => {
     }
 
     const send=async()=>{
+        setIsSearchResult(true)
         const send={
             "token":token,
             "people_id":data.id,
@@ -86,6 +92,7 @@ const TestEpocScreen = (props) => {
                 setError(resp.errors)
             }else{
                 navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Riesgo EPOC'})
+                setIsSearchResult(false)
             }
             
         } catch (error) {
@@ -95,46 +102,54 @@ const TestEpocScreen = (props) => {
 
 
   return (
-    <ScrollView>
-        {(answer)?
-            <View style={styles.container}>
-            {(questions)?questions.map((item,id)=>{
+    <>
+        {
+            (isSearch)?
+            <TestSkeletonScreen/>
+            :(isSearchResult)?
+                <ViewAlertSkeletonScreen/>:
+                <ScrollView>
+                    {(answer)?
+                        <View style={styles.container}>
+                        {(questions)?questions.map((item,id)=>{
 
-                return(
-                    <View style={Styles.borderContainer} key={id}>
-                        <View style={styles.cQuestion}>
-                            <Text style={styles.tQuestion}>{item.name}</Text>
-                        </View>
-                        <View style={styles.cCheckBox}>
-                            <CheckBox
-                                text={item.options[0].name}
-                                value={(answer[id].answer=== '0')?true:false}
-                                disabled={false}
-                                onValueChange={(newValue) => itemCheckboxSelected(id,'0')}
-                            />
-                            <CheckBox
-                                text={item.options[1].name}
-                                value={(answer[id].answer !== '0')?true:false}
-                                disabled={false}
-                                onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value))}
-                            />
+                            return(
+                                <View style={Styles.borderContainer} key={id}>
+                                    <View style={styles.cQuestion}>
+                                        <Text style={styles.tQuestion}>{item.name}</Text>
+                                    </View>
+                                    <View style={styles.cCheckBox}>
+                                        <CheckBox
+                                            text={item.options[0].name}
+                                            value={(answer[id].answer=== '0')?true:false}
+                                            disabled={false}
+                                            onValueChange={(newValue) => itemCheckboxSelected(id,'0')}
+                                        />
+                                        <CheckBox
+                                            text={item.options[1].name}
+                                            value={(answer[id].answer !== '0')?true:false}
+                                            disabled={false}
+                                            onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value))}
+                                        />
+                                    </View>
+                                </View>
+                            )
+                        }):null
+                        }
+                        
+                        <View style={styles.cButton}>  
+                            <Button 
+                                title={"Calcular"}
+                                onPress={()=>send()} 
+                                fill='solid'
+                            /> 
                         </View>
                     </View>
-                )
-            }):null
-            }
-            
-            <View style={styles.cButton}>  
-                <Button 
-                    title={"Calcular"}
-                    onPress={()=>send()} 
-                    fill='solid'
-                /> 
-            </View>
-        </View>
-        :null}
-        
-    </ScrollView>
+                    :null}
+                    
+                </ScrollView>
+        }
+    </>
   )
 }
 export default TestEpocScreen;

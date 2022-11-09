@@ -9,6 +9,8 @@ import { Endpoint } from '../../environment/Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import http from '../../services/http';
 import { useNavigation } from '@react-navigation/native';
+import TestSkeletonScreen from '../skeleton/TestSkeletonScreen';
+import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 
 const TestMentalHealthScreen = (props) => {
     const [answer,setAnswer]=useState()
@@ -16,6 +18,8 @@ const TestMentalHealthScreen = (props) => {
     const [questions,setQuestions]=useState()
     const [token,setToken]=useState()
     const [error, setError] = useState()
+    const [isSearch, setIsSearch] = useState(true)
+    const [isSearchResult, setIsSearchResult] = useState(false)
 
     const data = props.route.params.data
     console.log('daaataaa',data)
@@ -43,6 +47,7 @@ const TestMentalHealthScreen = (props) => {
             console.log(resp.data)
             setQuestions(resp.data)
             listadoPreguntas(resp.data)
+            setIsSearch(false)
         } catch (error) {
             console.log('error',error)
         }
@@ -74,6 +79,7 @@ const TestMentalHealthScreen = (props) => {
     }
 
     const send=async()=>{
+        setIsSearchResult(true)
         const send={
             "token":token,
             "people_id":data.id,
@@ -87,6 +93,7 @@ const TestMentalHealthScreen = (props) => {
                 setError(resp.errors)
             }else{
                 navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Riesgo Salud Mental'})
+                setIsSearchResult(false)
             }
             
         } catch (error) {
@@ -96,7 +103,14 @@ const TestMentalHealthScreen = (props) => {
 
 
   return (
-    <ScrollView>
+
+    <>
+    {
+        (isSearch)?
+        <TestSkeletonScreen/>
+        :(isSearchResult)?
+        <ViewAlertSkeletonScreen/>:
+        <ScrollView>
         {(answer)?
             <View style={styles.container}>
             {(questions)?questions.map((item,id)=>{
@@ -147,7 +161,10 @@ const TestMentalHealthScreen = (props) => {
         </View>
         :null}
         
-    </ScrollView>
+        </ScrollView>
+    }
+    </>
+    
   )
 }
 export default TestMentalHealthScreen;

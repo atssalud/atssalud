@@ -7,7 +7,7 @@ export const HomeScreen = () => {
   return (
     <View style={styles.container}>
         <View style={styles.box}>
-            <Text style={styles.title}>Número de alertas generadas</Text>
+            <Text style={styles.title}>Número de tamizajes generados</Text>
             <Text style={styles.number}>54</Text>
             <Text style={styles.text}>Pacientes</Text>
         </View>

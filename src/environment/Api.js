@@ -2,8 +2,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // const BASEURL = 'https://attsalud.com/api';
-const BASEURL = 'http://157.230.219.132/api-test';
-// const BASEURL = 'https://www.atssalud.com/api-test';
+// const BASEURL = 'http://157.230.219.132/api-test';
+const BASEURL = 'https://www.atssalud.com/api-test';
 // const BASEURL = 'https://www.atssalud.com/api';
 
 
@@ -17,9 +17,9 @@ export const Endpoint = {
     cities:(idDepartament)=>{return `${BASEURL}/cities&state=${idDepartament}`;},
     signUp:`${BASEURL}/sign-up`,
     login:`${BASEURL}/login`,
-    dataUser:`${BASEURL}/list-profile-user`,
-    editDataUser:`${BASEURL}/update-profile-user`,
-    editDataBankUser:`${BASEURL}/update-databank-user`,
+    dataUser:`${BASEURL}/get-user-profile`,
+    editDataUser:`${BASEURL}/update-user-profile`,
+    editDataBankUser:`${BASEURL}/update-user-databank`,
     forgetPassword:`${BASEURL}/forget-password`,
     logout:`${BASEURL}/logout`,
     banks:`${BASEURL}/banks`,

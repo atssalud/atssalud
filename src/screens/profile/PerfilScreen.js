@@ -31,18 +31,14 @@ const PerfilScreen = () => {
   
   const getToken =async()=>{
     const userToken = await AsyncStorage.getItem('token')
-    getUser(userToken)
+    setToken(userToken)
+    getUser()
 
   }
 
-  const getUser = async(token)=>{
-    setToken(token)
+  const getUser = async()=>{
     try { 
-      const data={
-        'token':token
-      }
-      console.log(data)
-      const res = await http('post',Endpoint.dataUser,data)
+      const res = await http('get',Endpoint.dataUser)
       console.log('resp',res)
       setDataUser(res.data)
       

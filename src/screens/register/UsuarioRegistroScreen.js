@@ -104,7 +104,7 @@ const UsuarioRegisterScreen = () => {
 
     const register = async()=>{
         
-        const data={
+        const send={
             "dni":userRegister.dni,
             "dni_type":userRegister.dni_type,
             "first_name":userRegister.first_name,
@@ -120,10 +120,10 @@ const UsuarioRegisterScreen = () => {
             "same_password":userRegister.same_password
         }
 
-        console.log(data)
+        console.log(send)
 
         try {
-            const resp = await http('post',Endpoint.signUp, data);
+            const resp = await http('post',Endpoint.signUp, send);
             console.log('resp',resp)
             if(resp.errors){
                 setError(resp.errors)

@@ -10,6 +10,7 @@ import http from '../../services/http';
 import { Endpoint } from '../../environment/Api';
 import Button from '../../components/Button';
 import LoadingScreen from '../LoadingScreen'
+import TypeAlertSkeletonScreen from '../skeleton/TypeAlertSkeletonScreen';
 
 const TypeAlertScreen = (props) => {
   const data= props.route.params.data
@@ -19,6 +20,20 @@ const TypeAlertScreen = (props) => {
 
   
   useEffect(() => {
+    navigator.setOptions({
+      headerRight:()=>(
+          <TouchableOpacity
+              style={{padding:5}}
+              onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen' })}
+          >
+              <Icon
+                  name="stethoscope"
+                  color= {'white'}
+                  size={25}
+              />
+          </TouchableOpacity>
+      ),
+    })
     if(data){
       findPeople()
     }
@@ -97,7 +112,7 @@ const TypeAlertScreen = (props) => {
             nameImage='heartbeat'
             text='Cardiovascular'
             size={30}
-            btnFunction={()=>navigator.navigate('TestCardiovascularScreen',{data:dataPeople,datos:data,})}
+            btnFunction={()=>navigator.replace('TestCardiovascularScreen',{data:dataPeople,datos:data,})}
             
           /> 
           : (data.edad>44)?
@@ -114,7 +129,7 @@ const TypeAlertScreen = (props) => {
             nameImage='child'
             text='Asma'
             size={30}
-            btnFunction={()=>navigator.navigate('TestAsthmaScreen',{data:dataPeople,datos:data,})}
+            btnFunction={()=>navigator.replace('TestAsthmaScreen',{data:dataPeople,datos:data,})}
           />
           :(data.edad>0 && data.edad<8)?
           <ButtonImage
@@ -131,7 +146,7 @@ const TypeAlertScreen = (props) => {
             nameImage='medkit'
             text='EPOC'
             size={30}
-            btnFunction={()=>navigator.navigate('TestEpocScreen',{data:dataPeople,datos:data,})}
+            btnFunction={()=>navigator.replace('FilterTestEpocScreen',{data:dataPeople,datos:data,})}
           />
           :(data.edad>39)?
           <ButtonImage
@@ -147,7 +162,7 @@ const TypeAlertScreen = (props) => {
             nameImage='medkit'
             text='Salud Mental'
             size={30}
-            btnFunction={()=>navigator.navigate('TestMentalHealthScreen',{data:dataPeople,datos:data,})}
+            btnFunction={()=>navigator.replace('TestMentalHealthScreen',{data:dataPeople,datos:data,})}
           />
           :
           (data.edad>13)?
@@ -168,7 +183,7 @@ const TypeAlertScreen = (props) => {
         nameImage='heartbeat'
         text='Cardiovascular'
         size={30}
-        btnFunction={()=>navigator.navigate('TestCardiovascularScreen',{data:dataPeople,datos:data,})}
+        btnFunction={()=>navigator.replace('TestCardiovascularScreen',{data:dataPeople,datos:data,})}
         
       /> 
       : null
@@ -178,7 +193,7 @@ const TypeAlertScreen = (props) => {
         nameImage='child'
         text='Asma'
         size={30}
-        btnFunction={()=>navigator.navigate('TestAsthmaScreen',{data:dataPeople,datos:data,})}
+        btnFunction={()=>navigator.replace('TestAsthmaScreen',{data:dataPeople,datos:data,})}
       />
       :null
       }
@@ -188,7 +203,7 @@ const TypeAlertScreen = (props) => {
         nameImage='medkit'
         text='EPOC'
         size={30}
-        btnFunction={()=>navigator.navigate('TestEpocScreen',{data:dataPeople,datos:data,})}
+        btnFunction={()=>navigator.replace('FilterTestEpocScreen',{data:dataPeople,datos:data,})}
       />
       :null
       }
@@ -197,7 +212,7 @@ const TypeAlertScreen = (props) => {
         nameImage='medkit'
         text='Salud Mental'
         size={30}
-        btnFunction={()=>navigator.navigate('TestMentalHealthScreen',{data:dataPeople,datos:data,})}
+        btnFunction={()=>navigator.replace('TestMentalHealthScreen',{data:dataPeople,datos:data,})}
       />
       :null
       }
@@ -206,13 +221,13 @@ const TypeAlertScreen = (props) => {
       <View style={style.btnEvaluarPaciente}>
         <Button
           title="Evaluar otro paciente"
-          onPress={() => navigator.navigate('CatchmentScreen')}
+          onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen' })}
           color='secondary'
           fill='solid'
         />
       </View>
       </>
-      :<LoadingScreen/>
+      :<TypeAlertSkeletonScreen/>
     }
     </View>
   )

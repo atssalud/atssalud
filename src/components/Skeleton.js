@@ -2,13 +2,13 @@ import React, { useEffect, useRef } from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 import {Colors} from '../theme/Colors'
 
-const Skeleton= ({width='90%',height=580,color=Colors.GREY}) => {
+const Skeleton= ({width='90%',height=600,color=Colors.GREY}) => {
     const opacity= useRef(new Animated.Value(0.3))
     useEffect(() => {
         Animated.loop(
         Animated.sequence([
             Animated.timing(opacity.current,{
-                toValue:1,
+                toValue:0.1,
                 useNativeDriver:true,
                 duration:500
             }),

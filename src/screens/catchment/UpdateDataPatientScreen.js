@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { Image, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
+import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Endpoint } from '../../environment/Api'
 import http from '../../services/http'
 import { Colors } from '../../theme/Colors'
@@ -12,6 +12,7 @@ import TextInputs from '../../components/TextInput';
 import Button from '../../components/Button'
 import WindowAlert from '../../components/WindowAlert'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Checkbox from '../../components/CheckBox'
 
 const UpdateDataPatientScreen = (props) => {
 
@@ -19,6 +20,8 @@ const UpdateDataPatientScreen = (props) => {
     const genero=[{'id':'M', 'item':'M'},{'id':'F', 'item':'F'}]
     const [errorAlert,setErrorAlert]= useState(false)
     const [alert,setAlert]= useState(false)
+    const [checkboxEmail,setCheckboxEmail]= useState(false)
+
     const today= new Date()
 
     const data = props.route.params.data
@@ -53,6 +56,20 @@ const UpdateDataPatientScreen = (props) => {
     const [token,setToken]=useState()
 
     useEffect(() => {
+        navigator.setOptions({
+            headerRight:()=>(
+                <TouchableOpacity
+                    style={{padding:5}}
+                    onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen' })}
+                >
+                    <Icon
+                        name="stethoscope"
+                        color= {'white'}
+                        size={25}
+                    />
+                </TouchableOpacity>
+            ),
+          })
         getDniTypes()
         getDepartaments()
         getEps()
@@ -99,55 +116,51 @@ const UpdateDataPatientScreen = (props) => {
         }
     }
 
-    const [errorPhone,setErrorPhone]=useState({
-        celular:'',
-        telefono:'',
-    })
-    const handlePhone =()=>{
-        const errors={}
-        if(userRegister.celular.trim().length === 0){
-            errors.celular='El célular es requerido'
-        }
-        if(userRegister.celular.trim().length !==10){
-            errors.celular='El célular debe tener 10 dígitos'
-        }
-        if(isNaN(userRegister.telefono) === true){
-            errors.celular='El celular deber ser un número'
-        }
-        if(userRegister.telefono){
+    // const handlePhone =()=>{
+    //     const errors={}
+    //     if(userRegister.celular.trim().length === 0){
+    //         errors.celular='El célular es requerido'
+    //     }
+    //     if(userRegister.celular.trim().length !==10){
+    //         errors.celular='El célular debe tener 10 dígitos'
+    //     }
+    //     if(isNaN(userRegister.telefono) === true){
+    //         errors.celular='El celular deber ser un número'
+    //     }
+    //     if(userRegister.telefono){
 
-            if(userRegister.telefono.trim().length !==10){
-                errors.telefono='El teléfono debe tener 10 dígitos'
-            }
-            if(isNaN(userRegister.telefono) === true){
-                errors.telefono='El teléfono deber ser un número'
-            }
-        }
-        setErrorPhone(errors)
-    }
+    //         if(userRegister.telefono.trim().length !==10){
+    //             errors.telefono='El teléfono debe tener 10 dígitos'
+    //         }
+    //         if(isNaN(userRegister.telefono) === true){
+    //             errors.telefono='El teléfono deber ser un número'
+    //         }
+    //     }
+    //     setErrorPhone(errors)
+    // }
 
     const register = async()=>{
         
         const updateDatos={
-            'token':token,
             'first_name':userRegister.nombre,
             'last_name':userRegister.apellido,
             'dni_type':userRegister.idTipoIdentificacion,
             'dni':userRegister.numIdentificacion,
             'address':userRegister.direccion,
-            'phone':userRegister.celular,
+            'phone':userRegister.telefono,
+            'movil':userRegister.celular,
             'state':userRegister.departamento_id,
             'city':userRegister.ciudad_id,
-            'email':userRegister.correo,
+            'email':(checkboxEmail)?'sincorreo@sincorreo.com':userRegister.correo,
             'birthday':userRegister.fechaNacimiento,
             'gender':userRegister.genero,
             'id':data.id
         }
+        console.log('updateDatos',updateDatos)
        
         try {
             const resp = await http('put',Endpoint.editPatient,updateDatos);
             console.log('resp',resp)
-            handlePhone()
             if(resp.errors){
                 setError(resp.errors)
             }else{
@@ -200,7 +213,6 @@ const UpdateDataPatientScreen = (props) => {
         console.log(key,value)
         setUserRegister({...userRegister, ciudad_id:key,ciudad:value}) 
     }
-    
 
   return (
     <View style={styles.container}>
@@ -216,8 +228,8 @@ const UpdateDataPatientScreen = (props) => {
 
                 />
                 {(error)?
-                    (error.phone==='')?null:
-                    <Text style={styles.textValid}>{error.phone}</Text>: null
+                    (error.movil==='')?null:
+                    <Text style={styles.textValid}>{error.movil}</Text>: null
                 }
                 <TextInputs
                     label='Teléfono'
@@ -226,9 +238,9 @@ const UpdateDataPatientScreen = (props) => {
                     value={userRegister.telefono}
 
                 />
-                {(errorPhone)?
-                    (errorPhone.telefono==='')?null:
-                    <Text style={styles.textValid}>{errorPhone.telefono}</Text>: null
+                {(error)?
+                    (error.phone==='')?null:
+                    <Text style={styles.textValid}>{error.phone}</Text>: null
                 }
 
                 <ListOptions
@@ -290,17 +302,28 @@ const UpdateDataPatientScreen = (props) => {
                         (error.address==='')?null:
                         <Text style={styles.textValid}>{error.address}</Text>: null
                     }
-                
-                    <TextInputs
-                        label='Correo'
-                        placeholder="ejemplo@gmail.com"
-                        onChangeText= { (value) => setUserRegister({...userRegister ,correo:value}) }
-                        value={userRegister.correo}
-                    />
-                    {(error)?
-                        (error.email==='')?null:
-                        <Text style={styles.textValid}>{error.email}</Text>: null
+
+                    {
+                        !checkboxEmail &&
+                        <>
+                            <TextInputs
+                                label='Correo'
+                                placeholder="ejemplo@gmail.com"
+                                onChangeText= { (value) => setUserRegister({...userRegister ,correo:value}) }
+                                value={userRegister.correo}
+                            />
+                            {(error)?
+                                (error.email==='')?null:
+                                <Text style={styles.textValid}>{error.email}</Text>: null
+                            }
+                        </>
                     }
+
+                    <Checkbox
+                        text={'No tengo correo'}
+                        value={checkboxEmail}
+                        onValueChange={(value) => setCheckboxEmail(value)}
+                    />
                     
                 
             </View>

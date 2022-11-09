@@ -1,11 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Button from '../../components/Button'
 import { Colors } from '../../theme/Colors'
 import { Fonts } from '../../theme/Fonts'
 import { Styles } from '../../theme/GlobalStyle'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ViewAlertScreen = (props) => {
   const navigator = useNavigation()
@@ -18,6 +19,20 @@ const ViewAlertScreen = (props) => {
 
   useEffect(() => {
     getToken()
+    navigator.setOptions({
+      headerLeft:()=>(
+          <TouchableOpacity
+              style={{padding:5}}
+              onPress={() => navigator.replace('TypeAlertScreen', { data: datos, token: token })}
+          >
+              <Icon
+                  name="medkit"
+                  color= {'white'}
+                  size={25}
+              />
+          </TouchableOpacity>
+      ),
+    })
 
   }, [])
 
@@ -110,7 +125,7 @@ const ViewAlertScreen = (props) => {
         />
         <Button
           title="Evaluar otro paciente"
-          onPress={() => navigator.navigate('CatchmentScreen')}
+          onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen' })}
           color='secondary'
           fill='solid'
         />

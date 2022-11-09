@@ -13,6 +13,8 @@ import { Styles } from '../../theme/GlobalStyle';
 import ListOptions from '../../components/ListOptions'
 import { Fonts } from '../../theme/Fonts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DataPatientSkeletonScreen from '../skeleton/DataPatientSkeletonScreen';
+import LoadingScreen from '../LoadingScreen';
 
 const CatchmentScreen = () => {
 
@@ -23,6 +25,7 @@ const CatchmentScreen = () => {
     const [fieldError, setFieldError] = useState(false)
     const [dniTypes, setDniTypes] = useState()
     const [token, setToken] = useState()
+    const [isSearch, setIsSearch] = useState(false)
 
     const { typeDni, idDni, numberDni, onChange } = useForm({
         typeDni: 'CC',
@@ -87,15 +90,19 @@ const CatchmentScreen = () => {
         }
         console.log({ send })
         try {
+            setIsSearch(true)
             const resp = await http('post', Endpoint.findPeople, send)
             console.log(resp)
             if (resp.errors) {
                 setError(resp.errors)
             } else {
+                
                 if (Object.keys(resp.data).length===0) {
+                    setIsSearch(false)
                     Alert.alert('Notificación', 'Usuario no registrado en la base de datos')
                 } else {
                     navigator.navigate('DataPatientScreen', { data: resp.data, dni: numberDni })
+                    setIsSearch(false)
                 }
             }
             // if(resp.errors){
@@ -139,52 +146,60 @@ const CatchmentScreen = () => {
     }
 
     return (
-
-        <View style={styles.container}>
-
-            <View style={Styles.borderContainer}>
-                <ListOptions
-                    label='Tipo de documento'
-                    options={dniTypes}
-                    itemSelect={itemSelect}
-                    placeholder={typeDni}
-                    isSelect={true}
-                />
-                <TextInput
-                    label='Número de documento'
-                    value={numberDni}
-                    name='correo'
-                    onChangeText={(value) => onChange(value, 'numberDni')}
-                    placeholder='1042143543'
-                    line='blue'
-                />
-                {(error) ?
-                    (error.dni === '') ? null :
-                        <Text style={styles.textValid}>{error.dni}</Text> : null
-                }
-                <View style={styles.cBtn}>
-                    <TouchableOpacity
-                        style={styles.Btn}
-                        onPress={() => send()}
-                    >
-                        <Text style={styles.tBtn}>Buscar</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+        <>
             {
-                (alert) ?
-                    <WindowAlert
-                        bool={true}
-                        closeAlert={setAlert}
-                        content={contentAlert}
-                        width={50}
-                        height={3}
-                        btnText={'Aceptar'}
-                        btnFunction={close}
-                    />
-                    : null
+               (isSearch)? 
+               <LoadingScreen/>
+               :
+                <View style={styles.container}>
+
+                    <View style={Styles.borderContainer}>
+                        <ListOptions
+                            label='Tipo de documento'
+                            options={dniTypes}
+                            itemSelect={itemSelect}
+                            placeholder={typeDni}
+                            isSelect={true}
+                        />
+                        <TextInput
+                            label='Número de documento'
+                            value={numberDni}
+                            name='correo'
+                            onChangeText={(value) => onChange(value, 'numberDni')}
+                            placeholder='1042143543'
+                            line='blue'
+                        />
+                        {(error) ?
+                            (error.dni === '') ? null :
+                                <Text style={styles.textValid}>{error.dni}</Text> : null
+                        }
+                        <View style={styles.cBtn}>
+                            <TouchableOpacity
+                                style={styles.Btn}
+                                onPress={() => send()}
+                            >
+                                <Text style={styles.tBtn}>Buscar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    
+
+                    {
+                        (alert) ?
+                            <WindowAlert
+                                bool={true}
+                                closeAlert={setAlert}
+                                content={contentAlert}
+                                width={50}
+                                height={3}
+                                btnText={'Aceptar'}
+                                btnFunction={close}
+                            />
+                            : null
+                    }
+                </View>
             }
-        </View>
+        </>
     )
 }
 
@@ -194,7 +209,6 @@ const styles = StyleSheet.create({
     container: {
         marginHorizontal: 20,
         marginVertical: 20,
-        flex: 1,
         marginTop: 150
     },
     cImagen: {

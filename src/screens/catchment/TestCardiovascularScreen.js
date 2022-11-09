@@ -11,6 +11,7 @@ import Button from '../../components/Button'
 import http from '../../services/http'
 import { Endpoint } from '../../environment/Api'
 import { useNavigation } from '@react-navigation/native'
+import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen'
 
 const TestCardiovascularScreen = (props) => {
 
@@ -22,6 +23,7 @@ const TestCardiovascularScreen = (props) => {
     
     const [token,setToken]=useState()
     const [error, setError] = useState()
+    const [isSearchResult, setIsSearchResult] = useState(false)
 
     useEffect(() => {
         getToken()
@@ -44,6 +46,7 @@ const TestCardiovascularScreen = (props) => {
     })
 
     const send =async()=>{
+        setIsSearchResult(true)
         const data={
             "token":token,
             "people_id":id,
@@ -63,6 +66,7 @@ const TestCardiovascularScreen = (props) => {
                 setError(resp.errors)
             }else{
                 navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Riesgo Cardivascular'})
+                setIsSearchResult(false)
             }
             
             
@@ -80,96 +84,102 @@ const TestCardiovascularScreen = (props) => {
         onChange(key,'diabetes')
     }
   return (
-    <View style={[Styles.borderContainer,styles.container]}>
-        <View style={{flexDirection:'row',}}>
-            <View style={[styles.cText,{marginRight:40}]}>
-                <Text style={styles.text}>Genero:</Text>
-                <Text style={styles.subtitle}>{gender}</Text>
-            </View>  
-            <View style={styles.cText}>
-                <Text style={styles.text}>Edad:</Text>
-                <Text style={styles.subtitle}>{age}</Text>
-            </View>  
-        </View>
-        <View style={{flexDirection:'row',}}>
-            <View>
-            <TextInputs
-                label='Colesterol Total'
-                placeholder="150"
-                onChangeText= { (value) => onChange(value,'total_cholesterol') }
-                value={total_cholesterol}
-                dimension='middle'
-            />
-            {(error)?
-                (error.total_cholesterol==='')?null:
-                <Text style={styles.textValid}>{error.total_cholesterol}</Text>: null
-            }
+    <>
+        {(isSearchResult)?
+            <ViewAlertSkeletonScreen/>
+            :
+            <View style={[Styles.borderContainer,styles.container]}>
+                <View style={{flexDirection:'row',}}>
+                    <View style={[styles.cText,{marginRight:40}]}>
+                        <Text style={styles.text}>Genero:</Text>
+                        <Text style={styles.subtitle}>{gender}</Text>
+                    </View>  
+                    <View style={styles.cText}>
+                        <Text style={styles.text}>Edad:</Text>
+                        <Text style={styles.subtitle}>{age}</Text>
+                    </View>  
+                </View>
+                <View style={{flexDirection:'row',}}>
+                    <View>
+                    <TextInputs
+                        label='Colesterol Total'
+                        placeholder="150"
+                        onChangeText= { (value) => onChange(value,'total_cholesterol') }
+                        value={total_cholesterol}
+                        dimension='middle'
+                    />
+                    {(error)?
+                        (error.total_cholesterol==='')?null:
+                        <Text style={styles.textValid}>{error.total_cholesterol}</Text>: null
+                    }
+                    </View>
+                    <View>
+                    <TextInputs
+                        label='HDL'
+                        placeholder="45"
+                        onChangeText= { (value) => onChange(value,'hdl') }
+                        value={hdl}
+                        dimension='middle'
+                    />
+                    {(error)?
+                        (error.hdl==='')?null:
+                        <Text style={styles.textValid}>{error.hdl}</Text>: null
+                    }
+                    </View>
+                </View>
+                <View style={{flexDirection:'row',}}>
+                    <View>
+                    <TextInputs
+                        label='P.Sistólica'
+                        placeholder="120"
+                        onChangeText= { (value) => onChange(value,'systolic_pressure') }
+                        value={systolic_pressure}
+                        dimension='middle'
+                    />
+                    {(error)?
+                        (error.systolic_pressure==='')?null:
+                        <Text style={styles.textValid}>{error.systolic_pressure}</Text>: null
+                    }
+                    </View>
+                    <View style={{marginTop:2}}>
+                    <ListOptions
+                        label='Fumador'
+                        options={siNo}
+                        itemSelect={smokingSelect}
+                        dimension='middle'
+                        placeholder={'No'}
+                        />
+                    {(error)?
+                        (error.smoking==='')?null:
+                        <Text style={styles.textValid}>{error.smoking}</Text>: null
+                    }
+                    </View>
+                </View>
+                <View style={{flexDirection:'row',}}>
+                <View>
+                    <ListOptions
+                        label='Diabético'
+                        options={siNo}
+                        itemSelect={diabeteSelect}
+                        dimension='middle'
+                        placeholder={'No'}
+                        />
+                    {(error)?
+                        (error.diabetes==='')?null:
+                        <Text style={styles.textValid}>{error.diabetes}</Text>: null
+                    }
+                    </View>
+                </View>
+                <View style={styles.cButton}>  
+                    <Button
+                        title="Calcular"
+                        onPress={()=>send()} 
+                        fill='solid'
+                    /> 
+                </View>
             </View>
-            <View>
-            <TextInputs
-                label='HDL'
-                placeholder="45"
-                onChangeText= { (value) => onChange(value,'hdl') }
-                value={hdl}
-                dimension='middle'
-            />
-            {(error)?
-                (error.hdl==='')?null:
-                <Text style={styles.textValid}>{error.hdl}</Text>: null
-            }
-            </View>
-        </View>
-        <View style={{flexDirection:'row',}}>
-            <View>
-            <TextInputs
-                label='P.Sistólica'
-                placeholder="120"
-                onChangeText= { (value) => onChange(value,'systolic_pressure') }
-                value={systolic_pressure}
-                dimension='middle'
-            />
-            {(error)?
-                (error.systolic_pressure==='')?null:
-                <Text style={styles.textValid}>{error.systolic_pressure}</Text>: null
-            }
-            </View>
-            <View style={{marginTop:2}}>
-            <ListOptions
-                label='Fumador'
-                options={siNo}
-                itemSelect={smokingSelect}
-                dimension='middle'
-                placeholder={'No'}
-                />
-            {(error)?
-                (error.smoking==='')?null:
-                <Text style={styles.textValid}>{error.smoking}</Text>: null
-            }
-            </View>
-        </View>
-        <View style={{flexDirection:'row',}}>
-        <View>
-            <ListOptions
-                label='Diabético'
-                options={siNo}
-                itemSelect={diabeteSelect}
-                dimension='middle'
-                placeholder={'No'}
-                />
-            {(error)?
-                (error.diabetes==='')?null:
-                <Text style={styles.textValid}>{error.diabetes}</Text>: null
-            }
-            </View>
-        </View>
-        <View style={styles.cButton}>  
-            <Button
-                title="Calcular"
-                onPress={()=>send()} 
-                fill='solid'
-            /> 
-        </View>
-    </View>
+        }
+    </>
   )
 }
 export default TestCardiovascularScreen

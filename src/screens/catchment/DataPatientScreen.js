@@ -1,15 +1,35 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Button from '../../components/Button';
 import { Colors } from '../../theme/Colors';
 import { Fonts } from '../../theme/Fonts';
 import { Styles } from '../../theme/GlobalStyle';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const DataPatientScreen = (props) => {
 
     const navigator = useNavigation()
     const data=props.route.params.data
+    
+    useEffect(() => {
+        navigator.setOptions({
+            headerRight:()=>(
+                <TouchableOpacity
+                    style={{padding:5}}
+                    onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen' })}
+                >
+                    <Icon
+                        name="stethoscope"
+                        color= {'white'}
+                        size={25}
+                    />
+                </TouchableOpacity>
+            ),
+          })
+    }, [])
+    
+    
 
     let testsToApplicate = []
 
