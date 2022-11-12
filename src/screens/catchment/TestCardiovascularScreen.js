@@ -47,9 +47,12 @@ const TestCardiovascularScreen = (props) => {
 
     const send =async()=>{
         setIsSearchResult(true)
+        const user = await AsyncStorage.getItem('user');
+        const userJson =  JSON.parse(user);
         const data={
             "token":token,
             "people_id":id,
+            "user_id":userJson.id,
             "gender":gender,
             "age":age,
             "total_cholesterol":total_cholesterol,

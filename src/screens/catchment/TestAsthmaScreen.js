@@ -79,9 +79,12 @@ const TestAsthmaScreen = (props) => {
 
     const send=async()=>{
         setIsSearchResult(true)
+        const user = await AsyncStorage.getItem('user');
+        const { id } =  JSON.parse(user);
         const send={
             "token":token,
-            "people_id":data.id,
+            "people_id":data.id,            
+            "user_id":id,
             "test":answer
         }
         console.log({datos})

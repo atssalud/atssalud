@@ -82,7 +82,8 @@ export const AuthProvider = ({children})=>{
                     }
                 }
     
-                AsyncStorage.setItem('token',resp.token)
+                AsyncStorage.setItem('token',resp.token);
+                AsyncStorage.setItem('user',JSON.stringify(resp.user));
             }
             
             

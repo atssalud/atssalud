@@ -30,21 +30,24 @@ const PerfilScreen = () => {
   }, [])
   
   const getToken =async()=>{
-    const userToken = await AsyncStorage.getItem('token')
+    const userToken = await AsyncStorage.getItem('token');
+    
     setToken(userToken)
     getUser()
 
   }
 
   const getUser = async()=>{
+    const userStr = await AsyncStorage.getItem('user');
+    const { id } = JSON.parse(userStr);
     try { 
-      const res = await http('get',Endpoint.dataUser)
+      const res = await http('post',Endpoint.dataUser,{"user_id":id})
       console.log('resp',res)
       setDataUser(res.data)
       
     } catch (error) {
         console.log('error',error);
-        }
+    }
   }
 
   const contentAlert=
@@ -191,7 +194,6 @@ const PerfilScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-
       :<LoadingScreen/>
     }
 

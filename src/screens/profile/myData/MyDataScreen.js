@@ -65,7 +65,7 @@ const MyDataScreen = (props) => {
             <View style={styles.cImageText}>
             {(data.avatar)?
             <Image
-            source={{uri:photo}}
+            source={{uri:data.avatar}}
             style={styles.image}
             />
             :

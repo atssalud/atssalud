@@ -152,7 +152,15 @@ const CatchmentScreen = () => {
                <LoadingScreen/>
                :
                 <View style={styles.container}>
-
+                    <View style={{
+                        alignItems:'center',
+                        
+                    }}>
+                        <Text style={{
+                            fontSize:23,
+                            color: Colors.PRIMARY_COLOR
+                        }}>BUSCAR PACIENTE</Text>
+                    </View>
                     <View style={Styles.borderContainer}>
                         <ListOptions
                             label='Tipo de documento'

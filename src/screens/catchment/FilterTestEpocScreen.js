@@ -37,7 +37,7 @@ const FilterTestEpocScreen = (props) => {
         if(fumador=== false && biomasa===false){
             setAlert(true)
         }else{
-            navigator.replace('TestMentalHealthScreen',{data:data,datos:datos,})
+            navigator.replace('TestEpocScreen',{data:data,datos:datos,})
         }
     }
 

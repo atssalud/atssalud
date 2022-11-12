@@ -44,7 +44,7 @@ const TestMentalHealthScreen = (props) => {
         console.log({data})
         try {
             const resp = await http('post',Endpoint.listItemTestMental,data)
-            console.log(resp.data)
+            console.log("Items:",JSON.stringify(resp.data));
             setQuestions(resp.data)
             listadoPreguntas(resp.data)
             setIsSearch(false)
@@ -60,8 +60,8 @@ const TestMentalHealthScreen = (props) => {
             var id =i.id
             var question=i.name
             var answer=i.options[0].value
-
-            lista.push({id,question,answer})
+            const category = i.category
+            lista.push({id,question,answer,category})
         })
         setAnswer(lista)
     }
@@ -80,12 +80,16 @@ const TestMentalHealthScreen = (props) => {
 
     const send=async()=>{
         setIsSearchResult(true)
+        const user = await AsyncStorage.getItem('user');
+        const { id } =  JSON.parse(user);
+        console.log(user);
         const send={
             "token":token,
             "people_id":data.id,
+            "user_id":id,
             "test":answer
         }
-        console.log({send})
+        console.log(JSON.stringify(send));
         try {
             const resp= await http('post',Endpoint.sendTestMenntal,send)
             console.log({resp})
