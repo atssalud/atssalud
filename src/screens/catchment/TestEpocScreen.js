@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import CheckBox from '../../components/CheckBox';
 import { Styles } from '../../theme/GlobalStyle';
@@ -11,6 +11,7 @@ import http from '../../services/http';
 import { useNavigation } from '@react-navigation/native';
 import TestSkeletonScreen from '../skeleton/TestSkeletonScreen';
 import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
+import { AuthContext } from '../../context/AuthContext';
 
 const TestEpocScreen = (props) => {
     const [answer,setAnswer]=useState()
@@ -20,6 +21,7 @@ const TestEpocScreen = (props) => {
     const [error, setError] = useState()
     const [isSearch, setIsSearch] = useState(true)
     const [isSearchResult, setIsSearchResult] = useState(false)
+    const {logOut} = useContext(AuthContext)
 
     const data = props.route.params.data
     const datos = props.route.params.datos
@@ -43,6 +45,9 @@ const TestEpocScreen = (props) => {
         console.log({data})
         try {
             const resp = await http('post',Endpoint.listItemTestEpoc,data)
+            if(resp.message==='token no válido'){
+                logOut()
+            }
             console.log(resp)
             setQuestions(resp.data)
             listadoPreguntas(resp.data)

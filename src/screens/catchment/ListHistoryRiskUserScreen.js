@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { AuthContext } from '../../context/AuthContext'
 import { Endpoint } from '../../environment/Api'
 import http from '../../services/http'
 import { Colors } from '../../theme/Colors'
@@ -7,6 +8,7 @@ import { Fonts } from '../../theme/Fonts'
 import { Styles } from '../../theme/GlobalStyle'
 
 const ListHistoryRiskUserScreen = (props) => {
+    const {logOut} = useContext(AuthContext)
     const token=props.route.params.token
     console.log('token',token)
 
@@ -26,6 +28,9 @@ const ListHistoryRiskUserScreen = (props) => {
         }
         try {
             const resp = await http('post',Endpoint.historial,data)
+            if(resp.message==='token no válido'){
+                logOut()
+              }
             console.log('resp',resp.data)
             // setHistoryRisk(resp.data)
             setHistoryRisk([...historyRisk, ...resp.data])

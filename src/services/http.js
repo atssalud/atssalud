@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Endpoint } from '../environment/Api';
 
-const http = async (method, url, data, contentType='json')=>{
+const http = async (method, url, data, contentType='json',timeout = 4000)=>{
 
     const token = await AsyncStorage.getItem('token');
     const headers = {};
@@ -20,17 +21,27 @@ const http = async (method, url, data, contentType='json')=>{
         headers["Authorization"] =`Bearer ${ token }`;
     }
 
-
-    return new Promise((resolve, reject) => {
-        console.log(headers)
-        fetch(url, {
-            method,
-            headers,
-            body
-        }).then(
-            response => resolve(response.json()),
-            err => reject(err),
-        )
-    });
+    return Promise.race([
+        new Promise((resolve, reject) => {
+                fetch(url, {
+                    method,
+                    headers,
+                    body
+                }).then(
+                    response => resolve(response.json()),
+                    err => reject(err),
+                )}),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
+    ]);
+    // return new Promise((resolve, reject) => {
+    //     fetch(url, {
+    //         method,
+    //         headers,
+    //         body
+    //     }).then(
+    //         response => resolve(response.json()),
+    //         err => reject(err),
+    //     )
+    // });
 }
 export default http;

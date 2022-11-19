@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useForm } from '../../hooks/useForm'
@@ -12,12 +12,14 @@ import http from '../../services/http'
 import { Endpoint } from '../../environment/Api'
 import { useNavigation } from '@react-navigation/native'
 import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen'
+import { AuthContext } from '../../context/AuthContext'
 
 const TestCardiovascularScreen = (props) => {
 
     const navigator = useNavigation()
     const data = props.route.params.data
     const datos = props.route.params.datos
+    const {logOut} = useContext(AuthContext)
 
     const siNo=[{'id':'0','item':'No'},{'id':'1','item':'Si'}]
     
@@ -64,6 +66,9 @@ const TestCardiovascularScreen = (props) => {
         console.log({data})
         try {
             const resp = await http('post',Endpoint.testCardiovascular,data)
+            if(resp.message==='token no válido'){
+                logOut()
+            }
             console.log(resp)
             if(resp.errors){
                 setError(resp.errors)

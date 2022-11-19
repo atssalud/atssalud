@@ -11,17 +11,19 @@ import { Fonts } from '../../theme/Fonts';
 import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
 import LoadingScreen from '../LoadingScreen'
+import FailedService from '../catchment/FailedService';
 
 
 
 const PerfilScreen = () => {
-
+  
   const navigator= useNavigation()
   const {logOut} = useContext(AuthContext)
   const [alert,setAlert]= useState(false)
 
   const [dataUser,setDataUser] = useState();
   const [token,setToken]=useState()
+  const [failed,setFailed]=useState(false)
   
 
   useEffect(()=> {
@@ -42,11 +44,15 @@ const PerfilScreen = () => {
     const { id } = JSON.parse(userStr);
     try { 
       const res = await http('post',Endpoint.dataUser,{"user_id":id})
+      if(res.message==='token no válido'){
+        logOut()
+      }
       console.log('resp',res)
       setDataUser(res.data)
       
     } catch (error) {
         console.log('error',error);
+        setFailed(true)
     }
   }
 
@@ -72,6 +78,9 @@ const PerfilScreen = () => {
       }
       const resp = await http('post',Endpoint.logout,data)
       console.log(resp)
+      if(resp.message==='token no válido'){
+        logOut()
+      }
       if(resp.success === true){
         logOut()
       }
@@ -141,7 +150,7 @@ const PerfilScreen = () => {
             <View style={styles.cBtnData}>
               <TouchableOpacity
                 style={styles.btnData}
-                onPress={()=> Alert.alert('Próximamente!','Próximamente podrás realizar pagos por medio de GOCARGO')}
+                onPress={()=> Alert.alert('Próximamente!','Próximamente estará habilitada esta opción')}
               >
                 <Icon
                   name='credit-card'
@@ -152,7 +161,7 @@ const PerfilScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.btnData}
-                onPress={()=>navigator.navigate('SupportScreen')}
+                onPress={()=> Alert.alert('Próximamente!','Próximamente estará habilitada esta opción')}
               >
                 <Icon
                   name='phone'
@@ -194,7 +203,8 @@ const PerfilScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-      :<LoadingScreen/>
+      :(failed)?<FailedService/>:
+      <LoadingScreen />
     }
 
     {

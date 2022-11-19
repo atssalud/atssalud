@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/login/LoginScreen';
 import UsuarioRegisterScreen from '../screens/register/UsuarioRegistroScreen';
@@ -28,14 +28,29 @@ import DataPatientSkeletonScreen from '../screens/skeleton/DataPatientSkeletonSc
 import TestSkeletonScreen from '../screens/skeleton/TestSkeletonScreen';
 import ViewAlertSkeletonScreen from '../screens/skeleton/ViewAlertSkeletonScreen';
 import FilterTestEpocScreen from '../screens/catchment/FilterTestEpocScreen';
+import SupportScreen from '../screens/profile/SupportScreen';
+import NetInfo from "@react-native-community/netinfo";
+import IsConnectedScreen from '../screens/IsConnectedScreen';
+import FailedService from '../screens/catchment/FailedService';
 
 const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
 
+  const [isConnected,setIsConnected]=useState(false)
+
   const { status } = useContext(AuthContext)
 
   if (status === 'checking') return <LoadingScreen />;
+  
+
+  NetInfo.fetch().then(state => {
+   setIsConnected(state.isConnected)
+   console.log(state.isConnected)
+   console.log("Connection type", state.type);
+  });
+
+  if(isConnected === false) return <IsConnectedScreen/>;
 
   return (
     <Stack.Navigator
@@ -66,6 +81,7 @@ const Navigator = () => {
                   backgroundColor: Colors.SECONDARY_COLOR,
                 },
               }} />
+              {/* <Stack.Screen name="FailedService" component={FailedService} options={{  title: 'Conexión'}} /> */}
 
             </>
           )
@@ -95,6 +111,8 @@ const Navigator = () => {
               <Stack.Screen name="TestSkeletonScreen" component={TestSkeletonScreen} options={{ headerShown: false }} />
               <Stack.Screen name="ViewAlertSkeletonScreen" component={ViewAlertSkeletonScreen} options={{ headerShown: false }} />
               <Stack.Screen name="FilterTestEpocScreen" component={FilterTestEpocScreen} options={{ title: 'Filtro Test EPOC'}} />
+              <Stack.Screen name="SupportScreen" component={SupportScreen} options={{ title: 'Soporte'}} />
+              <Stack.Screen name="FailedService" component={FailedService} options={{  title: 'Conexión'}} />
             </>
           )
       }

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
 import Button from '../../components/Button';
 import WindowAlert from '../../components/WindowAlert';
@@ -15,10 +15,13 @@ import { Fonts } from '../../theme/Fonts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DataPatientSkeletonScreen from '../skeleton/DataPatientSkeletonScreen';
 import LoadingScreen from '../LoadingScreen';
+import { AuthContext } from '../../context/AuthContext';
+import FailedService from './FailedService';
 
 const CatchmentScreen = () => {
 
     const navigator = useNavigation()
+    const { logOut } = useContext(AuthContext)
 
     const [alert, setAlert] = useState(false)
     const [errorAlert, setErrorAlert] = useState(false)
@@ -44,6 +47,9 @@ const CatchmentScreen = () => {
     const getDniTypes = async () => {
         try {
             const res = await http('get', Endpoint.dniTypes)
+            if (res.message === 'token no válido') {
+                logOut()
+            }
             setDniTypes(res)
         } catch (error) {
             console.log('error', error)
@@ -92,12 +98,18 @@ const CatchmentScreen = () => {
         try {
             setIsSearch(true)
             const resp = await http('post', Endpoint.findPeople, send)
+            
+            if (resp.message === 'token no válido') {
+                logOut()
+            }
             console.log(resp)
+            if(resp === 'timeout') return <FailedService/>
+            
             if (resp.errors) {
                 setError(resp.errors)
             } else {
-                
-                if (Object.keys(resp.data).length===0) {
+
+                if (Object.keys(resp.data).length === 0) {
                     setIsSearch(false)
                     Alert.alert('Notificación', 'Usuario no registrado en la base de datos')
                 } else {
@@ -148,64 +160,59 @@ const CatchmentScreen = () => {
     return (
         <>
             {
-               (isSearch)? 
-               <LoadingScreen/>
-               :
-                <View style={styles.container}>
-                    <View style={{
-                        alignItems:'center',
-                        
-                    }}>
-                        <Text style={{
-                            fontSize:23,
-                            color: Colors.PRIMARY_COLOR
-                        }}>BUSCAR PACIENTE</Text>
-                    </View>
-                    <View style={Styles.borderContainer}>
-                        <ListOptions
-                            label='Tipo de documento'
-                            options={dniTypes}
-                            itemSelect={itemSelect}
-                            placeholder={typeDni}
-                            isSelect={true}
-                        />
-                        <TextInput
-                            label='Número de documento'
-                            value={numberDni}
-                            name='correo'
-                            onChangeText={(value) => onChange(value, 'numberDni')}
-                            placeholder='1042143543'
-                            line='blue'
-                        />
-                        {(error) ?
-                            (error.dni === '') ? null :
-                                <Text style={styles.textValid}>{error.dni}</Text> : null
-                        }
-                        <View style={styles.cBtn}>
-                            <TouchableOpacity
-                                style={styles.Btn}
-                                onPress={() => send()}
-                            >
-                                <Text style={styles.tBtn}>Buscar</Text>
-                            </TouchableOpacity>
+                (isSearch) ?
+                    (errorAlert)?<FailedService/>:
+                    <LoadingScreen />
+                    :
+                    <View style={styles.container}>
+                        <View style={styles.cTitulo}>
+                            <Text style={styles.titulo}>Buscar Paciente</Text>
                         </View>
-                    </View>
-                    
-
-                    {
-                        (alert) ?
-                            <WindowAlert
-                                bool={true}
-                                closeAlert={setAlert}
-                                content={contentAlert}
-                                width={50}
-                                height={3}
-                                btnText={'Aceptar'}
-                                btnFunction={close}
+                        <View style={Styles.borderContainer}>
+                            <ListOptions
+                                label='Tipo de documento'
+                                options={dniTypes}
+                                itemSelect={itemSelect}
+                                placeholder={typeDni}
+                                isSelect={true}
                             />
-                            : null
-                    }
-                </View>
+                            <TextInput
+                                label='Número de documento'
+                                value={numberDni}
+                                name='correo'
+                                onChangeText={(value) => onChange(value, 'numberDni')}
+                                placeholder='1042143543'
+                                line='blue'
+                            />
+                            {(error) ?
+                                (error.dni === '') ? null :
+                                    <Text style={styles.textValid}>{error.dni}</Text> : null
+                            }
+                            <View style={styles.cBtn}>
+                                <TouchableOpacity
+                                    style={styles.Btn}
+                                    onPress={() => send()}
+                                >
+                                    <Text style={styles.tBtn}>Buscar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+
+                        {
+                            (alert) ?
+                                <WindowAlert
+                                    bool={true}
+                                    closeAlert={setAlert}
+                                    content={contentAlert}
+                                    width={50}
+                                    height={3}
+                                    btnText={'Aceptar'}
+                                    btnFunction={close}
+                                />
+                                : null
+                        }
+                    </View>
             }
         </>
     )
@@ -296,5 +303,14 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.BOLD,
         fontSize: 15,
         color: Colors.WHITE
+    },
+    cTitulo: {
+        alignItems: 'center',
+        marginBottom: 20
+    },
+    titulo: {
+        fontSize: 20,
+        color: Colors.PRIMARY_COLOR,
+        fontFamily: Fonts.BOLD
     }
 })

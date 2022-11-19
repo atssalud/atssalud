@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Endpoint } from '../../environment/Api'
 import http from '../../services/http'
@@ -13,11 +13,21 @@ import Button from '../../components/Button'
 import WindowAlert from '../../components/WindowAlert'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Checkbox from '../../components/CheckBox'
+import { AuthContext } from '../../context/AuthContext'
 
 const UpdateDataPatientScreen = (props) => {
+    const {logOut} = useContext(AuthContext)
 
     const navigator = useNavigation()
-    const genero=[{'id':'M', 'item':'M'},{'id':'F', 'item':'F'}]
+
+    const etnia=[{'id':'1', 'item':'Indígena'},{'id':'2', 'item':'ROM(Gitano)'},{'id':'3', 'item':'Raizal'},{'id':'4', 'item':'Palenquero'},
+                  {'id':'5', 'item':'Negro,Mulato,Afrocolombiano o Afrodescendiente'},{'id':'6', 'item':'Otro'},{'id':'7', 'item':'Ninguno'}]
+
+    const grupoPoblacional=[{'id':'1', 'item':'Personas trabajadoras sexuales'},{'id':'2', 'item':'Mujeres transgénero'},{'id':'3', 'item':'Hombres transgénero'},{'id':'4', 'item':'Hombres que tienen relaciones sexuales con otros hombres'},
+                  {'id':'5', 'item':'Habitantes de la calle'},{'id':'6', 'item':'Población privada de la libertad'},{'id':'7', 'item':'Migratoria'},{'id':'8', 'item':'Desmovilizados'},
+                  {'id':'9', 'item':'Desplazados'},{'id':'10', 'item':'Población infantil a cargo del ICBF'},{'id':'11', 'item':'Víctimas del conflicto armado'},{'id':'12', 'item':'Población en centros psiquiátricos'},
+                  {'id':'13', 'item':'Poblaciones en situación de discapacidad'},{'id':'14', 'item':'Otro'},{'id':'15', 'item':'Ninguno'}]
+    
     const [errorAlert,setErrorAlert]= useState(false)
     const [alert,setAlert]= useState(false)
     const [checkboxEmail,setCheckboxEmail]= useState(false)
@@ -43,6 +53,10 @@ const UpdateDataPatientScreen = (props) => {
         edad:(data.birthday)?today.getFullYear()-data.birthday.split('-')[0]:'',
         ciudad_id:'',
         departamento_id:'',
+        etnia:'',
+        etniaId:'',
+        grupoPoblacional:'',
+        grupoPoblacionalId:''
     })
 
     console.log('fecha', )
@@ -92,6 +106,9 @@ const UpdateDataPatientScreen = (props) => {
     const getDniTypes = async()=>{
         try {
           const res = await http('get',Endpoint.dniTypes)
+          if(res.message==='token no válido'){
+            logOut()
+          }
           setDniTypes(res)
         } catch (error) {
           console.log('error',error)
@@ -100,6 +117,9 @@ const UpdateDataPatientScreen = (props) => {
     const getEps = async()=>{
         try {
           const res = await http('get',Endpoint.eps)
+          if(res.message==='token no válido'){
+            logOut()
+          }
           setEps(res)
         } catch (error) {
           console.log('error',error)
@@ -209,6 +229,16 @@ const UpdateDataPatientScreen = (props) => {
         setUserRegister({...userRegister, departamento_id:key,departamento:value})
         getCities(key) 
     }
+    const etniaSelect=(key,value)=>{
+        console.log(key,value)
+        setUserRegister({...userRegister, etniaId:key,etnia:value})
+        getCities(key) 
+    }
+    const grupoPoblacionalSelect=(key,value)=>{
+        console.log(key,value)
+        setUserRegister({...userRegister, grupoPoblacionalId:key,grupoPoblacional:value})
+        getCities(key) 
+    }
     const citySelect=(key,value)=>{
         console.log(key,value)
         setUserRegister({...userRegister, ciudad_id:key,ciudad:value}) 
@@ -301,6 +331,28 @@ const UpdateDataPatientScreen = (props) => {
                     {(error)?
                         (error.address==='')?null:
                         <Text style={styles.textValid}>{error.address}</Text>: null
+                    }
+
+                    <ListOptions
+                        label='Etnia'
+                        options={etnia}
+                        itemSelect={etniaSelect}
+                        placeholder={userRegister.etnia}
+                        isSelect={(userRegister.etnia)? true:false}
+                    />
+                    {
+                        (userRegister.etnia==='')?<Text style={styles.textValid}>Campo requerido</Text>:null
+                    }
+
+                    <ListOptions
+                        label='Grupo Poblacional'
+                        options={grupoPoblacional}
+                        itemSelect={grupoPoblacionalSelect}
+                        placeholder={userRegister.grupoPoblacional}
+                        isSelect={(userRegister.grupoPoblacional)? true:false}
+                    />
+                    {
+                        (userRegister.grupoPoblacional==='')?<Text style={styles.textValid}>Campo requerido</Text>:null
                     }
 
                     {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import CheckBox from '../../components/CheckBox';
 import { Styles } from '../../theme/GlobalStyle';
@@ -11,8 +11,10 @@ import http from '../../services/http';
 import { useNavigation } from '@react-navigation/native';
 import TestSkeletonScreen from '../skeleton/TestSkeletonScreen';
 import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
+import { AuthContext } from '../../context/AuthContext';
 
 const TestMentalHealthScreen = (props) => {
+    const {logOut} = useContext(AuthContext)
     const [answer,setAnswer]=useState()
     const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
@@ -44,6 +46,9 @@ const TestMentalHealthScreen = (props) => {
         console.log({data})
         try {
             const resp = await http('post',Endpoint.listItemTestMental,data)
+            if(resp.message==='token no válido'){
+                logOut()
+            }
             console.log("Items:",JSON.stringify(resp.data));
             setQuestions(resp.data)
             listadoPreguntas(resp.data)

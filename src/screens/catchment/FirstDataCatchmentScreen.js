@@ -19,7 +19,7 @@ import http from '../../services/http';
 import InputDate from '../../components/InputDate';
 
 const FirstDataCatchmentScreen = (props) => {
-
+    const {logOut} = useContext(AuthContext)
     const navigator = useNavigation()
     const genero=[{'id':'M', 'item':'M'},{'id':'F', 'item':'F'}]
     const [errorAlert,setErrorAlert]= useState(false)
@@ -75,6 +75,9 @@ const FirstDataCatchmentScreen = (props) => {
     const getDepartaments = async()=>{
         try {
           const res = await http('get',Endpoint.departaments)
+          if(res.message==='token no válido'){
+            logOut()
+          }
           setDepartaments(res)
         } catch (error) {
           console.log('error',error)
@@ -83,6 +86,9 @@ const FirstDataCatchmentScreen = (props) => {
     const getDniTypes = async()=>{
         try {
           const res = await http('get',Endpoint.dniTypes)
+          if(res.message==='token no válido'){
+            logOut()
+          }
           setDniTypes(res)
         } catch (error) {
           console.log('error',error)
@@ -91,6 +97,9 @@ const FirstDataCatchmentScreen = (props) => {
     const getEps = async()=>{
         try {
           const res = await http('get',Endpoint.eps)
+          if(res.message==='token no válido'){
+            logOut()
+          }
           setEps(res)
         } catch (error) {
           console.log('error',error)
@@ -100,6 +109,9 @@ const FirstDataCatchmentScreen = (props) => {
         console.log('dep',userRegister.state)
         try {
           const res = await http('get',Endpoint.cities(userRegister.departamento))
+          if(res.message==='token no válido'){
+            logOut()
+          }
           console.log('cities',res)
           setCities(res)
         } catch (error) {
@@ -132,6 +144,9 @@ const FirstDataCatchmentScreen = (props) => {
        
         try {
             const resp = await http('post',Endpoint.createPatient, datos);
+            if(resp.message==='token no válido'){
+                logOut()
+              }
             console.log('resp',resp)
             if(resp.errors){
                 setError(resp.errors)

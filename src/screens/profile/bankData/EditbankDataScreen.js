@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect, useContext} from 'react'
 import {View,Text,Image,TouchableOpacity,StyleSheet,Alert,ScrollView} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from '../../../hooks/useForm'
@@ -10,8 +10,11 @@ import { Fonts } from '../../../theme/Fonts';
 import TextInputs from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { AuthContext } from '../../../context/AuthContext';
 
 const EditbankDataScreen = (props) => {
+
+    const {logOut} = useContext(AuthContext)
     const data = props.route.params.dataUser
     console.log('dataaaa', data)
     const navigator= useNavigation()
@@ -46,6 +49,9 @@ const EditbankDataScreen = (props) => {
     const getTypeAccount = async()=>{
         try {
           const res = await http('get',Endpoint.typeAccount)
+          if(res.message==='token no válido'){
+            logOut()
+          }
           setTypeAccount(res)
         } catch (error) {
           console.log('error',error)
@@ -54,6 +60,9 @@ const EditbankDataScreen = (props) => {
     const getNameBank = async()=>{
         try {
           const res = await http('get',Endpoint.banks)
+          if(res.message==='token no válido'){
+            logOut()
+          }
           setNameBank(res)
         } catch (error) {
           console.log('error',error)
@@ -83,6 +92,9 @@ const EditbankDataScreen = (props) => {
 
         try {
             const resp = await http('put',Endpoint.editDataBankUser,update);
+            if(resp.message==='token no válido'){
+                logOut()
+              }
             console.log('respuesta',resp)
             if(resp.errors){
                 setError(resp.errors)
@@ -109,6 +121,9 @@ const EditbankDataScreen = (props) => {
             'token':token
           }
           const res = await http('post',Endpoint.dataUser,data)
+          if(res.message==='token no válido'){
+            logOut()
+          }
           console.log('res',res)
           navigator.replace('Tabs', { screen: 'PerfilScreen' })
           

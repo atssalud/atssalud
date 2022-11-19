@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { Styles } from '../../theme/GlobalStyle';
@@ -11,8 +11,11 @@ import { Endpoint } from '../../environment/Api';
 import Button from '../../components/Button';
 import LoadingScreen from '../LoadingScreen'
 import TypeAlertSkeletonScreen from '../skeleton/TypeAlertSkeletonScreen';
+import { AuthContext } from '../../context/AuthContext';
 
 const TypeAlertScreen = (props) => {
+  const {logOut} = useContext(AuthContext)
+
   const data= props.route.params.data
   const navigator = useNavigation()
   const [dataPeople,setDataPeople]=useState()
@@ -56,6 +59,9 @@ const TypeAlertScreen = (props) => {
     console.log({send})
     try {
         const resp= await http('post',Endpoint.findPeople,send)
+        if(resp.message==='token no válido'){
+          logOut()
+        }
         console.log('resp',resp.data)
         setDataPeople(resp.data)
         

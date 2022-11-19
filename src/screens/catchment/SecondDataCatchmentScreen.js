@@ -17,7 +17,7 @@ import Button from '../../components/Button';
 import ListOptions from '../../components/ListOptions';
 
 const SecondDataCatchmentScreen = () => {
-
+    const {logOut} = useContext(AuthContext)
     const navigator = useNavigation()
 
     const profession=[{'id':'1','profession':'Médico General'},{'id':'2','profession':'Odontólogo'},{'id':'3','profession':'Oncólogo'},{'id':'4','profession':'Enfermer@'},]
@@ -89,6 +89,9 @@ const SecondDataCatchmentScreen = () => {
 
         try {
             const resp = await http('post',Endpoint.preRegister, data);
+            if(resp.message==='token no válido'){
+                logOut()
+              }
             console.log('resp',resp)
             setAlert(true)
 

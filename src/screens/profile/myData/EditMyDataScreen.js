@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect, useContext} from 'react'
 import {View,Text,Image,TouchableOpacity,StyleSheet,Alert,ScrollView} from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from '../../../hooks/useForm';
@@ -12,6 +12,7 @@ import { Fonts } from '../../../theme/Fonts';
 import TextInputs from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthContext } from '../../../context/AuthContext';
 
 const EditMyDataScreen = (props) => {
 
@@ -19,6 +20,7 @@ const EditMyDataScreen = (props) => {
     //colocar como obligatorio el campo de ciudad de nacimiento para
     // que deje realizar los cambios
 
+    const {logOut} = useContext(AuthContext)
     const data = props.route.params.dataUser
     const photos = data.avatar
     const initialDepartament=data.state
@@ -84,6 +86,9 @@ const EditMyDataScreen = (props) => {
     const getDepartaments = async()=>{
         try {
           const res = await http('get',Endpoint.departaments)
+          if(res.message==='token no válido'){
+            logOut()
+          }
           setDepartaments(res)
         } catch (error) {
           console.log('error',error)
@@ -92,6 +97,9 @@ const EditMyDataScreen = (props) => {
     const getEps = async()=>{
         try {
           const res = await http('get',Endpoint.eps)
+          if(res.message==='token no válido'){
+            logOut()
+          }
           setEps(res)
         } catch (error) {
           console.log('error',error)
@@ -101,6 +109,9 @@ const EditMyDataScreen = (props) => {
         console.log({idState})
         try {
           const res = await http('get',Endpoint.cities(idState))
+          if(res.message==='token no válido'){
+            logOut()
+          }
           console.log('cities',res)
           setCities(res)
         } catch (error) {
@@ -157,6 +168,9 @@ const EditMyDataScreen = (props) => {
 
         try {
             const resp = await http('put',Endpoint.editDataUser,update);
+            if(resp.message==='token no válido'){
+                logOut()
+              }
             saveDocuments(type)
             console.log('respuesta',resp)
             if(resp.errors){
@@ -185,6 +199,9 @@ const EditMyDataScreen = (props) => {
             'token':token
           }
           const res = await http('post',Endpoint.dataUser,data)
+          if(res.message==='token no válido'){
+            logOut()
+          }
           console.log('res',res)
           navigator.replace('Tabs', { screen: 'PerfilScreen' })
           

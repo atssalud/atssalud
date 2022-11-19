@@ -50,7 +50,7 @@ const BankDataScreen = (props) => {
                 <Text style={styles.textData}>{(data.bank_account)? data.bank_account: 'No registrado'}</Text>
             </View>
             <View style={styles.cData}>
-                <Text style={styles.textCampo}>Tipo de cuneta: </Text>
+                <Text style={styles.textCampo}>Tipo de cuenta: </Text>
                 <Text style={styles.textData}>{(data.type_account_name) ? data.type_account_name :'No registrado'}</Text>
             </View>
             <View style={styles.cData2}>

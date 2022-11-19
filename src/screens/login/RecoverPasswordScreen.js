@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View,Text,TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Button from '../../components/Button';
 import WindowAlert from '../../components/WindowAlert';
@@ -10,10 +10,13 @@ import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../theme/Colors';
 import { Styles } from '../../theme/GlobalStyle';
 import { Fonts } from '../../theme/Fonts';
+import { AuthContext } from '../../context/AuthContext';
 
 const RecoverPasswordScreen =()=>{
 
     const navigator = useNavigation()
+    const {logOut} = useContext(AuthContext)
+
 
     const [alert,setAlert]= useState(false)
     const [errorAlert,setErrorAlert]= useState(false)
