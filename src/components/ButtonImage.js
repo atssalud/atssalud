@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Colors } from '../theme/Colors';
 import { Fonts } from '../theme/Fonts';
 
-export const ButtonImage = ({nameImage,size,type,text,color=Colors.PRIMARY_COLOR,btnFunction,disabled=false,}) => {
+export const ButtonImage = ({nameImage,size,type,text,color=Colors.PRIMARY_COLOR,btnFunction,disabled=false,fontSize=16}) => {
   return (
     <View style={styles.cBtnRute}>
       <TouchableOpacity 
@@ -27,7 +27,7 @@ export const ButtonImage = ({nameImage,size,type,text,color=Colors.PRIMARY_COLOR
             size={size}
           />
           }
-          <Text style={styles.tBtnRute}>{text}</Text>
+          <Text style={[styles.tBtnRute,{fontSize}]}>{text}</Text>
         </View>
         <Icon
             name='chevron-right'

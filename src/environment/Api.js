@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // const BASEURL = 'http://157.230.219.132/api-test';
 const BASEURL = 'https://www.atssalud.com/api-test';
 // const BASEURL = 'https://www.atssalud.com/api';
+const NODE_BASEURL='https://api.atssalud.com'
 
 
 export const Endpoint = {
@@ -35,6 +36,9 @@ export const Endpoint = {
     historial:`${BASEURL}/list-history-risk-user`,
     listItemTestMental :`${BASEURL}/list-items-test-mental-health`,
     sendTestMenntal:`${BASEURL}/test-mental-health`,
+    listTamizaje:`${NODE_BASEURL}/tests?type=TAMIZAJE`,
+    listRiesgo:`${NODE_BASEURL}/tests?type=MARCA EN SALUD`,
+    getCheckRisk:(idTest)=>{return `${NODE_BASEURL}/tests/${idTest}`;},
 }   
 
 const Api = axios.create(Endpoint)

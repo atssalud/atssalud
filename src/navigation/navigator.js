@@ -32,6 +32,9 @@ import SupportScreen from '../screens/profile/SupportScreen';
 import NetInfo from "@react-native-community/netinfo";
 import IsConnectedScreen from '../screens/IsConnectedScreen';
 import FailedService from '../screens/catchment/FailedService';
+import CatchmentOptionsScreen from '../screens/catchment/CatchmentOptionsScreen';
+import TypeRiskScreen from '../screens/catchment/TypeRiskScreen';
+import TestRiskScreen from '../screens/catchment/TestRiskScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -81,7 +84,7 @@ const Navigator = () => {
                   backgroundColor: Colors.SECONDARY_COLOR,
                 },
               }} />
-              {/* <Stack.Screen name="FailedService" component={FailedService} options={{  title: 'Conexión'}} /> */}
+              <Stack.Screen name="FailedService" component={FailedService} options={{  title: 'Conexión'}} />
 
             </>
           )
@@ -113,6 +116,9 @@ const Navigator = () => {
               <Stack.Screen name="FilterTestEpocScreen" component={FilterTestEpocScreen} options={{ title: 'Filtro Test EPOC'}} />
               <Stack.Screen name="SupportScreen" component={SupportScreen} options={{ title: 'Soporte'}} />
               <Stack.Screen name="FailedService" component={FailedService} options={{  title: 'Conexión'}} />
+              <Stack.Screen name="CatchmentOptionsScreen" component={CatchmentOptionsScreen} options={{  title: 'Opciones'}} />
+              <Stack.Screen name="TypeRiskScreen" component={TypeRiskScreen} options={{  title: 'Lista de Riesgos'}} />
+              <Stack.Screen name="TestRiskScreen" component={TestRiskScreen} />
             </>
           )
       }

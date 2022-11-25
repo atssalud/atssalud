@@ -219,7 +219,7 @@ const UpdateDataPatientScreen = (props) => {
 
     const close=()=>{
         console.log('userRegister',userRegister)
-        navigator.navigate('TypeAlertScreen',{data:userRegister,token:token})
+        navigator.navigate('CatchmentOptionsScreen',{data:userRegister})
     }
     const closeError=()=>{
         console.log('error')
