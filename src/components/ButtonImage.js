@@ -29,11 +29,14 @@ export const ButtonImage = ({nameImage,size,type,text,color=Colors.PRIMARY_COLOR
           }
           <Text style={[styles.tBtnRute,{fontSize}]}>{text}</Text>
         </View>
+        
         <Icon
             name='chevron-right'
             color={color}
             size={20}
+            
           />
+        
        </TouchableOpacity>
     </View>
   )

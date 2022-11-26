@@ -35,6 +35,8 @@ import FailedService from '../screens/catchment/FailedService';
 import CatchmentOptionsScreen from '../screens/catchment/CatchmentOptionsScreen';
 import TypeRiskScreen from '../screens/catchment/TypeRiskScreen';
 import TestRiskScreen from '../screens/catchment/TestRiskScreen';
+import TestDiabetesScreen from '../screens/catchment/TestDiabetesScreen';
+import TypeRiskScreen2 from '../screens/catchment/TypeRiskScreen2';
 
 const Stack = createNativeStackNavigator();
 
@@ -117,8 +119,10 @@ const Navigator = () => {
               <Stack.Screen name="SupportScreen" component={SupportScreen} options={{ title: 'Soporte'}} />
               <Stack.Screen name="FailedService" component={FailedService} options={{  title: 'Conexión'}} />
               <Stack.Screen name="CatchmentOptionsScreen" component={CatchmentOptionsScreen} options={{  title: 'Opciones'}} />
-              <Stack.Screen name="TypeRiskScreen" component={TypeRiskScreen} options={{  title: 'Lista de Riesgos'}} />
-              <Stack.Screen name="TestRiskScreen" component={TestRiskScreen} />
+              <Stack.Screen name="TypeRiskScreen" component={TypeRiskScreen} options={{  title: 'Lista de Marcas'}} />
+              <Stack.Screen name="TestRiskScreen" component={TestRiskScreen} options={{  title: 'Marca en Salud'}}/>
+              <Stack.Screen name="TestDiabetesScreen" component={TestDiabetesScreen} options={{  title: 'Test Diabetes'}}/>
+              <Stack.Screen name="TypeRiskScreen2" component={TypeRiskScreen2} options={{  title: 'Marca en Salud'}}/>
             </>
           )
       }

@@ -31,14 +31,17 @@ export const Endpoint = {
     editPatient:`${BASEURL}/update-patient`,
     listItemTestAsthma :`${BASEURL}/list-items-test-childrem-asthma`,
     sendTestAsthma:`${BASEURL}/test-childrem-asthma`,
-    listItemTestEpoc :`${BASEURL}/list-items-test-epoc`,
-    sendTestEpoc:`${BASEURL}/test-epoc`,
     historial:`${BASEURL}/list-history-risk-user`,
     listItemTestMental :`${BASEURL}/list-items-test-mental-health`,
     sendTestMenntal:`${BASEURL}/test-mental-health`,
     listTamizaje:`${NODE_BASEURL}/tests?type=TAMIZAJE`,
     listRiesgo:`${NODE_BASEURL}/tests?type=MARCA EN SALUD`,
     getCheckRisk:(idTest)=>{return `${NODE_BASEURL}/tests/${idTest}`;},
+    sendMark:`${NODE_BASEURL}/tests/health-marking`,
+    listItemDiabetes :`${NODE_BASEURL}/tests/5`,
+    sendTestDiabetes:`${NODE_BASEURL}/tests/deabetes`,
+    listItemTestEpoc :`${NODE_BASEURL}/tests/3`,
+    sendTestEpoc:`${NODE_BASEURL}/tests/epoc`,
 }   
 
 const Api = axios.create(Endpoint)

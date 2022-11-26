@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Button from '../../components/Button'
 import { Colors } from '../../theme/Colors'
 import { Fonts } from '../../theme/Fonts'
@@ -41,7 +41,8 @@ const ViewAlertScreen = (props) => {
     setToken(userToken)
   }
   return (
-    <View style={styles.container}>
+    <ScrollView>
+      <View style={styles.container}>
 
       <View style={[Styles.borderContainer,{marginBottom:30}]}>
       
@@ -58,7 +59,7 @@ const ViewAlertScreen = (props) => {
           /> : null
       }
       {
-        (data.risk_level === 'MODERADO') ?
+        (data.risk_level === 'MODERADO'|| data.risk_level === 'MEDIO') ?
           <Image
             source={require("../../assets/images/medio.png")}
             style={styles.image}
@@ -116,6 +117,23 @@ const ViewAlertScreen = (props) => {
             </View>
           </View> : null
       }
+
+      {
+        (data.professional_observation) ?
+        <View style={Styles.borderContainer}>
+          <Text style={styles.titleObservation}>Observación al profesional</Text>
+          <Text style={styles.textObservation}>{data.professional_observation}</Text>
+        </View>
+        : null
+      }
+      {
+        (data.affiliate_observation) ?
+        <View style={Styles.borderContainer}>
+          <Text style={styles.titleObservation}>Observación para el paciente</Text> 
+          <Text style={styles.textObservation}>{data.affiliate_observation}</Text>
+        </View>
+        : null
+      }
       </View>
       <View>
         <Button
@@ -130,7 +148,8 @@ const ViewAlertScreen = (props) => {
           fill='solid'
         />
       </View>
-    </View>
+      </View>
+    </ScrollView>
   )
 }
 export default ViewAlertScreen
@@ -146,7 +165,7 @@ const styles = StyleSheet.create({
   cText: {
     marginBottom: 40,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   text: {
     fontFamily: Fonts.BOLD,
@@ -166,5 +185,16 @@ const styles = StyleSheet.create({
   },
   cRTest: {
     flexDirection: 'row'
+  },
+  textObservation:{
+    fontFamily: Fonts.REGULAR,
+    fontSize: 13,
+    color: Colors.FONT_COLOR,
+  },
+  titleObservation:{
+    fontFamily: Fonts.BOLD,
+    fontSize: 16,
+    color: Colors.FONT_COLOR,
   }
+
 })

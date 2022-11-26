@@ -14,8 +14,7 @@ import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
 
-const TestEpocScreen = (props) => {
-
+const TestDiabetesScreen = (props) => {
     const {logOut} = useContext(AuthContext)
     const [answer,setAnswer]=useState()
     const [change,setChange]=useState()
@@ -45,7 +44,7 @@ const TestEpocScreen = (props) => {
     const getQuestion=async()=>{
         
         try {
-            const resp = await http('get',Endpoint.listItemTestEpoc)
+            const resp = await http('get',Endpoint.listItemDiabetes)
             if(resp.message==='token no válido'){
                 logOut()
             }
@@ -116,7 +115,7 @@ const TestEpocScreen = (props) => {
         console.log(JSON.stringify(send));
         try {
             console.log('entro')
-            const resp= await http('post',Endpoint.sendTestEpoc,send)
+            const resp= await http('post',Endpoint.sendTestDiabetes,send)
             console.log({resp})
             if(resp.errors){
                 setError(resp.errors)
@@ -218,7 +217,7 @@ const TestEpocScreen = (props) => {
     
   )
 }
-export default TestEpocScreen;
+export default TestDiabetesScreen;
 
 const styles= StyleSheet.create({
     container:{

@@ -12,6 +12,8 @@ const CatchmentOptionsScreen = (props) => {
     const navigator = useNavigation()
     const data = props.route.params.data
 
+    console.log('daaa',data)
+
     const searchListTest = async (option) => {
         if (option === 'tamizaje') {
             try {
@@ -28,7 +30,7 @@ const CatchmentOptionsScreen = (props) => {
             try {
                 const resp = await http('get', Endpoint.listRiesgo)
                 console.log('reso',resp)
-                navigator.navigate('TypeRiskScreen', { data: data, list: resp })
+                navigator.navigate('TypeRiskScreen2', { data: data, list: resp })
 
 
             } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CheckBox from '../../components/CheckBox';
 import { Styles } from '../../theme/GlobalStyle';
 import {Fonts} from '../../theme/Fonts'
@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import TestSkeletonScreen from '../skeleton/TestSkeletonScreen';
 import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../context/AuthContext';
+import WindowAlert from '../../components/WindowAlert';
 
 const TestRiskScreen = (props) => {
     
@@ -26,9 +27,13 @@ const TestRiskScreen = (props) => {
     const [isSearch, setIsSearch] = useState(true)
     const [isSearchResult, setIsSearchResult] = useState(false)
     const [checkBox, setCheckBox] = useState()
+    const [alert, setAlert] = useState(false)
+    const [alertSearchResult, setAlertSearchResult] = useState(false)
+
     
-    const data = props.route.params.data
-    const datos = props.route.params.datos
+    const dataPatient = props.route.params.data
+
+    console.log('datos',dataPatient)
 
     const navigator=useNavigation()
 
@@ -46,10 +51,7 @@ const TestRiskScreen = (props) => {
         //         />
         //     </TouchableOpacity>
         // ),
-        // headerTitle:props.route.params.title,
-        // headerTitleStyle:{
-        //     fontSize:14
-        // }
+    
         
     })
     }, [])
@@ -75,7 +77,7 @@ const TestRiskScreen = (props) => {
             console.log('error',error)
         }
     }
-
+//Arma el arreglo de los checkbox de forma automatica por defecto en falso
     const listCkeckBox =(length)=>{
         const list=[]
         for (let i = 0; i < length; i++) {
@@ -89,7 +91,7 @@ const TestRiskScreen = (props) => {
 
         let answ=[]
         if (answer !== undefined) answer.map(item=> answ.push(item))
-        answ.push({'question_id':'9','name':value,'value':''})
+        answ.push({'question_id':questions.id,'name':value,'value':''})
 
         const filter= removeDuplicates(answ)
         setAnswer(filter)
@@ -118,34 +120,69 @@ const TestRiskScreen = (props) => {
         return cleaned.map(element => {
           return JSON.parse(element)
         })
-      }
+    }
 
+    const sendValidator=()=>{
+        setAlert(true)
+    }
+    const close = () => {
+        send()
+    }
+
+    const closeAlert=()=>{
+        navigator.replace('CatchmentOptionsScreen',{data:dataPatient})
+    }
     const send=async()=>{
         setIsSearchResult(true)
         const user = await AsyncStorage.getItem('user');
         const { id } =  JSON.parse(user);
-        console.log(user);
+
         const send={
-            "token":token,
-            "people_id":data.id,
-            "user_id":id,
+            "dni":dataPatient.numIdentificacion,
+            "author_id":id,
+            "test_id":idTest,
             "test":answer
         }
         console.log(JSON.stringify(send));
         try {
-            const resp= await http('post',Endpoint.sendTestMenntal,send)
+            const resp= await http('post',Endpoint.sendMark,send)
             console.log({resp})
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Riesgo Salud Mental'})
+                // navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Riesgo Salud Mental'})
                 setIsSearchResult(false)
+                setAlertSearchResult(true)
             }
             
         } catch (error) {
             console.log('error',error)
         }
     }
+
+    const contentAlert =
+        <View style={styles.cAlert}>
+            <Image
+                source={require('../../assets/icons/modal-alert-Icon.png')}
+                style={styles.imageAlert}
+            />
+            <Text style={styles.title}>Alerta</Text>
+            <View style={styles.ctextAlert}>
+                <Text style={styles.textAlert}>¿ Desea proceder a Marcar Paciente ?</Text>
+            </View>
+        </View>
+
+    const contentAlertResult =
+        <View style={styles.cAlert}>
+            <Image
+                source={require('../../assets/icons/checkCircle.png')}
+                style={styles.imageAlert}
+            />
+            <Text style={styles.title}>Notificación</Text>
+            <View style={styles.ctextAlert}>
+                <Text style={styles.textAlert}>¡ Afiliado marcado con éxito !</Text>
+            </View>
+        </View>
     return (
 
         <>
@@ -165,12 +202,13 @@ const TestRiskScreen = (props) => {
                             {
                                 questions.options.map((option,id)=>{
                                     return(
-                                        <CheckBox
-                                            key={id}
-                                            text={option.name}
-                                            value={checkBox[id].item}
-                                            onValueChange={(newValue) => itemCheckboxSelected(id,option.name)}
-                                        />
+                                        <View style={{marginBottom:15}} key={id}>
+                                            <CheckBox
+                                                text={option.name}
+                                                value={checkBox[id].item}
+                                                onValueChange={(newValue) => itemCheckboxSelected(id,option.name)}
+                                            />
+                                        </View>
                                     )
                                 })
                             }
@@ -180,13 +218,41 @@ const TestRiskScreen = (props) => {
                 
                 <View style={styles.cButton}>  
                     <Button 
-                        title={"Calcular"}
-                        onPress={()=>send()} 
+                        title={"Marcar"}
+                        onPress={()=>sendValidator()} 
                         fill='solid'
                     /> 
                 </View>
             </View>
             :null}
+            {
+                (alert) ?
+                    <WindowAlert
+                        bool={true}
+                        closeAlert={setAlert}
+                        content={contentAlert}
+                        width={50}
+                        height={3}
+                        btnText={'Aceptar'}
+                        btnFunction={close}
+                        btnClose={'yes'}
+                        
+                    />
+                    : null
+            }
+            {
+                (alertSearchResult) ?
+                    <WindowAlert
+                        bool={true}
+                        closeAlert={setAlertSearchResult}
+                        content={contentAlertResult}
+                        width={50}
+                        height={3}
+                        btnText={'Aceptar'}
+                        btnFunction={closeAlert}
+                    />
+                    : null
+            }
             
             </ScrollView>
         }
@@ -199,7 +265,7 @@ export default TestRiskScreen;
 
 const styles= StyleSheet.create({
     container:{
-        marginHorizontal:20,
+        marginHorizontal:10,
         marginVertical:20
     },
     cCheckBox:{
@@ -209,7 +275,7 @@ const styles= StyleSheet.create({
     cQuestion:{
         justifyContent:'center',
         alignItems:'center',
-        marginBottom:10
+        marginBottom:20
     },
     tQuestion:{
         fontFamily:Fonts.BOLD,
@@ -219,5 +285,31 @@ const styles= StyleSheet.create({
     cButton:{
         marginBottom:10,
         marginTop:20
-    }
+    },
+    imageAlert: {
+        width: 60,
+        height: 60,
+        bottom: 20,
+        marginTop: 15
+    },
+    cAlert: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    textAlertError: {
+        color: 'black',
+        marginTop: 10,
+        marginBottom: 20
+    },
+    textAlert: {
+        color: 'black',
+    },
+    ctextAlert: {
+        marginTop: 10,
+        alignItems: 'center'
+    },
+    title: {
+        fontSize: 18,
+        color: 'black'
+    },
 })

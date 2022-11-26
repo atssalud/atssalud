@@ -180,6 +180,23 @@ const TypeAlertScreen = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
+          {(data.edad>13 && !nameTestToApplicate.includes('DIABETES'))?
+            <ButtonImage
+            nameImage='medkit'
+            text='Diabetes'
+            size={30}
+            btnFunction={()=>navigator.replace('TestDiabetesScreen',{data:dataPeople,datos:data,})}
+          />
+          :
+          (data.edad>13)?
+          <ButtonImage
+            nameImage='medkit'
+            text='Diabetes'
+            size={30}
+            disabled={true}
+            color={Colors.GREY_LIGHT}
+          />:null
+          }
           </>
           
       :
@@ -219,6 +236,15 @@ const TypeAlertScreen = (props) => {
         text='Salud Mental'
         size={30}
         btnFunction={()=>navigator.replace('TestMentalHealthScreen',{data:dataPeople,datos:data,})}
+      />
+      :null
+      }
+      {(data.edad>13)?
+        <ButtonImage
+        nameImage='medkit'
+        text='Diabetes'
+        size={30}
+        btnFunction={()=>navigator.replace('TestDiabetesScreen',{data:dataPeople,datos:data,})}
       />
       :null
       }

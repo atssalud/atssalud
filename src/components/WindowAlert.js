@@ -52,12 +52,14 @@ const WindowAlert = (props) => {
                             <Icon
                                 name="times"
                                 size={30}
-                                color={'grey'}
+                                color={Colors.PRIMARY_COLOR}
                             />
                         </TouchableOpacity>
                     </View>:null
                 }
-                {props.content}
+                <View style={(props.btnClose === 'yes')?{marginTop:-10}:null}>
+                    {props.content}
+                </View>
                 {
                     (props.messageError)?
                     <View style={styles.cTextAlert}>
