@@ -139,8 +139,8 @@ const TestRiskScreen = (props) => {
 
         const send={
             "dni":dataPatient.numIdentificacion,
-            "author_id":id,
-            "test_id":idTest,
+            "author_id":String(id),
+            "test_id":String(idTest),
             "test":answer
         }
         console.log(JSON.stringify(send));

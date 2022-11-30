@@ -13,6 +13,7 @@ import TestSkeletonScreen from '../skeleton/TestSkeletonScreen';
 import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
+import TextInputs from '../../components/TextInput';
 
 const TestEpocScreen = (props) => {
 
@@ -21,10 +22,16 @@ const TestEpocScreen = (props) => {
     const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
     const [token,setToken]=useState()
-    const [error, setError] = useState()
     const [isSearch, setIsSearch] = useState(true)
     const [isSearchResult, setIsSearchResult] = useState(false)
     const [alert, setAlert] = useState(false)
+
+    const [numPaquete, setNumPaquete] = useState('')
+    const [años, setAños] = useState('')
+    const [error, setError] = useState({
+        numPaquete: '',
+        años: ''
+    })
 
     const data = props.route.params.data
     console.log('daaataaa',data)
@@ -109,8 +116,8 @@ const TestEpocScreen = (props) => {
         const { id } =  JSON.parse(user);
         console.log(user);
         const send={
-            "dni":data.dni,
-            "author_id":id,
+            "dni":String(data.dni),
+            "author_id":String(id),
             "test":answer
         }
         console.log(JSON.stringify(send));
@@ -121,7 +128,7 @@ const TestEpocScreen = (props) => {
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje Diabetes'})
+                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje Epoc'})
                 setIsSearchResult(false)
             }
             
@@ -129,6 +136,80 @@ const TestEpocScreen = (props) => {
             console.log('error',error)
         }
     }
+
+    const totalPaquete = () => {
+        
+        const total = numPaquete*años
+
+        if (total < 30) {
+            answer[2].name='NO'
+            answer[2].value='0'
+        }
+        if (total >= 30) {
+            answer[2].name='SI'
+            answer[2].value='1'
+        }
+        changeQAge()
+        
+
+    }
+
+    const changeQAge=()=>{
+        
+        const edad=data.age
+
+        if (edad >=50) {
+            answer[1].name='SI'
+            answer[1].value='1'
+        }
+        if (edad  <50) {
+            answer[1].name='NO'
+            answer[1].value='0'
+        }
+        changeQGender()
+    }
+
+    const changeQGender=()=>{
+        const gender=data.gender
+        if (gender==='F') {
+            answer[0].name='NO'
+            answer[0].value='0'
+        }
+        if (gender==='M') {
+            answer[0].name='SI'
+            answer[0].value='1'
+        }
+
+        sendValidator()
+    }
+
+    const handleTest = () => {
+
+        const error = []
+        if (numPaquete.trim().length === 0) {
+            error.numPaquete = 'Campo Obligatorio'
+        }
+        if (años.trim().length === 0) {
+            error.años = 'Campo Obligatorio'
+        }
+
+        const vnumPaquete = numPaquete.includes(',')
+        const vaños = años.includes(',')
+
+        console.log({ vnumPaquete })
+        if (vaños) {
+            error.años = 'Use punto'
+        }
+        if (vnumPaquete) {
+            error.numPaquete = 'Use punto'
+        }
+        if (numPaquete.trim().length>0 && años.trim().length>0 && (vaños=== false) && (vnumPaquete === false)) {
+            totalPaquete()
+        }
+
+        setError(error)
+    }
+
 
 
   return (
@@ -142,8 +223,45 @@ const TestEpocScreen = (props) => {
         <ScrollView>
         {(answer)?
             <View style={styles.container}>
+                <View style={Styles.borderContainer}>
+                <View style={styles.cQuestion}>
+                    <Text style={styles.tQuestion}>¿Ha fumado 30 o más paquetes de productos derivados del tabaco? </Text>
+                    <View style={{ flexDirection: 'row', marginTop: 15, justifyContent: 'center', width: '100%', marginLeft: 50 }}>
+
+                        <View>
+                            <TextInputs
+                                label={'Num Paquete dia'}
+                                placeholder={'Ej: 35'}
+                                keyboardType='numeric'
+                                dimension='middle'
+                                onChangeText={(value) => setNumPaquete(value)}
+                                value={numPaquete}
+                            />
+                            {(error) ?
+                                (error.numPaquete === '') ? null :
+                                    <Text style={styles.textValid}>{error.numPaquete}</Text> : null
+                            }
+                        </View>
+                        <View>
+                            <TextInputs
+                                label={'Años'}
+                                placeholder={'Ej: 1.5'}
+                                keyboardType='numeric'
+                                dimension='middle'
+                                onChangeText={(value) => setAños(value)}
+                                value={años}
+                            />
+                            {(error) ?
+                                (error.años === '') ? null :
+                                    <Text style={styles.textValid}>{error.años}</Text> : null
+                            }
+                        </View>
+                    </View>
+
+                </View>
+            </View>
             {(questions)?questions.map((item,id)=>{
-                console.log('hhhh',item.options.length)
+                if (item.id !== 13 && item.id !== 14 && item.id !== 15) {
                 return(
                     <View style={Styles.borderContainer} key={id}>
                         <View style={styles.cQuestion}>
@@ -184,13 +302,14 @@ const TestEpocScreen = (props) => {
                         </View>
                     </View>
                 )
+                }
             }):null
             }
             
             <View style={styles.cButton}>  
                 <Button 
                     title={"Calcular"}
-                    onPress={()=>sendValidator()} 
+                    onPress={()=>handleTest()} 
                     fill='solid'
                 /> 
             </View>
@@ -268,5 +387,11 @@ const styles= StyleSheet.create({
     title: {
         fontSize: 18,
         color: 'black'
+    },
+    textValid: {
+        fontSize: 14,
+        fontFamily: Fonts.BOLD,
+        color: "#ff5d2f",
+        marginBottom: 10
     },
 })

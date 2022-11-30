@@ -44,13 +44,14 @@ export const AuthProvider = ({children})=>{
     const signIn = async (email,password,isSelected)=>{
 
        
-        const data={
+        const dato={
             "email":email,
             "password":password
         }
+        
 
         try {
-            const resp = await http('post',Endpoint.login,data)
+            const resp = await http('post',Endpoint.login,dato)
             console.log('resp',resp)
             if (resp.message){
                 dispatch({
@@ -89,7 +90,7 @@ export const AuthProvider = ({children})=>{
             
 
         } catch (error) {
-            console.log(error)
+            console.log('errrrr',error)
             dispatch({
                 type:'addError',
                 payload:error.errors|| 'Usuario o Contraseña incorrecta',
@@ -117,6 +118,18 @@ export const AuthProvider = ({children})=>{
             type:'removeError'
         })
     }
+
+    // const changeToken=async()=>{
+    //     try {
+    //         const resp= await http('get',Endpoint.validateToken)
+    //         if(resp.message === 'true'){
+    //             logOut()
+    //         }
+    //     } catch (error) {
+    //         console.log('error',error)
+
+    //     }
+    // }
 
 
     return (

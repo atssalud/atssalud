@@ -113,15 +113,15 @@ const TypeAlertScreen = (props) => {
      <>
       {(nameTestToApplicate.length !== 0)?
           <>
-          {(data.edad>44 && !nameTestToApplicate.includes('RIESGO CARDIOVASCULAR'))?
+          {(data.edad>17 && !nameTestToApplicate.includes('RIESGO CARDIOVASCULAR'))?
             <ButtonImage
             nameImage='heartbeat'
             text='Cardiovascular'
             size={30}
-            btnFunction={()=>navigator.replace('TestCardiovascularScreen',{data:dataPeople,datos:data,})}
+            btnFunction={()=>navigator.replace('FilterTestCardiovascular',{data:dataPeople,datos:data,})}
             
           /> 
-          : (data.edad>44)?
+          : (data.edad>17)?
           <ButtonImage
             nameImage='heartbeat'
             text='Cardiovascular'
@@ -201,12 +201,12 @@ const TypeAlertScreen = (props) => {
           
       :
       <>
-      {(data.edad>44)?
+      {(data.edad>17)?
         <ButtonImage
         nameImage='heartbeat'
         text='Cardiovascular'
         size={30}
-        btnFunction={()=>navigator.replace('TestCardiovascularScreen',{data:dataPeople,datos:data,})}
+        btnFunction={()=>navigator.replace('FilterTestCardiovascular',{data:dataPeople,datos:data,})}
         
       /> 
       : null

@@ -73,7 +73,7 @@ const ViewAlertScreen = (props) => {
           /> : null
       }
       <View style={styles.cText}>
-        <Text style={styles.text}>{(data.risk_percentage) ? data.risk_percentage + '%' : data.risk_message}</Text>
+        <Text style={styles.text}>{(data.risk_percentage) ? data.risk_percentage: data.risk_message}</Text>
       </View>
       {
         (data.risk_anxiety) ?
@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
   image: {
     width: 300,
     height: 180,
-    marginTop:-40
   },
   cRTest: {
     flexDirection: 'row'

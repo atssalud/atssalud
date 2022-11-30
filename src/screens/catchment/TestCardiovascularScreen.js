@@ -36,15 +36,15 @@ const TestCardiovascularScreen = (props) => {
         setToken(userToken)
     }
 
-    const {gender,age,id,total_cholesterol,hdl,systolic_pressure,smoking,diabetes,onChange} = useForm({
+    const {gender,age,id,total_cholesterol,hdl,systolic_pressure,smoking,tratamiento,onChange} = useForm({
         gender:data.gender,
         age:datos.edad,
         total_cholesterol:'',
         hdl:'',
         systolic_pressure:'',
         smoking:'',
-        diabetes:'',
-        id:data.id
+        tratamiento:'',
+        id:data.dni
     })
 
     const send =async()=>{
@@ -52,20 +52,20 @@ const TestCardiovascularScreen = (props) => {
         const user = await AsyncStorage.getItem('user');
         const userJson =  JSON.parse(user);
         const data={
-            "token":token,
-            "people_id":id,
-            "user_id":userJson.id,
-            "gender":gender,
-            "age":age,
-            "total_cholesterol":total_cholesterol,
-            "hdl":hdl,
-            "systolic_pressure":systolic_pressure,
-            "smoking":smoking,
-            "diabetes":diabetes
+            "dni":String(id),
+            "author_id":String(userJson.id),
+            "gender":String(gender),
+            "age":String(age),
+            "total_cholesterol":String(total_cholesterol),
+            "hdl_cholesterol":String(hdl),
+            "systolic_pressure":String(systolic_pressure),
+            "smoking":String(smoking),
+            "blood_pressure_treatment":String(tratamiento),
+
         }
         console.log({data})
         try {
-            const resp = await http('post',Endpoint.testCardiovascular,data)
+            const resp = await http('post',Endpoint.sendTestCardiovascular,data)
             if(resp.message==='token no válido'){
                 logOut()
             }
@@ -87,9 +87,9 @@ const TestCardiovascularScreen = (props) => {
         console.log(key,value)
         onChange(key,'smoking')
     }
-    const diabeteSelect=(key,value)=>{
+    const tratamientoSelect=(key,value)=>{
         console.log(key,value)
-        onChange(key,'diabetes')
+        onChange(key,'tratamiento')
     }
   return (
     <>
@@ -166,15 +166,15 @@ const TestCardiovascularScreen = (props) => {
                 <View style={{flexDirection:'row',}}>
                 <View>
                     <ListOptions
-                        label='Diabético'
+                        label='¿ Tiene tratamiento ?'
                         options={siNo}
-                        itemSelect={diabeteSelect}
+                        itemSelect={tratamientoSelect}
                         dimension='middle'
                         placeholder={'No'}
                         />
                     {(error)?
-                        (error.diabetes==='')?null:
-                        <Text style={styles.textValid}>{error.diabetes}</Text>: null
+                        (error.tratamiento==='')?null:
+                        <Text style={styles.textValid}>{error.tratamiento}</Text>: null
                     }
                     </View>
                 </View>

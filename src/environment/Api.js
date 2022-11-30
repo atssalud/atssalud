@@ -10,14 +10,14 @@ const NODE_BASEURL='https://api.atssalud.com'
 
 export const Endpoint = {
 
-    login:`${BASEURL}/auth`,
+    login:`${NODE_BASEURL}/auth/login`,
     professions:`${BASEURL}/professions`,
     departaments:`${BASEURL}/states`,
     dniTypes:`${BASEURL}/dni-types`,
     eps:`${BASEURL}/companies`,
     cities:(idDepartament)=>{return `${BASEURL}/cities&state=${idDepartament}`;},
     signUp:`${BASEURL}/sign-up`,
-    login:`${BASEURL}/login`,
+    // login:`${BASEURL}/login`,
     dataUser:`${BASEURL}/get-user-profile`,
     editDataUser:`${BASEURL}/update-user-profile`,
     editDataBankUser:`${BASEURL}/update-user-databank`,
@@ -26,7 +26,6 @@ export const Endpoint = {
     banks:`${BASEURL}/banks`,
     typeAccount:`${BASEURL}/banks-types-account`,
     findPeople:`${BASEURL}/find-patient-dni`,
-    testCardiovascular:`${BASEURL}/test-cardiovascular`,
     createPatient:`${BASEURL}/create-patient`,
     editPatient:`${BASEURL}/update-patient`,
     listItemTestAsthma :`${BASEURL}/list-items-test-childrem-asthma`,
@@ -42,6 +41,9 @@ export const Endpoint = {
     sendTestDiabetes:`${NODE_BASEURL}/tests/deabetes`,
     listItemTestEpoc :`${NODE_BASEURL}/tests/3`,
     sendTestEpoc:`${NODE_BASEURL}/tests/epoc`,
+    sendTestCardiovascular:`${NODE_BASEURL}/tests/framingham`,
+    sendValidationTestCardiovascular:`${NODE_BASEURL}/tests/is-cardiovascular`
+    // validateToken:`${NODE_BASEURL}/token`,
 }   
 
 const Api = axios.create(Endpoint)

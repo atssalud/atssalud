@@ -290,6 +290,7 @@ const EditMyDataScreen = (props) => {
                 (error.city==='')?null:
                 <Text style={styles.textValid}>{error.city}</Text>: null
             }
+            
             <TextInputs
                 label='Direccion'
                 placeholder="cra 48 # 31-54"

@@ -118,17 +118,17 @@ const TypeRiskScreen2 = (props) => {
             color={Colors.GREY_LIGHT}
           /> :null
           }
-          {(data.edad>17 && !nameTestToApplicate.includes('IPERTENSIÓN ARTERIAL'))?
+          {(data.edad>17 && !nameTestToApplicate.includes('HIPERTENSIÓN ARTERIAL'))?
             <ButtonImage
             nameImage='check-circle'
-            text='IPERTENSIÓN ARTERIAL'
+            text='HIPERTENSIÓN ARTERIAL'
             size={30}
-            btnFunction={()=>navigator.replace('TestRiskScreen', { id: 7, data: data, title: 'IPERTENSIÓN ARTERIAL' })}
+            btnFunction={()=>navigator.replace('TestRiskScreen', { id: 7, data: data, title: 'HIPERTENSIÓN ARTERIAL' })}
           />
           :(data.edad>17)?
           <ButtonImage
             nameImage='check-circle'
-            text='IPERTENSIÓN ARTERIAL'
+            text='HIPERTENSIÓN ARTERIAL'
             size={30}
             disabled={true}
             color={Colors.GREY_LIGHT}
@@ -270,6 +270,125 @@ const TypeRiskScreen2 = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
+          {(data.edad>=14 && !nameTestToApplicate.includes('DEPRESIÓN'))?
+            <ButtonImage
+            nameImage='check-circle'
+            text='DEPRESIÓN'
+            size={30}
+            btnFunction={()=>navigator.replace('TestRiskScreen', { id: 16, data: data, title: 'DEPRESIÓN' })}
+          />
+          :
+          (data.edad>=14)?
+          <ButtonImage
+            nameImage='check-circle'
+            text='DEPRESIÓN'
+            size={30}
+            disabled={true}
+            color={Colors.GREY_LIGHT}
+          />:null
+          }
+          {(data.edad>=14 && !nameTestToApplicate.includes('DEMENCIA'))?
+            <ButtonImage
+            nameImage='check-circle'
+            text='DEMENCIA'
+            size={30}
+            btnFunction={()=>navigator.replace('TestRiskScreen', { id: 17, data: data, title: 'DEMENCIA' })}
+          />
+          :
+          (data.edad>=14)?
+          <ButtonImage
+            nameImage='check-circle'
+            text='DEMENCIA'
+            size={30}
+            disabled={true}
+            color={Colors.GREY_LIGHT}
+          />:null
+          }
+          {(data.edad>=14 && !nameTestToApplicate.includes('ESQUIZOFRENIA'))?
+            <ButtonImage
+            nameImage='check-circle'
+            text='ESQUIZOFRENIA'
+            size={30}
+            btnFunction={()=>navigator.replace('TestRiskScreen', { id: 18, data: data, title: 'ESQUIZOFRENIA' })}
+          />
+          :
+          (data.edad>=14)?
+          <ButtonImage
+            nameImage='check-circle'
+            text='ESQUIZOFRENIA'
+            size={30}
+            disabled={true}
+            color={Colors.GREY_LIGHT}
+          />:null
+          }
+          {(data.edad>=14 && !nameTestToApplicate.includes('INTENTO SUICIDA'))?
+            <ButtonImage
+            nameImage='check-circle'
+            text='INTENTO SUICIDA'
+            size={30}
+            btnFunction={()=>navigator.replace('TestRiskScreen', { id: 19, data: data, title: 'INTENTO SUICIDA' })}
+          />
+          :
+          (data.edad>=14)?
+          <ButtonImage
+            nameImage='check-circle'
+            text='INTENTO SUICIDA'
+            size={30}
+            disabled={true}
+            color={Colors.GREY_LIGHT}
+          />:null
+          }
+          {(data.edad>=14 && !nameTestToApplicate.includes('CONSUMIDOR DE SUSTACIAS PSICOACTIVAS'))?
+            <ButtonImage
+            nameImage='check-circle'
+            text='CONSUMIDOR DE SUSTACIAS PSICOACTIVAS'
+            size={30}
+            btnFunction={()=>navigator.replace('TestRiskScreen', { id: 20, data: data, title: 'CONSUMIDOR DE SUSTACIAS PSICOACTIVAS' })}
+          />
+          :
+          (data.edad>=14)?
+          <ButtonImage
+            nameImage='check-circle'
+            text='CONSUMIDOR DE SUSTACIAS PSICOACTIVAS'
+            size={30}
+            disabled={true}
+            color={Colors.GREY_LIGHT}
+          />:null
+          }
+          {(data.edad>=14 && !nameTestToApplicate.includes('VICTIMA DEL CONFLICTO ARMADO'))?
+            <ButtonImage
+            nameImage='check-circle'
+            text='VICTIMA DEL CONFLICTO ARMADO'
+            size={30}
+            btnFunction={()=>navigator.replace('TestRiskScreen', { id: 21, data: data, title: 'VICTIMA DEL CONFLICTO ARMADO' })}
+          />
+          :
+          (data.edad>=14)?
+          <ButtonImage
+            nameImage='check-circle'
+            text='VICTIMA DEL CONFLICTO ARMADO'
+            size={30}
+            disabled={true}
+            color={Colors.GREY_LIGHT}
+          />:null
+          }
+          {(data.edad>=14 && !nameTestToApplicate.includes('VICTIMA DE VIOLENCIA DE GENERO'))?
+            <ButtonImage
+            nameImage='check-circle'
+            text='VICTIMA DE VIOLENCIA DE GENERO'
+            size={30}
+            btnFunction={()=>navigator.replace('TestRiskScreen', { id: 22, data: data, title: 'VICTIMA DE VIOLENCIA DE GENERO' })}
+          />
+          :
+          (data.edad>=14)?
+          <ButtonImage
+            nameImage='check-circle'
+            text='VICTIMA DE VIOLENCIA DE GENERO'
+            size={30}
+            disabled={true}
+            color={Colors.GREY_LIGHT}
+          />:null
+          }
           </>
           ///////////////////////////////////////////////////////////////////////////////////////
       :
@@ -287,9 +406,9 @@ const TypeRiskScreen2 = (props) => {
       {(data.edad>17)?
         <ButtonImage
         nameImage='check-circle'
-        text='IPERTENSIÓN ARTERIAL'
+        text='HIPERTENSIÓN ARTERIAL'
         size={30}
-        btnFunction={()=>navigator.replace('TestRiskScreen', { id: 7, data: data, title: 'IPERTENSIÓN ARTERIAL' })}
+        btnFunction={()=>navigator.replace('TestRiskScreen', { id: 7, data: data, title: 'HIPERTENSIÓN ARTERIAL' })}
       />
       :null
       }
@@ -364,6 +483,68 @@ const TypeRiskScreen2 = (props) => {
         size={30}
         btnFunction={()=>navigator.replace('TestRiskScreen', { id: 15, data: data, title: 'POBLACIÓN CON RIESGO O TRANSTORNOS VISUALES Y AUDITIVOS' })}
       />
+      :null
+      }
+      {(data.edad>13)?
+         <ButtonImage
+         nameImage='check-circle'
+         text='DEPRESIÓN'
+         size={30}
+         btnFunction={()=>navigator.replace('TestRiskScreen', { id: 16, data: data, title: 'DEPRESIÓN' })}
+       />
+      :null
+      }
+      {(data.edad>13)?
+         <ButtonImage
+         nameImage='check-circle'
+         text='DEMENCIA'
+         size={30}
+         btnFunction={()=>navigator.replace('TestRiskScreen', { id: 17, data: data, title: 'DEMENCIA' })}
+       />
+      :null
+      }
+      {(data.edad>13)?
+         <ButtonImage
+         nameImage='check-circle'
+         text='ESQUIZOFRENIA'
+         size={30}
+         btnFunction={()=>navigator.replace('TestRiskScreen', { id: 18, data: data, title: 'ESQUIZOFRENIA' })}/>
+      :null
+      }
+      {(data.edad>13)?
+         <ButtonImage
+         nameImage='check-circle'
+         text='INTENTO SUICIDA'
+         size={30}
+         btnFunction={()=>navigator.replace('TestRiskScreen', { id: 19, data: data, title: 'INTENTO SUICIDA' })}
+       />
+      :null
+      }
+      {(data.edad>13)?
+         <ButtonImage
+         nameImage='check-circle'
+         text='CONSUMIDOR DE SUSTACIAS PSICOACTIVAS'
+         size={30}
+         btnFunction={()=>navigator.replace('TestRiskScreen', { id: 20, data: data, title: 'CONSUMIDOR DE SUSTACIAS PSICOACTIVAS' })}
+       />
+      :null
+      }
+      {(data.edad>13)?
+         <ButtonImage
+         nameImage='check-circle'
+         text='VICTIMA DEL CONFLICTO ARMADO'
+         size={30}
+         btnFunction={()=>navigator.replace('TestRiskScreen', { id: 21, data: data, title: 'VICTIMA DEL CONFLICTO ARMADO' })}
+       />
+      :null
+      }
+      {(data.edad>13)?
+         <ButtonImage
+         nameImage='check-circle'
+         text='VICTIMA DE VIOLENCIA DE GENERO'
+         size={30}
+         btnFunction={()=>navigator.replace('TestRiskScreen', { id: 22, data: data, title: 'VICTIMA DE VIOLENCIA DE GENERO' })}
+       />
       :null
       }
       </>

@@ -37,6 +37,7 @@ import TypeRiskScreen from '../screens/catchment/TypeRiskScreen';
 import TestRiskScreen from '../screens/catchment/TestRiskScreen';
 import TestDiabetesScreen from '../screens/catchment/TestDiabetesScreen';
 import TypeRiskScreen2 from '../screens/catchment/TypeRiskScreen2';
+import FilterTestCardiovascular from '../screens/catchment/FilterTestCardiovascular';
 
 const Stack = createNativeStackNavigator();
 
@@ -123,6 +124,7 @@ const Navigator = () => {
               <Stack.Screen name="TestRiskScreen" component={TestRiskScreen} options={{  title: 'Marca en Salud'}}/>
               <Stack.Screen name="TestDiabetesScreen" component={TestDiabetesScreen} options={{  title: 'Test Diabetes'}}/>
               <Stack.Screen name="TypeRiskScreen2" component={TypeRiskScreen2} options={{  title: 'Marca en Salud'}}/>
+              <Stack.Screen name="FilterTestCardiovascular" component={FilterTestCardiovascular} options={{  title: 'Filtro Test Cardiovascular '}}/>
             </>
           )
       }

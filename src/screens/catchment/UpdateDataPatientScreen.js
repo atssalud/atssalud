@@ -286,7 +286,7 @@ const UpdateDataPatientScreen = (props) => {
                     <Text style={styles.textValid}>{error.state}</Text>: null
                 }
                     
-                    {(userRegister.departamento)?
+                    {(cities)?
                         <View>
                         <ListOptions
                         label='Ciudad'
