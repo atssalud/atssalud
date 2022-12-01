@@ -82,8 +82,7 @@ const FilterTestEpocScreen = (props) => {
         </View>
         <View style={Styles.borderContainer}>
             <View style={styles.cQuestion}>
-                <Text style={styles.tQuestion}>¿Estuvo expuesto a biomasa por</Text>
-                <Text style={styles.tQuestion}>más de 7 años seguidos?</Text>
+            <Text style={styles.tQuestion}>¿Estuvo expuesto a biomasa?</Text>
             </View>
             <View style={styles.cCheckBox}>
                 <Checkbox
@@ -100,6 +99,30 @@ const FilterTestEpocScreen = (props) => {
                 />
             </View>
         </View>
+        {
+            (biomasa === true)?
+
+            <View style={Styles.borderContainer}>
+            <View style={styles.cQuestion}>
+                <Text style={styles.tQuestion}>¿Estuvo expuesto a biomasa por</Text>
+                <Text style={styles.tQuestion}>más de 10 años seguidos?</Text>
+            </View>
+            <View style={styles.cCheckBox}>
+                <Checkbox
+                    text={'Si'}
+                    value={biomasa}
+                    disabled={false}
+                    onValueChange={(newValue) => setBiomasa(newValue)}
+                />
+                <Checkbox
+                    text={'No'}
+                    value={!biomasa}
+                    disabled={false}
+                    onValueChange={(newValue) => setBiomasa(!newValue)}
+                />
+            </View>
+        </View>:null
+        }
         <View style={styles.cButton}>
         <Button
           title="Aplicar Test"

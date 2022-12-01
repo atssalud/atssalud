@@ -3,6 +3,7 @@ import Api, { Endpoint } from '../environment/Api';
 import { AuthReducer } from './AuthReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native'
+import NetInfo from "@react-native-community/netinfo";
 import http from '../services/http'
 
 
@@ -119,6 +120,16 @@ export const AuthProvider = ({children})=>{
         })
     }
 
+    const isConnected=()=>{
+        NetInfo.fetch().then(state => {
+            if(state.isConnected === false){
+            dispatch({
+                type:'isNotConnected'
+            })}
+            console.log('isConnected',state.isConnected)
+           });
+    }
+
     // const changeToken=async()=>{
     //     try {
     //         const resp= await http('get',Endpoint.validateToken)
@@ -139,6 +150,7 @@ export const AuthProvider = ({children})=>{
             signIn,
             logOut,
             removeError,
+            isConnected
         }}>
             { children }
         </AuthContext.Provider>

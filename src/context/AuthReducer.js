@@ -34,6 +34,11 @@ export const AuthReducer = (state,action)=>{
                 status:'not-authenticated',
                 token:null,
             };
+        case 'isNotConnected':
+            return {
+                ...state,
+                status:'isNotConnected',
+            };
     
         default:
             return state;

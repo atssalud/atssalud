@@ -28,7 +28,7 @@ const TestDiabetesScreen = (props) => {
     const [talla, setTalla] = useState('')
 
    
-
+    console.log('answerrrrrr',answer)
     const data = props.route.params.data
     console.log('daaataaa', data)
     const datos = props.route.params.datos
@@ -40,7 +40,9 @@ const TestDiabetesScreen = (props) => {
 
     const calculateIMC = () => {
         
-        const imc = peso / talla
+        const imc = peso / (talla*talla)
+
+        console.log({imc})
 
         if (imc < 25) {
             answer[1].name='Menor a 25 kg/m2'
@@ -190,6 +192,7 @@ const TestDiabetesScreen = (props) => {
         const user = await AsyncStorage.getItem('user');
         const { id } = JSON.parse(user);
         console.log(user);
+        console.log('verificadooooo',answer)
         const send = {
             "dni": String(data.dni),
             "author_id": String(id),

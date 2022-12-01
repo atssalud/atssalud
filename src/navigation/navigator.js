@@ -38,25 +38,22 @@ import TestRiskScreen from '../screens/catchment/TestRiskScreen';
 import TestDiabetesScreen from '../screens/catchment/TestDiabetesScreen';
 import TypeRiskScreen2 from '../screens/catchment/TypeRiskScreen2';
 import FilterTestCardiovascular from '../screens/catchment/FilterTestCardiovascular';
+// import { TestEnfermedadRenalCronica } from '../screens/catchment/TestEnfermedadRenalCronica';
+// import { TestHipertensionArterial } from '../screens/catchment/TestHipertensionArterial';
+// import { TestMaternoPerinatal } from '../screens/catchment/TestMaternoPerinatal';
+// import { TestPoblacionRiesgo } from '../screens/catchment/TestPoblacionRiesgo';
 
 const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
 
-  const [isConnected,setIsConnected]=useState(false)
-
-  const { status } = useContext(AuthContext)
-
-  if (status === 'checking') return <LoadingScreen />;
   
 
-  NetInfo.fetch().then(state => {
-   setIsConnected(state.isConnected)
-   console.log(state.isConnected)
-   console.log("Connection type", state.type);
-  });
+  const { status, isConnected} = useContext(AuthContext)
+  // isConnected()
 
-  if(isConnected === false) return <IsConnectedScreen/>;
+  if (status === 'checking') return <LoadingScreen />;
+  // if (status === 'isNotConnected') return <IsConnectedScreen/>;
 
   return (
     <Stack.Navigator
@@ -125,6 +122,10 @@ const Navigator = () => {
               <Stack.Screen name="TestDiabetesScreen" component={TestDiabetesScreen} options={{  title: 'Test Diabetes'}}/>
               <Stack.Screen name="TypeRiskScreen2" component={TypeRiskScreen2} options={{  title: 'Marca en Salud'}}/>
               <Stack.Screen name="FilterTestCardiovascular" component={FilterTestCardiovascular} options={{  title: 'Filtro Test Cardiovascular '}}/>
+              {/* <Stack.Screen name="TestEnfermedadRenalCronica" component={TestEnfermedadRenalCronica} options={{  title: 'Test Enfermedad Renal Crónica '}}/>
+              <Stack.Screen name="TestHipertensionArterial" component={TestHipertensionArterial} options={{  title: 'Test Hipertensión Arterial'}}/>
+              <Stack.Screen name="TestMaternoPerinatal" component={TestMaternoPerinatal} options={{  title: 'Test Materno Perinatal'}}/>
+              <Stack.Screen name="TestPoblacionRiesgo" component={TestPoblacionRiesgo} options={{  title: 'Test Población en Riesgo ...'}}/> */}
             </>
           )
       }

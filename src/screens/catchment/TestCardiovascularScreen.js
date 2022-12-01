@@ -115,6 +115,7 @@ const TestCardiovascularScreen = (props) => {
                         onChangeText= { (value) => onChange(value,'total_cholesterol') }
                         value={total_cholesterol}
                         dimension='middle'
+                        keyboardType='numeric'
                     />
                     {(error)?
                         (error.total_cholesterol==='')?null:
@@ -128,6 +129,7 @@ const TestCardiovascularScreen = (props) => {
                         onChangeText= { (value) => onChange(value,'hdl') }
                         value={hdl}
                         dimension='middle'
+                        keyboardType='numeric'
                     />
                     {(error)?
                         (error.hdl==='')?null:
@@ -143,6 +145,7 @@ const TestCardiovascularScreen = (props) => {
                         onChangeText= { (value) => onChange(value,'systolic_pressure') }
                         value={systolic_pressure}
                         dimension='middle'
+                        keyboardType='numeric'
                     />
                     {(error)?
                         (error.systolic_pressure==='')?null:
@@ -166,7 +169,7 @@ const TestCardiovascularScreen = (props) => {
                 <View style={{flexDirection:'row',}}>
                 <View>
                     <ListOptions
-                        label='¿ Tiene tratamiento ?'
+                        label='¿ Tiene tratamiento para Hipertensión Arterial ?'
                         options={siNo}
                         itemSelect={tratamientoSelect}
                         dimension='middle'
