@@ -106,7 +106,7 @@ const DataPatientScreen = (props) => {
                     )
                 })
                 :
-                <View style={styles.cData2}>
+                <View style={styles.cData}>
                     <Text style={styles.textCampo}>Riesgos: </Text>
                     <Text style={styles.textData}>Sin test aplicados</Text>
                 </View>
@@ -136,7 +136,8 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         borderBottomWidth:1,
         borderBottomColor: '#CFD2CF',
-        paddingVertical:20
+        paddingVertical:20,
+        paddingHorizontal:14
     },
     cData2:{
         flexDirection:'row',

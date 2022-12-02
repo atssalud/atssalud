@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { Styles } from '../../theme/GlobalStyle';
 import { Fonts } from '../../theme/Fonts';
@@ -112,7 +112,7 @@ const TypeAlertScreen = (props) => {
       {(debouncedValue)?
      <>
       {(nameTestToApplicate.length !== 0)?
-          <>
+          <ScrollView>
           {(data.edad>17 && !nameTestToApplicate.includes('RIESGO CARDIOVASCULAR'))?
             <ButtonImage
             nameImage='heartbeat'
@@ -197,10 +197,70 @@ const TypeAlertScreen = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
-          </>
+          {(data.edad>17 && !nameTestToApplicate.includes('HIPERTENSION ARTERIAL'))?
+            <ButtonImage
+            nameImage='medkit'
+            text='Hipertension Arterial'
+            size={30}
+            btnFunction={()=>navigator.replace('TestHipertensionArterial',{data:dataPeople,datos:data,})}
+          />
+          :
+          (data.edad>17)?
+          <ButtonImage
+            nameImage='medkit'
+            text='Hipertension Arterial'
+            size={30}
+            disabled={true}
+            color={Colors.GREY_LIGHT}
+          />:null
+          }
+          {(data.edad>18 && !nameTestToApplicate.includes('ENFERMEDAD RENAL CRONICA'))?
+            <ButtonImage
+            nameImage='medkit'
+            text='Enfermedad Renal Crónica'
+            size={30}
+            btnFunction={()=>navigator.replace('FilterTestEnfermedadRenalCronico',{data:dataPeople,datos:data,})}
+          />
+          :
+          (data.edad>18)?
+          <ButtonImage
+            nameImage='medkit'
+            text='Enfermedad Renal Crónica'
+            size={30}
+            disabled={true}
+            color={Colors.GREY_LIGHT}
+          />:null
+          }
+          {(data.edad>17 && !nameTestToApplicate.includes('POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES'))?
+            <ButtonImage
+            nameImage='medkit'
+            text='Población en riesgo o presencia de alteraciones nutricionales'
+            size={30}
+            btnFunction={()=>navigator.replace('TestPoblacionRiesgo',{data:dataPeople,datos:data,})}
+          />
+          :
+          (data.edad>17)?
+          <ButtonImage
+            nameImage='medkit'
+            text='Población en riesgo o presencia de alteraciones nutricionales'
+            size={30}
+            disabled={true}
+            color={Colors.GREY_LIGHT}
+          />:null
+          }
+
+      <View style={style.btnEvaluarPaciente}>
+        <Button
+          title="Evaluar otro paciente"
+          onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen' })}
+          color='secondary'
+          fill='solid'
+        />
+      </View>
+          </ScrollView>
           
       :
-      <>
+      <ScrollView>
       {(data.edad>17)?
         <ButtonImage
         nameImage='heartbeat'
@@ -248,8 +308,33 @@ const TypeAlertScreen = (props) => {
       />
       :null
       }
-      </>
-    }
+      {(data.edad>17)?
+       <ButtonImage
+       nameImage='medkit'
+       text='Hipertension Arterial'
+       size={30}
+       btnFunction={()=>navigator.replace('TestHipertensionArterial',{data:dataPeople,datos:data,})}
+     />
+      :null
+      }
+      {(data.edad>18)?
+       <ButtonImage
+       nameImage='medkit'
+       text='Enfermedad Renal Crónica'
+       size={30}
+       btnFunction={()=>navigator.replace('FilterTestEnfermedadRenalCronico',{data:dataPeople,datos:data,})}
+     />
+      :null
+      }
+      {(data.edad>17)?
+       <ButtonImage
+       nameImage='medkit'
+       text='Población en riesgo o presencia de alteraciones nutricionales'
+       size={30}
+       btnFunction={()=>navigator.replace('TestPoblacionRiesgo',{data:dataPeople,datos:data,})}
+     />
+      :null
+      }
       <View style={style.btnEvaluarPaciente}>
         <Button
           title="Evaluar otro paciente"
@@ -258,9 +343,13 @@ const TypeAlertScreen = (props) => {
           fill='solid'
         />
       </View>
+      </ScrollView>
+    }
+      
       </>
       :<TypeAlertSkeletonScreen/>
     }
+    
     </View>
   )
 }
@@ -281,11 +370,5 @@ const style=StyleSheet.create({
     fontSize:18,
     color:Colors.FONT_COLOR
   },
-  btnEvaluarPaciente:{
-    flex:1,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    position:'absolute'}
 
 })

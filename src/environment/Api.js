@@ -42,7 +42,10 @@ export const Endpoint = {
     listItemTestEpoc :`${NODE_BASEURL}/tests/3`,
     sendTestEpoc:`${NODE_BASEURL}/tests/epoc`,
     sendTestCardiovascular:`${NODE_BASEURL}/tests/framingham`,
-    sendValidationTestCardiovascular:`${NODE_BASEURL}/tests/is-cardiovascular`
+    sendValidationTestCardiovascular:`${NODE_BASEURL}/tests/is-cardiovascular`,
+    sendTestHipertensionArterial:`${NODE_BASEURL}/tests/arterialHypertension`,
+    sendTestEnfermedadRenalCronica:`${NODE_BASEURL}/tests/chronicKidneyDisease`,
+    sendTestPoblacionRiesgo:`${NODE_BASEURL}/tests/populationAtRiskOrPresenceNutritionalAlterations`,
     // validateToken:`${NODE_BASEURL}/token`,
 }   
 
