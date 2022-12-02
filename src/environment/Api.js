@@ -41,6 +41,8 @@ export const Endpoint = {
     sendTestDiabetes:`${NODE_BASEURL}/tests/deabetes`,
     listItemTestEpoc :`${NODE_BASEURL}/tests/3`,
     sendTestEpoc:`${NODE_BASEURL}/tests/epoc`,
+    listItemTesOms :`${NODE_BASEURL}/tests/24`,
+    sendTestOms:`${NODE_BASEURL}/tests/rcvOms`,
     sendTestCardiovascular:`${NODE_BASEURL}/tests/framingham`,
     sendValidationTestCardiovascular:`${NODE_BASEURL}/tests/is-cardiovascular`,
     sendTestHipertensionArterial:`${NODE_BASEURL}/tests/arterialHypertension`,

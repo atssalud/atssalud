@@ -61,7 +61,8 @@ const FilterTestCardiovascular = (props) => {
             if(examenes===true){
                 navigator.replace('TestCardiovascularScreen',{data:data,datos:datos,})
             }else{
-                setAlert(true)
+                navigator.replace('TestCardiovascularOms',{data:data,datos:datos,})
+                
             }
         }
     }

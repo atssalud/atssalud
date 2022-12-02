@@ -42,6 +42,7 @@ import TestHipertensionArterial from '../screens/catchment/TestHipertensionArter
 import FilterTestEnfermedadRenalCronico from '../screens/catchment/FilterTestEnfermedadRenalCronico';
 import TestEnfermedadRenalCronica from '../screens/catchment/TestEnfermedadRenalCronica';
 import TestPoblacionRiesgo from '../screens/catchment/TestPoblacionRiesgo';
+import TestCardiovascularOms from '../screens/catchment/TestCardiovascularOms';
 
 const Stack = createNativeStackNavigator();
 
@@ -127,6 +128,7 @@ const Navigator = () => {
               <Stack.Screen name="FilterTestEnfermedadRenalCronico" component={FilterTestEnfermedadRenalCronico} options={{  title: ' Filtro Test ERC'}}/>
               {/* <Stack.Screen name="TestMaternoPerinatal" component={TestMaternoPerinatal} options={{  title: 'Test Materno Perinatal'}}/> */}
               <Stack.Screen name="TestPoblacionRiesgo" component={TestPoblacionRiesgo} options={{  title: 'Test Población en Riesgo ...'}}/>
+              <Stack.Screen name="TestCardiovascularOms" component={TestCardiovascularOms} options={{  title: 'Test Cardiovascular'}}/>
 
             </>
           )
