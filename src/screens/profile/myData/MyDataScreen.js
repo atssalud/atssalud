@@ -44,12 +44,12 @@ const MyDataScreen = (props) => {
     }
     if(data){
         var nombre=data.first_name.split(' ')
-        // nombre=nombre[0][0].toUpperCase()+nombre[0].substring(1).toLowerCase()
+        // // nombre=nombre[0][0].toUpperCase()+nombre[0].substring(1).toLowerCase()
         nombre=nombre.map(n=>n[0].toUpperCase()+n.substring(1).toLowerCase()+' ')
         nombre.join('')
 
         var apellido=data.last_name.split(' ')
-        // apellido=apellido[0][0].toUpperCase()+apellido[0].substring(1).toLowerCase()
+        // // apellido=apellido[0][0].toUpperCase()+apellido[0].substring(1).toLowerCase()
         apellido=apellido.map(n=>n[0].toUpperCase()+n.substring(1).toLowerCase()+' ')
         apellido.join('')
         

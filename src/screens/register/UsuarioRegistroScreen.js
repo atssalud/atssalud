@@ -28,6 +28,7 @@ const UsuarioRegisterScreen = () => {
     const [cities,setCities]= useState()
     const [dniTypes,setDniTypes]= useState()
     const [eps,setEps]= useState()
+    const [message,setMessage]= useState()
 
     const [userRegister, setUserRegister] = useState({
         dni:'',
@@ -105,19 +106,19 @@ const UsuarioRegisterScreen = () => {
     const register = async()=>{
         
         const send={
-            "dni":userRegister.dni,
+            "dni":userRegister.dni.trim(),
             "dni_type":userRegister.dni_type,
-            "first_name":userRegister.first_name,
-            "last_name":userRegister.last_name,
-            "address":userRegister.address,
+            "first_name":userRegister.first_name.trim(),
+            "last_name":userRegister.last_name.trim(),
+            "address":userRegister.address.trim(),
             "city":userRegister.city,
             "state":userRegister.state,
-            "phone":userRegister.phone,
+            "phone":userRegister.phone.trim(),
             "profession":userRegister.profession,
             "company":userRegister.company,
-            "email":userRegister.email,
-            "password":userRegister.password,
-            "same_password":userRegister.same_password
+            "email":userRegister.email.trim(),
+            "password":userRegister.password.trim(),
+            "same_password":userRegister.same_password.trim()
         }
 
         console.log(send)
@@ -128,13 +129,19 @@ const UsuarioRegisterScreen = () => {
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                setAlert(true)
+                if(resp.success===false){
+                    setMessage(resp.message)
+                    setErrorAlert(true)
+                }else{
+                    setAlert(true)
+                }
+                
             }
             
 
         } catch (error) {
             console.log('error',error)
-            // setErrorAlert(true)
+            setErrorAlert(true)
         }
     }
 
@@ -145,7 +152,7 @@ const UsuarioRegisterScreen = () => {
                 style={styles.imageAlert}
             />
             <Text style={styles.tTitleAlert}>Notificación</Text>
-            <Text style={styles.textAlertError}>!Ha ocurrido un error¡ , Registro no exitoso</Text>
+            <Text style={styles.textAlertError}>{(message)?message:'!Ha ocurrido un error¡ , Registro no exitoso'}</Text>
         </View>
 
     const contentAlert=
@@ -446,7 +453,7 @@ const styles=StyleSheet.create({
         width:60,
         height:60,
         bottom:20,
-        marginTop:15
+        marginTop:10
     },
     cAlert:{
         justifyContent: 'center',
@@ -454,9 +461,9 @@ const styles=StyleSheet.create({
         marginTop:20
     },
     textAlertError:{
-        color:'black',
-        marginTop:10,
-        marginBottom:20
+        color:Colors.FONT_COLOR,
+        fontFamily:Fonts.REGULAR,
+        fontSize:15
     },
     textAlert:{
         color:Colors.FONT_COLOR,
