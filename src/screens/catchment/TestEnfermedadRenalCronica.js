@@ -159,7 +159,7 @@ const TestEnfermedadRenalCronica = (props) => {
                       </View>
                       <View>
                           <TextInputs
-                              label={'Creatinina Sérica'}
+                              label={'Creatinina Sérica (mg / dl)'}
                               placeholder={'Ej: 0.7'}
                               keyboardType='numeric'
                               dimension='middle'
