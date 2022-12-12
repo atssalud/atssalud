@@ -1,4 +1,4 @@
-const iconos = ["glass", "music", "search", "envelope-o", "heart",
+export const iconos = ["glass", "music", "search", "envelope-o", "heart",
         "star", "star-o", "user", "film", "th-large", "th", "th-list", "check",
         "remove", "close", "times", "search-plus", "search-minus", "power-off",
         "signal", "gear", "cog", "trash-o", "home", "file-o", "clock-o", "road", "download",

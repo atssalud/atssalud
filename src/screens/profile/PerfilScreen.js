@@ -181,13 +181,13 @@ const PerfilScreen = () => {
             btnFunction={()=>navigator.navigate('MyDataScreen',{dataUser:dataUser})}
           />
           <ButtonImage
-            nameImage='user'
+            nameImage='credit-card-alt'
             text='Datos bancarios'
-            size={30}
+            size={25}
             btnFunction={()=>navigator.navigate('BankDataScreen',{dataUser:dataUser})}
           />
           <ButtonImage
-            nameImage='user'
+            nameImage='file-text-o'
             text='Historial'
             size={30}
             btnFunction={()=>navigator.navigate('ListHistoryRiskUserScreen',{token:token})}

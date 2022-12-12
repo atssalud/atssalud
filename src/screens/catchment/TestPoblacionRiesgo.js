@@ -62,11 +62,11 @@ const TestPoblacionRiesgo = (props) => {
 
         const answer=[
             {
-                "question_id": "54",
+                "question_id": "75",
                 "value": peso
             },
             {
-                "question_id": "55",
+                "question_id": "76",
                 "value": talla
             }
         ]

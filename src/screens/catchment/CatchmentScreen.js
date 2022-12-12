@@ -102,7 +102,7 @@ const CatchmentScreen = () => {
             if (resp.message === 'token no válido') {
                 logOut()
             }
-            console.log(resp)
+            console.log('resss',resp)
             if(resp === 'timeout') return <FailedService/>
             
             if (resp.errors) {
@@ -126,8 +126,6 @@ const CatchmentScreen = () => {
             //         navigator.navigate('DataPatientScreen',{data:resp.data,dni:numberDni})
             //     }
             // }
-
-            console.log('resp', resp)
 
         } catch (error) {
             console.log('error', error)

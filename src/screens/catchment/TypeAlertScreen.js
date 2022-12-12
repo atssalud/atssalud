@@ -17,6 +17,7 @@ const TypeAlertScreen = (props) => {
   const {logOut} = useContext(AuthContext)
 
   const data= props.route.params.data
+  console.log('dataaaa1',data)
   const navigator = useNavigation()
   const [dataPeople,setDataPeople]=useState()
   const [debouncedValue,setDebouncedValue] = useState(false);
@@ -42,7 +43,7 @@ const TypeAlertScreen = (props) => {
     }
     const timeout = setTimeout(() => {
       setDebouncedValue(true);
-    },3000);
+    },2000);
 
   return () => {
     clearTimeout(timeout);
@@ -69,41 +70,83 @@ const TypeAlertScreen = (props) => {
         console.log('error',error)
     }
   }
-  let testsToApplicate = []
+
+  let brandsToApplicate = []
+  let nameBrandToApplicate=[]
   let nameTestToApplicate=[]
+  let testsToApplicate = []
 
-  
+  if(dataPeople){
+      console.log('data',data.tamizajes)
+      let testsPeople = dataPeople.tamizajes;
+      let brandsPeople = dataPeople.marcas;
+      //Condicion previa caracterización.
+      let testsToEvaluate = [
+          'DIABETES FINDRISC',
+          'EPOC',
+          'CARDIOVASCULAR',
+          'RIESGO DE ASMA EN NIÑOS',
+          'HIPERTENSIÓN ARTERIAL',
+          'ENFERMEDAD RENAL CRÓNICA',
+          'RIESGO CARDIOVASCULAR OMS',
+          'SOSPECHA DE EMBARAZO',
+          'POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES'
+      ];
+      let brandsToEvaluate = [
+          'DIABETES MELLITUS',
+          'ENFERMEDAD PULMONAR OBSTRUCTIVA CRÓNICA (EPOC)',
+          'ENFERMEDAD CEREBROVASCULAR',
+          'RIESGO DE ASMA EN NIÑOS',
+          'HIPERTENSIÓN ARTERIAL',
+          'OBESIDAD',
+          'ENFERMEDAD RENAL CRÓNICA',
+          'POBLACIÓN CON RIESGO O ALTERACIONES EN SALUD BUCAL',
+          'ENFERMEDADES RARAS',
+          'POBLACIÓN CON RIESGO O PRESENCIA DE CÁNCER',
+          'POBLACIÓN CON RIESGO O TRANSTORNOS VISUALES Y AUDITIVOS',
+          'DEPRESIÓN',
+          'DEMENCIA',
+          'ESQUIZOFRENIA',
+          'INTENTO SUICIDA',
+          'CONSUMIDOR DE SUSTACIAS PSICOACTIVAS',
+          'VICTIMA DEL CONFLICTO ARMADO',
+          'VICTIMA DE VIOLENCIA DE GENERO',
 
-    if(dataPeople){
-      
-        console.log('data',dataPeople.risks)
-        let testsPeople = dataPeople.risks;
-        //Condicion previa caracterización.
-        let testsToEvaluate = [
-            'SALUD MENTAL',
-            'RIESGO EPOC',
-            'RIESGO CARDIOVASCULAR',
-            'RIESGO DE ASMA EN NIÑOS'
-        ];
-        testsToEvaluate.map((testToEvaluate)=>{
-            let tests = testsPeople.filter(testPeople=> testPeople.risk_name == testToEvaluate);
-            let testsOrderByDesc = tests.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-            if(testsOrderByDesc[0] !== undefined){
+      ];
+      testsToEvaluate.map((testToEvaluate)=>{
+          let tests = testsPeople.filter(testPeople=> testPeople.test_name == testToEvaluate);
+          let testsOrderByDesc = tests.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+          if(testsOrderByDesc[0] !== undefined){
 
-                testsToApplicate.push(testsOrderByDesc[0]);
-            }
-        });
-
-        console.log(testsToApplicate);
-        if(testsToApplicate.length !==0){
-          testsToApplicate.map(item=>{
-            nameTestToApplicate.push(item.risk_name)
+              testsToApplicate.push(testsOrderByDesc[0]);
           }
-          )
-          
-        console.log('name',nameTestToApplicate.includes('RIESGO DE ASMA EN NIÑOS'))
+      });
+
+      brandsToEvaluate.map((testToEvaluate)=>{
+          let tests = brandsPeople.filter(brandPeople=> brandPeople.test_name == testToEvaluate);
+          let testsOrderByDesc = tests.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+          if(testsOrderByDesc[0] !== undefined){
+
+              brandsToApplicate.push(testsOrderByDesc[0]);
+          }
+      });
+
+      console.log(testsToApplicate);
+
+      if(brandsToApplicate.length !==0){
+        brandsToApplicate.map(item=>{
+          console.log('item',item)
+          nameBrandToApplicate.push(item.test_name)
+        }
+        )
       }
-    }
+      if(testsToApplicate.length !==0){
+        testsToApplicate.map(item=>{
+          nameTestToApplicate.push(item.test_name)
+        }
+        )
+      }
+}
 
   
   //Preguntar si la persona fuma o si estuvo expuesto a humo de leña, biomasa
@@ -113,137 +156,154 @@ const TypeAlertScreen = (props) => {
      <>
       {(nameTestToApplicate.length !== 0)?
           <ScrollView>
-          {(data.edad>17 && !nameTestToApplicate.includes('RIESGO CARDIOVASCULAR'))?
+          {(data.edad>17 && !nameTestToApplicate.includes('CARDIOVASCULAR') && !nameTestToApplicate.includes('RIESGO CARDIOVASCULAR OMS'))?
             <ButtonImage
-            nameImage='heartbeat'
+            nameImage='check-circle'
             text='Cardiovascular'
-            size={30}
+            size={25}
             btnFunction={()=>navigator.replace('FilterTestCardiovascular',{data:dataPeople,datos:data,})}
             
           /> 
           : (data.edad>17)?
           <ButtonImage
-            nameImage='heartbeat'
+            nameImage='check-circle'
             text='Cardiovascular'
-            size={30}
+            size={25}
             disabled={true}
             color={Colors.GREY_LIGHT}
           /> :null
           }
           {(data.edad>0 && data.edad<8 && !nameTestToApplicate.includes('RIESGO DE ASMA EN NIÑOS'))?
             <ButtonImage
-            nameImage='child'
+            nameImage='check-circle'
             text='Asma'
-            size={30}
+            size={25}
             btnFunction={()=>navigator.replace('TestAsthmaScreen',{data:dataPeople,datos:data,})}
           />
           :(data.edad>0 && data.edad<8)?
           <ButtonImage
-            nameImage='child'
+            nameImage='check-circle'
             text='Asma'
-            size={30}
+            size={25}
             disabled={true}
             color={Colors.GREY_LIGHT}
           />:null
           }
           
-          {(data.edad>39 && !nameTestToApplicate.includes('RIESGO EPOC'))?
+          {(data.edad>39 && !nameTestToApplicate.includes('EPOC') && !nameBrandToApplicate.includes('ENFERMEDAD PULMONAR OBSTRUCTIVA CRÓNICA (EPOC)'))?
             <ButtonImage
-            nameImage='medkit'
+            nameImage='check-circle'
             text='EPOC'
-            size={30}
+            size={25}
             btnFunction={()=>navigator.replace('FilterTestEpocScreen',{data:dataPeople,datos:data,})}
           />
           :(data.edad>39)?
           <ButtonImage
-            nameImage='medkit'
+            nameImage='check-circle'
             text='EPOC'
-            size={30}
+            size={25}
             disabled={true}
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>13 && !nameTestToApplicate.includes('SALUD MENTAL'))?
+          {(data.edad>=5 && !nameTestToApplicate.includes('SALUD MENTAL'))?
             <ButtonImage
-            nameImage='medkit'
+            nameImage='check-circle'
             text='Salud Mental'
-            size={30}
-            btnFunction={()=>navigator.replace('TestMentalHealthScreen',{data:dataPeople,datos:data,})}
+            size={25}
+            btnFunction={()=>navigator.replace('FilterMentalHealth',{data:dataPeople,datos:data,})}
           />
           :
-          (data.edad>13)?
+          (data.edad>=5)?
           <ButtonImage
-            nameImage='medkit'
+            nameImage='check-circle'
             text='Salud Mental'
-            size={30}
+            size={25}
             disabled={true}
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>13 && !nameTestToApplicate.includes('DIABETES'))?
+          {(data.edad>13 && !nameTestToApplicate.includes('DIABETES FINDRISC')&& !nameBrandToApplicate.includes('DIABETES MELLITUS'))?
             <ButtonImage
-            nameImage='medkit'
+            nameImage='check-circle'
             text='Diabetes'
-            size={30}
+            size={25}
             btnFunction={()=>navigator.replace('TestDiabetesScreen',{data:dataPeople,datos:data,})}
           />
           :
           (data.edad>13)?
           <ButtonImage
-            nameImage='medkit'
+            nameImage='check-circle'
             text='Diabetes'
-            size={30}
+            size={25}
             disabled={true}
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>17 && !nameTestToApplicate.includes('HIPERTENSION ARTERIAL'))?
+          {(data.edad>17 && !nameTestToApplicate.includes('HIPERTENSIÓN ARTERIAL')&& !nameBrandToApplicate.includes('HIPERTENSIÓN ARTERIAL'))?
             <ButtonImage
-            nameImage='medkit'
-            text='Hipertension Arterial'
-            size={30}
+            nameImage='check-circle'
+            text='Hipertensión Arterial'
+            size={25}
             btnFunction={()=>navigator.replace('TestHipertensionArterial',{data:dataPeople,datos:data,})}
           />
           :
           (data.edad>17)?
           <ButtonImage
-            nameImage='medkit'
-            text='Hipertension Arterial'
-            size={30}
+            nameImage='check-circle'
+            text='Hipertensión Arterial'
+            size={25}
             disabled={true}
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>18 && !nameTestToApplicate.includes('ENFERMEDAD RENAL CRONICA'))?
+          {(data.edad>18 && !nameTestToApplicate.includes('ENFERMEDAD RENAL CRÓNICA') && !nameBrandToApplicate.includes('ENFERMEDAD RENAL CRÓNICA'))?
             <ButtonImage
-            nameImage='medkit'
+            nameImage='check-circle'
             text='Enfermedad Renal Crónica'
-            size={30}
+            size={25}
             btnFunction={()=>navigator.replace('FilterTestEnfermedadRenalCronico',{data:dataPeople,datos:data,})}
           />
           :
           (data.edad>18)?
           <ButtonImage
-            nameImage='medkit'
+            nameImage='check-circle'
             text='Enfermedad Renal Crónica'
-            size={30}
+            size={25}
             disabled={true}
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>17 && !nameTestToApplicate.includes('POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES'))?
+          {(data.edad>17 && !nameTestToApplicate.includes('POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES')&& !nameBrandToApplicate.includes('POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES'))?
             <ButtonImage
-            nameImage='medkit'
+            nameImage='check-circle'
             text='Población en riesgo o presencia de alteraciones nutricionales'
-            size={30}
+            size={25}
             btnFunction={()=>navigator.replace('TestPoblacionRiesgo',{data:dataPeople,datos:data,})}
           />
           :
           (data.edad>17)?
           <ButtonImage
-            nameImage='medkit'
+            nameImage='check-circle'
             text='Población en riesgo o presencia de alteraciones nutricionales'
-            size={30}
+            size={25}
+            disabled={true}
+            color={Colors.GREY_LIGHT}
+          />:null
+          }
+          {(data.edad>14  && data.edad<50 &&  !nameTestToApplicate.includes('SOSPECHA DE EMBARAZO') && data.genero==='F')?
+            <ButtonImage
+            nameImage='check-circle'
+            text='Materno Perinatal'
+            size={25}
+            btnFunction={()=>navigator.replace('FilterItemTestMaternoPerinatal',{data:dataPeople,datos:data,})}
+          />
+          :
+          (data.edad>14  && data.edad<50 && data.genero==='F')?
+          <ButtonImage
+            nameImage='check-circle'
+            text='Materno Perinatal'
+            size={25}
             disabled={true}
             color={Colors.GREY_LIGHT}
           />:null
@@ -263,9 +323,9 @@ const TypeAlertScreen = (props) => {
       <ScrollView>
       {(data.edad>17)?
         <ButtonImage
-        nameImage='heartbeat'
+        nameImage='check-circle'
         text='Cardiovascular'
-        size={30}
+        size={25}
         btnFunction={()=>navigator.replace('FilterTestCardiovascular',{data:dataPeople,datos:data,})}
         
       /> 
@@ -273,9 +333,9 @@ const TypeAlertScreen = (props) => {
       }
       {(data.edad>0 && data.edad<8)?
         <ButtonImage
-        nameImage='child'
+        nameImage='check-circle'
         text='Asma'
-        size={30}
+        size={25}
         btnFunction={()=>navigator.replace('TestAsthmaScreen',{data:dataPeople,datos:data,})}
       />
       :null
@@ -283,62 +343,71 @@ const TypeAlertScreen = (props) => {
       
       {(data.edad>39)?
         <ButtonImage
-        nameImage='medkit'
+        nameImage='check-circle'
         text='EPOC'
-        size={30}
+        size={25}
         btnFunction={()=>navigator.replace('FilterTestEpocScreen',{data:dataPeople,datos:data,})}
       />
       :null
       }
-      {(data.edad>13)?
+      {(data.edad>=5)?
         <ButtonImage
-        nameImage='medkit'
+        nameImage='check-circle'
         text='Salud Mental'
-        size={30}
-        btnFunction={()=>navigator.replace('TestMentalHealthScreen',{data:dataPeople,datos:data,})}
+        size={25}
+        btnFunction={()=>navigator.replace('FilterMentalHealth',{data:dataPeople,datos:data,})}
       />
       :null
       }
       {(data.edad>13)?
         <ButtonImage
-        nameImage='medkit'
+        nameImage='check-circle'
         text='Diabetes'
-        size={30}
+        size={25}
         btnFunction={()=>navigator.replace('TestDiabetesScreen',{data:dataPeople,datos:data,})}
       />
       :null
       }
       {(data.edad>17)?
        <ButtonImage
-       nameImage='medkit'
-       text='Hipertension Arterial'
-       size={30}
+       nameImage='check-circle'
+       text='Hipertensión Arterial'
+       size={25}
        btnFunction={()=>navigator.replace('TestHipertensionArterial',{data:dataPeople,datos:data,})}
      />
       :null
       }
       {(data.edad>18)?
        <ButtonImage
-       nameImage='medkit'
+       nameImage='check-circle'
        text='Enfermedad Renal Crónica'
-       size={30}
+       size={25}
        btnFunction={()=>navigator.replace('FilterTestEnfermedadRenalCronico',{data:dataPeople,datos:data,})}
      />
       :null
       }
       {(data.edad>17)?
        <ButtonImage
-       nameImage='medkit'
+       nameImage='check-circle'
        text='Población en riesgo o presencia de alteraciones nutricionales'
-       size={30}
+       size={25}
        btnFunction={()=>navigator.replace('TestPoblacionRiesgo',{data:dataPeople,datos:data,})}
      />
+      :null
+      }
+      {(data.edad>14 && data.edad<50 && data.genero==='F')?
+       <ButtonImage
+       nameImage='check-circle'
+       text='Materno Perinatal'
+       size={25}
+       btnFunction={()=>navigator.replace('FilterItemTestMaternoPerinatal',{data:dataPeople,datos:data,})}
+      />
       :null
       }
       <View style={style.btnEvaluarPaciente}>
         <Button
           title="Evaluar otro paciente"
-          onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen' })}
+          onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen'})}
           color='secondary'
           fill='solid'
         />
@@ -357,8 +426,8 @@ export default TypeAlertScreen
 
 const style=StyleSheet.create({
   container:{
-    marginHorizontal:20,
-    marginVertical:20,
+    marginHorizontal:25,
+    marginVertical:25,
     flex:1
   },
   cBtn:{

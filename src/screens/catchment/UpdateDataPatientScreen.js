@@ -161,25 +161,35 @@ const UpdateDataPatientScreen = (props) => {
 
     const register = async()=>{
         
+        // const updateDatos={
+        //     'first_name':userRegister.nombre,
+        //     'last_name':userRegister.apellido,
+        //     'dni_type':userRegister.idTipoIdentificacion,
+        //     'dni':userRegister.numIdentificacion,
+        //     'address':userRegister.direccion,
+        //     'phone':userRegister.telefono,
+        //     'movil':userRegister.celular,
+        //     'state':userRegister.departamento_id,
+        //     'city':userRegister.ciudad_id,
+        //     'email':(checkboxEmail)?'sincorreo@sincorreo.com':userRegister.correo,
+        //     'birthday':userRegister.fechaNacimiento,
+        //     'gender':userRegister.genero,
+        //     'id':data.id
+        // }
         const updateDatos={
-            'first_name':userRegister.nombre,
-            'last_name':userRegister.apellido,
-            'dni_type':userRegister.idTipoIdentificacion,
-            'dni':userRegister.numIdentificacion,
-            'address':userRegister.direccion,
-            'phone':userRegister.telefono,
-            'movil':userRegister.celular,
-            'state':userRegister.departamento_id,
-            'city':userRegister.ciudad_id,
-            'email':(checkboxEmail)?'sincorreo@sincorreo.com':userRegister.correo,
-            'birthday':userRegister.fechaNacimiento,
-            'gender':userRegister.genero,
-            'id':data.id
-        }
+            "address":userRegister.direccion,
+            "city":userRegister.ciudad_id,
+            "state":userRegister.departamento_id,
+            "phone":userRegister.telefono,
+            "movil":userRegister.celular,
+            "email":(checkboxEmail)?'sincorreo@sincorreo.com':userRegister.correo,
+            "ethnic_group":userRegister.etnia,
+            "population_group":userRegister.grupoPoblacional
+    }
         console.log('updateDatos',updateDatos)
        
         try {
-            const resp = await http('put',Endpoint.editPatient,updateDatos);
+            const resp = await http('put',Endpoint.editPatient(data.dni),updateDatos);
             console.log('resp',resp)
             if(resp.errors){
                 setError(resp.errors)
@@ -340,8 +350,9 @@ const UpdateDataPatientScreen = (props) => {
                         placeholder={userRegister.etnia}
                         isSelect={(userRegister.etnia)? true:false}
                     />
-                    {
-                        (userRegister.etnia==='')?<Text style={styles.textValid}>Campo requerido</Text>:null
+                    {(error)?
+                        (error.ethnic_group==='')?null:
+                        <Text style={styles.textValid}>{error.ethnic_group}</Text>: null
                     }
 
                     <ListOptions
@@ -351,8 +362,9 @@ const UpdateDataPatientScreen = (props) => {
                         placeholder={userRegister.grupoPoblacional}
                         isSelect={(userRegister.grupoPoblacional)? true:false}
                     />
-                    {
-                        (userRegister.grupoPoblacional==='')?<Text style={styles.textValid}>Campo requerido</Text>:null
+                    {(error)?
+                        (error.population_group==='')?null:
+                        <Text style={styles.textValid}>{error.population_group}</Text>: null
                     }
 
                     {

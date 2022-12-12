@@ -43,6 +43,16 @@ import FilterTestEnfermedadRenalCronico from '../screens/catchment/FilterTestEnf
 import TestEnfermedadRenalCronica from '../screens/catchment/TestEnfermedadRenalCronica';
 import TestPoblacionRiesgo from '../screens/catchment/TestPoblacionRiesgo';
 import TestCardiovascularOms from '../screens/catchment/TestCardiovascularOms';
+import FilterMentalHealth from '../screens/catchment/MentalHealth/FilterMentalHealth';
+import FilterItemTPsicosocialesMH from '../screens/catchment/MentalHealth/FilterItemTPsicosocialesMH';
+import FilterItemTMentalesMH from '../screens/catchment/MentalHealth/FilterItemTMentalesMH';
+import FilterItemPRiesgoMH from '../screens/catchment/MentalHealth/FilterItemPRiesgoMH';
+import TestSRQ from '../screens/catchment/MentalHealth/TestSRQ';
+import TestRQC from '../screens/catchment/MentalHealth/TestRQC';
+import FilterTestSRQ from '../screens/catchment/MentalHealth/FilterTestSRQ';
+import FilterItemTestMaternoPerinatal from '../screens/catchment/FilterItemTestMaternoPerinatal';
+import TestSuspectedPregnancy from '../screens/catchment/TestSuspectedPregnancy';
+import FilterTestMH from '../screens/catchment/MentalHealth/FilterTestMH';
 
 const Stack = createNativeStackNavigator();
 
@@ -126,9 +136,18 @@ const Navigator = () => {
               <Stack.Screen name="TestEnfermedadRenalCronica" component={TestEnfermedadRenalCronica} options={{  title: 'Test Enfermedad Renal Crónica '}}/>
               <Stack.Screen name="TestHipertensionArterial" component={TestHipertensionArterial} options={{  title: 'Test Hipertensión Arterial'}}/>
               <Stack.Screen name="FilterTestEnfermedadRenalCronico" component={FilterTestEnfermedadRenalCronico} options={{  title: ' Filtro Test ERC'}}/>
-              {/* <Stack.Screen name="TestMaternoPerinatal" component={TestMaternoPerinatal} options={{  title: 'Test Materno Perinatal'}}/> */}
               <Stack.Screen name="TestPoblacionRiesgo" component={TestPoblacionRiesgo} options={{  title: 'Test Población en Riesgo ...'}}/>
               <Stack.Screen name="TestCardiovascularOms" component={TestCardiovascularOms} options={{  title: 'Test Cardiovascular'}}/>
+              <Stack.Screen name="FilterMentalHealth" component={FilterMentalHealth} options={{  title: 'Salud Mental'}}/>
+              <Stack.Screen name="FilterItemTPsicosocialesMH" component={FilterItemTPsicosocialesMH} options={{  title: 'T. Psicosociales'}}/>
+              <Stack.Screen name="FilterItemTMentalesMH" component={FilterItemTMentalesMH} options={{  title: 'T. Mentales'}}/>
+              <Stack.Screen name="FilterItemPRiesgoMH" component={FilterItemPRiesgoMH} options={{  title: 'Población en Riesgo ...'}}/>
+              <Stack.Screen name="TestSRQ" component={TestSRQ} options={{  title: 'Test SRQ'}}/>
+              <Stack.Screen name="TestRQC" component={TestRQC} options={{  title: 'Test RQC'}}/>
+              <Stack.Screen name="FilterTestSRQ" component={FilterTestSRQ} options={{  title: 'Filtro Test SRQ'}}/>
+              <Stack.Screen name="FilterItemTestMaternoPerinatal" component={FilterItemTestMaternoPerinatal} options={{  title: 'Filtro Test Materno Perinatal'}}/>
+              <Stack.Screen name="TestSuspectedPregnancy" component={TestSuspectedPregnancy} options={{  title: 'Test Sospecha Embarazo'}}/>
+              <Stack.Screen name="FilterTestMH" component={FilterTestMH} options={{  title: 'Filtro Test Salud Mental'}}/>
 
             </>
           )

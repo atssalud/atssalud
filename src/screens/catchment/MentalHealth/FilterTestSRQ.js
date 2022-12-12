@@ -2,29 +2,28 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
 import { Alert, Image, StyleSheet, Text, View } from 'react-native';
-import Button from '../../components/Button';
-import Checkbox from '../../components/CheckBox';
-import WindowAlert from '../../components/WindowAlert';
-import { Colors } from '../../theme/Colors';
-import { Fonts } from '../../theme/Fonts';
-import { Styles } from '../../theme/GlobalStyle';
+import Button from '../../../components/Button';
+import Checkbox from '../../../components/CheckBox';
+import WindowAlert from '../../../components/WindowAlert';
+import { Colors } from '../../../theme/Colors';
+import { Fonts } from '../../../theme/Fonts';
+import { Styles } from '../../../theme/GlobalStyle';
 
 
-const FilterTestEnfermedadRenalCronico = (props) => {
+const FilterTestSRQ = (props) => {
 
     const navigator = useNavigation()
 
     const data = props.route.params.data
     const datos = props.route.params.datos
 
-    const [diagnostico,setdiagnostico]=useState(false)
-    const [reporte,setreporte]=useState(false)
+    const [interes,setinteres]=useState(false)
+    const [desanimado,setdesanimado]=useState(false)
     const [alert,setAlert]= useState(false)
 
     const validarTest=()=>{
-        if((diagnostico=== true && reporte===true)||(data.age>=18 && reporte===true)){
-            navigator.replace('TestEnfermedadRenalCronica',{data:data,datos:datos,})
-            
+        if((interes=== true || desanimado===true)){
+            navigator.replace('FilterTestMH',{data:data,datos:datos,})  
         }else{
             setAlert(true)
         }
@@ -34,12 +33,12 @@ const FilterTestEnfermedadRenalCronico = (props) => {
     const contentAlert=
     <View style={styles.cAlert}>
         <Image
-            source={require('../../assets/icons/modal-alert-Icon.png')}
+            source={require('../../../assets/icons/modal-alert-Icon.png')}
             style={styles.imageAlert}
         />
         <Text style={styles.titleAlert}>Notificación</Text>
         <View style={styles.ctextAlert}>
-            <Text style={styles.textAlert}>El paciente no aplica para el tamizaje Enfermedad Renal Crónica</Text>
+            <Text style={styles.textAlert}>El paciente no aplica para el tamizaje SRQ</Text>
         </View>
     </View>
 
@@ -52,39 +51,39 @@ const FilterTestEnfermedadRenalCronico = (props) => {
     <View style={styles.container}>
         <View style={Styles.borderContainer}>
             <View style={styles.cQuestion}>
-                <Text style={styles.tQuestion}>¿El paciente cuenta con un con diagnóstico confirmado de Hipertensión Arterial y/o Diabetes mellitus.?</Text>
+                <Text style={styles.tQuestion}>¿Durante los últimos 30 días ha sentido a menudo poco interés o placer al hacer cosas que habitualmente disfrutaba?</Text>
             </View>
             <View style={styles.cCheckBox}>
                 <Checkbox
                     text={'Si'}
-                    value={diagnostico}
+                    value={interes}
                     disabled={false}
-                    onValueChange={(newValue) => setdiagnostico(newValue)}
+                    onValueChange={(newValue) => setinteres(newValue)}
                 />
                 <Checkbox
                     text={'No'}
-                    value={!diagnostico}
+                    value={!interes}
                     disabled={false}
-                    onValueChange={(newValue) => setdiagnostico(!newValue)}
+                    onValueChange={(newValue) => setinteres(!newValue)}
                 />
             </View>
         </View>
         <View style={Styles.borderContainer}>
             <View style={styles.cQuestion}>
-            <Text style={styles.tQuestion}>¿Cuenta con un con reporte de Creatinina sérica del ultimo año.?</Text>
+                <Text style={styles.tQuestion}>¿Durante los últimos 30 días se ha sentido a menudo desanimado, deprimido o con pocas esperanzas?</Text>
             </View>
             <View style={styles.cCheckBox}>
                 <Checkbox
                     text={'Si'}
-                    value={reporte}
+                    value={desanimado}
                     disabled={false}
-                    onValueChange={(newValue) => setreporte(newValue)}
+                    onValueChange={(newValue) => setdesanimado(newValue)}
                 />
                 <Checkbox
                     text={'No'}
-                    value={!reporte}
+                    value={!desanimado}
                     disabled={false}
-                    onValueChange={(newValue) => setreporte(!newValue)}
+                    onValueChange={(newValue) => setdesanimado(!newValue)}
                 />
             </View>
         </View>
@@ -116,7 +115,7 @@ const FilterTestEnfermedadRenalCronico = (props) => {
 }
 
 
-export default FilterTestEnfermedadRenalCronico;
+export default FilterTestSRQ;
 
 const styles= StyleSheet.create({
     container:{
@@ -180,5 +179,4 @@ const styles= StyleSheet.create({
     },
 
 })
-
 

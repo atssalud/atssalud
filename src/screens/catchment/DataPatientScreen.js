@@ -32,23 +32,59 @@ const DataPatientScreen = (props) => {
     
 
     let testsToApplicate = []
+    let brandsToApplicate = []
 
     if(data){
-        console.log('data',data.risks)
-        let testsPeople = data.risks;
+        console.log('data',data.tamizajes)
+        let testsPeople = data.tamizajes;
+        let brandsPeople = data.marcas;
         //Condicion previa caracterización.
         let testsToEvaluate = [
-            'SALUD MENTAL',
-            'RIESGO EPOC',
-            'RIESGO CARDIOVASCULAR',
-            'RIESGO DE ASMA EN NIÑOS'
+            'DIABETES FINDRISC',
+            'EPOC',
+            'CARDIOVASCULAR',
+            'RIESGO DE ASMA EN NIÑOS',
+            'HIPERTENSIÓN ARTERIAL',
+            'ENFERMEDAD RENAL CRÓNICA',
+            'RIESGO CARDIOVASCULAR OMS',
+        ];
+        let brandsToEvaluate = [
+            'DIABETES MELLITUS',
+            'ENFERMEDAD PULMONAR OBSTRUCTIVA CRÓNICA (EPOC)',
+            'ENFERMEDAD CEREBROVASCULAR',
+            'RIESGO DE ASMA EN NIÑOS',
+            'HIPERTENSIÓN ARTERIAL',
+            'ENFERMEDAD CEREBROVASCULAR',
+            'OBESIDAD',
+            'ENFERMEDAD RENAL CRÓNICA',
+            'POBLACIÓN CON RIESGO O ALTERACIONES EN SALUD BUCAL',
+            'ENFERMEDADES RARAS',
+            'POBLACIÓN CON RIESGO O PRESENCIA DE CÁNCER',
+            'POBLACIÓN CON RIESGO O TRANSTORNOS VISUALES Y AUDITIVOS',
+            'DEPRESIÓN',
+            'DEMENCIA',
+            'ESQUIZOFRENIA',
+            'INTENTO SUICIDA',
+            'CONSUMIDOR DE SUSTANCIAS PSICOACTIVA',
+            'VICTIMA DEL CONFLICTO ARMADO',
+            'VICTIMA DE VIOLENCIA DE GENERO',
+
         ];
         testsToEvaluate.map((testToEvaluate)=>{
-            let tests = testsPeople.filter(testPeople=> testPeople.risk_name == testToEvaluate);
+            let tests = testsPeople.filter(testPeople=> testPeople.test_name == testToEvaluate);
             let testsOrderByDesc = tests.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
             if(testsOrderByDesc[0] !== undefined){
 
                 testsToApplicate.push(testsOrderByDesc[0]);
+            }
+        });
+
+        brandsToEvaluate.map((testToEvaluate)=>{
+            let tests = brandsPeople.filter(brandPeople=> brandPeople.test_name == testToEvaluate);
+            let testsOrderByDesc = tests.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+            if(testsOrderByDesc[0] !== undefined){
+
+                brandsToApplicate.push(testsOrderByDesc[0]);
             }
         });
 
@@ -87,30 +123,40 @@ const DataPatientScreen = (props) => {
                 <Text style={styles.textCampo}>Genero: </Text>
                 <Text style={styles.textData}>{data.gender}</Text>
             </View>
-            {(testsToApplicate.length !== 0)?
-                testsToApplicate.map((risk,id)=>{
-                    
-                    return(
-                        <View style={styles.cData} key={id}>
-                            <View>
-                                <View style={{flexDirection:'row'}}>
-                                    <Text style={styles.textCampo}>T.Aplicado: </Text>
-                                    <Text style={styles.textData}>{risk.risk_name}</Text>
-                                </View>
-                                <View style={{flexDirection:'row'}}>
-                                    <Text style={styles.textCampo}>Fecha: </Text>
-                                    <Text style={styles.textData}>{risk.created_at}</Text>
-                                </View>
+
+            <View style={(testsToApplicate.length !== 0)?[styles.cData,{flexDirection:'column'}]:styles.cData}>
+                <Text style={styles.textCampo}>T.Aplicados: </Text>
+                {(testsToApplicate.length !== 0)?
+                    testsToApplicate.map((risk,id)=>{
+                        
+                        return(
+                            <View key={id}>
+                                <Text style={styles.textData}>{risk.test_name}</Text>
                             </View>
-                        </View>
-                    )
-                })
-                :
-                <View style={styles.cData}>
-                    <Text style={styles.textCampo}>Riesgos: </Text>
-                    <Text style={styles.textData}>Sin test aplicados</Text>
-                </View>
-            }
+                        )
+                    })
+                    :
+                    <Text style={styles.textData}>SIN TEST APLICADOS</Text>
+                    
+                }
+            </View>
+            <View style={(brandsToApplicate.length !== 0)?[styles.cData,{flexDirection:'column'}]:styles.cData}>
+                <Text style={styles.textCampo}>M.Aplicadas: </Text>
+                {(brandsToApplicate.length !== 0)?
+                    brandsToApplicate.map((risk,id)=>{
+                        
+                        return(
+                            <View key={id}>
+                                <Text style={styles.textData}>{risk.test_name}</Text>
+                            </View>
+                        )
+                    })
+                    :
+                    <Text style={styles.textData}>SIN MARCAS APLICADAS</Text>
+                    
+                }
+            </View>
+            
             <View style={{marginTop:10}}>
                 <Button
                     title="Siguiente"

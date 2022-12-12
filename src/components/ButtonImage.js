@@ -29,13 +29,14 @@ export const ButtonImage = ({nameImage,size,type,text,color=Colors.PRIMARY_COLOR
           }
           <Text style={[styles.tBtnRute,{fontSize}]}>{text}</Text>
         </View>
-        
-        <Icon
-            name='chevron-right'
-            color={color}
-            size={20}
-            
-          />
+        <View>
+          <Icon
+              name='chevron-right'
+              color={color}
+              size={20}
+              
+            />
+        </View>
         
        </TouchableOpacity>
     </View>
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
       },
       btnRute:{
         flexDirection:'row',
-        paddingHorizontal:10,
+        // paddingHorizontal:5,
         paddingVertical:7,
         justifyContent: 'center',
         alignItems:'center'
@@ -77,7 +78,8 @@ const styles = StyleSheet.create({
         color:Colors.BLUE_GREY,
         fontSize:16,
         marginLeft:20,
-        fontFamily:Fonts.BOLD
+        fontFamily:Fonts.BOLD,
+        width:'80%'
       },
       image:{
         width:17,

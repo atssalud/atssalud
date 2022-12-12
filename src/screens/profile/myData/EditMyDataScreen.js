@@ -168,7 +168,7 @@ const EditMyDataScreen = (props) => {
 
         try {
             const resp = await http('put',Endpoint.editDataUser,update);
-            if(resp.message==='token no válido'){
+            if(resp.message ==='token no válido'){
                 logOut()
               }
             saveDocuments(type)
@@ -176,15 +176,27 @@ const EditMyDataScreen = (props) => {
             if(resp.errors){
                 setError(resp.errors)
             }else{
+                if(resp.success===false){
+                    Alert.alert(
+                        'Notificación',
+                        'Ha ocurrido un error, no se puedo actualizar los datos',
+                        [
+                            { text: 'OK',
+                            onPress: () => getUser()},
+                        ]
+                    )
+                }else{
+                    Alert.alert(
+                        'Actualizando Datos',
+                        'Se ha actualizado de forma exitosa',
+                        [
+                            { text: 'OK',
+                            onPress: () => getUser()},
+                        ]
+                    )
+                }
                 
-                Alert.alert(
-                    'Actualizando Datos',
-                    'Se ha actualizado de forma exitosa',
-                    [
-                        { text: 'OK',
-                        onPress: () => getUser()},
-                    ]
-                )
+                
             }
         } catch (error) {
             console.error('error',error)

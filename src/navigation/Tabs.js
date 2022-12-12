@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import HomeScreen from '../screens/home/HomeScreen';
 import CatchmentScreen from '../screens/catchment/CatchmentScreen';
 import PerfilScreen from '../screens/profile/PerfilScreen'
+import { IconScreen } from '../screens/IconScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -31,6 +32,9 @@ export const Tabs = ()=>{
                     break;
                     case 'PerfilScreen':
                         iconName = 'user';
+                    break;
+                    case 'IconScreen':
+                        iconName = 'search';
                     break;
                 }
                 return <Icon name={iconName} size={25} color={color} />;
@@ -59,6 +63,7 @@ export const Tabs = ()=>{
       <Tab.Screen name="InicioScreen"  component={HomeScreen} options={{ title:''}} />
       <Tab.Screen name="CatchmentScreen" component={CatchmentScreen} options={{title:'Captar',}}  />
       <Tab.Screen name="PerfilScreen" component={PerfilScreen} options={{title:'Perfil'}} />
+      {/* <Tab.Screen name="IconScreen" component={IconScreen} options={{title:'Perfil'}} /> */}
     </Tab.Navigator>
   );
 }
