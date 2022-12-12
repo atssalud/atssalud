@@ -211,7 +211,7 @@ const TypeAlertScreen = (props) => {
             nameImage='check-circle'
             text='Salud Mental'
             size={25}
-            btnFunction={()=>navigator.replace('FilterMentalHealth',{data:dataPeople,datos:data,})}
+            btnFunction={()=> (data.edad<12)?navigator.navigate('TestRQC',{data:data,datos:datos,}):navigator.replace('FilterMentalHealth',{data:dataPeople,datos:data,})}
           />
           :
           (data.edad>=5)?
@@ -355,7 +355,7 @@ const TypeAlertScreen = (props) => {
         nameImage='check-circle'
         text='Salud Mental'
         size={25}
-        btnFunction={()=>navigator.replace('FilterMentalHealth',{data:dataPeople,datos:data,})}
+        btnFunction={()=> (data.edad<12)?navigator.navigate('TestRQC',{data:dataPeople,datos:data,}):navigator.replace('FilterMentalHealth',{data:dataPeople,datos:data,})}
       />
       :null
       }

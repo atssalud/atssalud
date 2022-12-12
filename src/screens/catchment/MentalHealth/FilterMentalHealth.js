@@ -18,7 +18,7 @@ const FilterMentalHealth = (props) => {
               nameImage='check-circle'
               text='Trastornos psicosociales y del comportamiento'
               size={30}
-              btnFunction={()=>navigator.navigate('FilterItemTPsicosocialesMH',{data:data,datos:datos,})}
+              btnFunction={()=>(data.age>11 && data.age <=15) ? navigator.navigate('TestRQC',{data:data,datos:datos,}):navigator.navigate('FilterItemTPsicosocialesMH',{data:data,datos:datos,})}
             />
             :null
           }
@@ -32,12 +32,6 @@ const FilterMentalHealth = (props) => {
               />
             :null
           }
-          <ButtonImage
-            nameImage='check-circle'
-            text='Población con riesgo o sujeto de agresiones, accidentes y traumas '
-            size={30}
-            btnFunction={()=>navigator.navigate('FilterItemPRiesgoMH',{data:data,datos:datos,})}
-          />
         </View>
     </View>
   )

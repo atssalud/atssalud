@@ -91,25 +91,7 @@ const FilterTestMH = (props) => {
             setChange(false)
         }
     }
-
-    const sendValidator=()=>{
-        setAlert(true)
-    }
-    const close = () => {
-        send()
-    }
-    const contentAlert =
-    <View style={styles.cAlert}>
-        <Image
-            source={require('../../../assets/icons/modal-alert-Icon.png')}
-            style={styles.imageAlert}
-        />
-        <Text style={styles.title}>Alerta</Text>
-        <View style={styles.ctextAlert}>
-            <Text style={styles.textAlert}>¿ Desea proceder a Tamizar Paciente ?</Text>
-        </View>
-    </View>
-
+    
     const send=async()=>{
         setIsSearchResult(true)
         const user = await AsyncStorage.getItem('user');
@@ -128,7 +110,7 @@ const FilterTestMH = (props) => {
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                navigator.replace('TestSRQ',{data:data,datos:datos,points:resp.data.risk_percentage})
+                navigator.navigate('TestSRQ',{data:data,datos:datos,points:resp.data.risk_percentage})
                 setIsSearchResult(false)
             }
             
@@ -196,28 +178,13 @@ const FilterTestMH = (props) => {
             
             <View style={styles.cButton}>  
                 <Button 
-                    title={"Calcular"}
-                    onPress={()=>sendValidator()} 
+                    title={"Siguiente"}
+                    onPress={()=>send()} 
                     fill='solid'
                 /> 
             </View>
         </View>
         :null}
-        {
-            (alert) ?
-                <WindowAlert
-                    bool={true}
-                    closeAlert={setAlert}
-                    content={contentAlert}
-                    width={50}
-                    height={3}
-                    btnText={'Aceptar'}
-                    btnFunction={close}
-                    btnClose={'yes'}
-                    
-                />
-                : null
-        }
         
         </ScrollView>
     }

@@ -116,13 +116,13 @@ const TestSRQ = (props) => {
         const user = await AsyncStorage.getItem('user');
         const { id } =  JSON.parse(user);
         console.log(user);
-        // answer.push({"question_id": "87","value": points})
         const send={
             "dni":String(data.dni),
             "author_id":String(id),
+            "extra_values":points,
             "test":answer
         }
-        console.log(JSON.stringify(send));
+        console.log('send',JSON.stringify(send));
         try {
             console.log('entro')
             const resp= await http('post',Endpoint.sendTestSRQ,send)

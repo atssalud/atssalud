@@ -16,26 +16,34 @@ const FilterItemTPsicosocialesMH = (props) => {
             nameImage='check-circle'
             text='Depresión'
             size={30}
-            btnFunction={()=>(data.age>=5 && data.age <=15) ? navigator.navigate('TestRQC',{data:data,datos:datos,}):navigator.navigate('FilterTestSRQ',{data:data,datos:datos,})}
+            btnFunction={()=>navigator.navigate('FilterTestSRQ',{data:data,datos:datos,})}
           />
-          <ButtonImage
-            nameImage='check-circle'
-            text='Demencia'
-            size={30}
-            btnFunction={()=>navigator.navigate('FilterItemTPsicosocialesMH',{data:data,datos:datos,})}
-          />
-          <ButtonImage
+
+          {/* si en depresion sale alto no se aplica demencia es decir se bloquea */}
+
+          {/* enviar una alerta donde se le diga al medico que debe aplicar primero tanto depresion como esquizofrenia */}
+          {
+            (data.age>59)?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Demencia'
+              size={30}
+              btnFunction={()=>navigator.navigate('FilterItemTPsicosocialesMH',{data:data,datos:datos,})}
+              />
+            :null
+          }
+          {/* si en esquizofrenia sale con riesgo (alto) no se aplica demencia es decir se bloquea */}
+          {
+            (data.age>11)?
+            <ButtonImage
             nameImage='check-circle'
             text='Esquizofrenia'
             size={30}
             btnFunction={()=>navigator.navigate('FilterItemTPsicosocialesMH',{data:data,datos:datos,})}
-          />
-          <ButtonImage
-            nameImage='check-circle'
-            text='Suicidio'
-            size={30}
-            btnFunction={()=>navigator.navigate('FilterItemTPsicosocialesMH',{data:data,datos:datos,})}
-          />
+            />
+            :null
+          }
+          
         </View>
     </View>
   )
