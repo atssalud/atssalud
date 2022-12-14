@@ -1,21 +1,22 @@
+
 import React, { useContext, useEffect, useState } from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import CheckBox from '../../../components/CheckBox';
-import { Styles } from '../../../theme/GlobalStyle';
-import {Fonts} from '../../../theme/Fonts'
-import { Colors } from '../../../theme/Colors';
-import Button from '../../../components/Button';
-import { Endpoint } from '../../../environment/Api';
+import CheckBox from '../../components/CheckBox';
+import { Styles } from '../../theme/GlobalStyle';
+import {Fonts} from '../../theme/Fonts'
+import { Colors } from '../../theme/Colors';
+import Button from '../../components/Button';
+import { Endpoint } from '../../environment/Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import http from '../../../services/http';
+import http from '../../services/http';
 import { useNavigation } from '@react-navigation/native';
-import TestSkeletonScreen from '../../skeleton/TestSkeletonScreen';
-import ViewAlertSkeletonScreen from '../../skeleton/ViewAlertSkeletonScreen';
-import { AuthContext } from '../../../context/AuthContext';
-import WindowAlert from '../../../components/WindowAlert';
-import TextInputs from '../../../components/TextInput';
+import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
+import { AuthContext } from '../../context/AuthContext';
+import WindowAlert from '../../components/WindowAlert';
+import TextInputs from '../../components/TextInput';
+import TestSkeletonScreen from '../skeleton/TestSkeletonScreen';
 
-const TestSRQ = (props) => {
+const TestHighReproductiveRisk = (props) => {
 
     const {logOut} = useContext(AuthContext)
     const [answer,setAnswer]=useState()
@@ -53,7 +54,7 @@ const TestSRQ = (props) => {
     const getQuestion=async()=>{
         
         try {
-            const resp = await http('get',Endpoint.listItemSRQ)
+            const resp = await http('get',Endpoint.listTestHighReproductiveRisk)
             if(resp.message==='token no válido'){
                 logOut()
             }
@@ -69,12 +70,18 @@ const TestSRQ = (props) => {
 
     const listadoPreguntas=(data)=>{
         const lista=[]
-        data.map((i)=>{
-            var name=i.options[1].name
-            var value=i.options[1].value
-            var question_id=i.id
-            lista.push({question_id,name,value})
-            // console.log({question_id,name,value})
+        data.map((i,index)=>{
+            if(index===0){
+                var name=i.options[0].name
+                var value=i.options[0].value
+                var question_id=i.id
+                lista.push({question_id,name,value})
+            }else{
+                var name=i.options[1].name
+                var value=i.options[1].value
+                var question_id=i.id
+                lista.push({question_id,name,value})
+            }
 
         })
         setAnswer(lista)
@@ -102,7 +109,7 @@ const TestSRQ = (props) => {
     const contentAlert =
     <View style={styles.cAlert}>
         <Image
-            source={require('../../../assets/icons/modal-alert-Icon.png')}
+            source={require('../../assets/icons/modal-alert-Icon.png')}
             style={styles.imageAlert}
         />
         <Text style={styles.title}>Alerta</Text>
@@ -125,12 +132,12 @@ const TestSRQ = (props) => {
         console.log('send',JSON.stringify(send));
         try {
             console.log('entro')
-            const resp= await http('post',Endpoint.sendTestSRQ,send)
+            const resp= await http('post',Endpoint.sendTestHighReproductiveRisk,send)
             console.log({resp})
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje SRQ'})
+                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje Alto Riesgo Reproductivo'})
                 setIsSearchResult(false)
             }
             
@@ -151,47 +158,31 @@ const TestSRQ = (props) => {
         {(answer)?
             <View style={styles.container}>
                 {(questions)?questions.map((item,id)=>{
-                
-                return(
-                    <View style={Styles.borderContainer} key={id}>
-                        <View style={styles.cQuestion}>
-                            <Text style={styles.tQuestion}>{item.name}</Text>
-                        </View>
-                        <View>
-                            <CheckBox
-                                text={item.options[0].name}
-                                value={(answer[id].value=== item.options[0].value)?true:false}
-                                disabled={false}
-                                onValueChange={(newValue) => itemCheckboxSelected(id,item.options[0].value,String(item.options[0].name))}
-                            />
-                            <CheckBox
-                                text={item.options[1].name}
-                                value={(answer[id].value === item.options[1].value)?true:false}
-                                disabled={false}
-                                onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
-                            />
-                            {
-                                (item.options.length >= 3)?
-                                <CheckBox
-                                text={item.options[2].name}
-                                value={(answer[id].value === item.options[2].value)?true:false}
-                                disabled={false}
-                                onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[2].value),String(item.options[2].name))}
-                                />:null
-                            }
-                            {
-                                (item.options.length === 4)?
+
+                    if(item.id !== 119){
+                        return(
+                            <View style={Styles.borderContainer} key={id}>
+                                <View style={styles.cQuestion}>
+                                    <Text style={styles.tQuestion}>{item.name}</Text>
+                                </View>
+                                <View style={{flexDirection:'row',justifyContent:'space-around'}}>
                                     <CheckBox
-                                    text={item.options[3].name}
-                                    value={(answer[id].value === item.options[3].value)?true:false}
-                                    disabled={false}
-                                    onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[3].value),String(item.options[3].name))}
-                                    />:null
-                            }
-                            
-                        </View>
-                    </View>
-                )
+                                        text={item.options[0].name}
+                                        value={(answer[id].value=== item.options[0].value)?true:false}
+                                        disabled={false}
+                                        onValueChange={(newValue) => itemCheckboxSelected(id,item.options[0].value,String(item.options[0].name))}
+                                    />
+                                    <CheckBox
+                                        text={item.options[1].name}
+                                        value={(answer[id].value === item.options[1].value)?true:false}
+                                        disabled={false}
+                                        onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
+                                    />
+                                    
+                                </View>
+                            </View>
+                        )
+                    }
                 
             }):null
             }
@@ -227,7 +218,7 @@ const TestSRQ = (props) => {
     
   )
 }
-export default TestSRQ;
+export default TestHighReproductiveRisk;
 
 const styles= StyleSheet.create({
     container:{
@@ -285,3 +276,4 @@ const styles= StyleSheet.create({
         marginBottom: 10
     },
 })
+

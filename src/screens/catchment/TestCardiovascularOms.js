@@ -25,6 +25,7 @@ const TestCardiovascularOms = (props) => {
     const [isSearch, setIsSearch] = useState(true)
     const [isSearchResult, setIsSearchResult] = useState(false)
     const [alert, setAlert] = useState(false)
+    const [alertError, setAlertError] = useState(false)
 
     const [pSistolica, setpSistolica] = useState('')
     const [error, setError] = useState({
@@ -145,6 +146,10 @@ const TestCardiovascularOms = (props) => {
     const close = () => {
         send()
     }
+    const closeError = () => {
+        console.log('error')
+        setAlertError(false)
+    }
     const contentAlert =
     <View style={styles.cAlert}>
         <Image
@@ -154,6 +159,18 @@ const TestCardiovascularOms = (props) => {
         <Text style={styles.title}>Alerta</Text>
         <View style={styles.ctextAlert}>
             <Text style={styles.textAlert}>¿ Desea proceder a Tamizar Paciente ?</Text>
+        </View>
+    </View>
+
+    const contentAlertError =
+    <View style={styles.cAlert}>
+        <Image
+            source={require('../../assets/icons/modal-alert-Icon.png')}
+            style={styles.imageAlert}
+        />
+        <Text style={styles.title}>Alerta</Text>
+        <View style={styles.ctextAlert}>
+            <Text style={styles.textAlert}>Ha ocurrido un error, vuelva a intentar</Text>
         </View>
     </View>
 
@@ -167,16 +184,23 @@ const TestCardiovascularOms = (props) => {
             "author_id":String(id),
             "test":answer
         }
-        console.log(JSON.stringify(send));
+        console.log('send',JSON.stringify(send));
         try {
             console.log('entro')
             const resp= await http('post',Endpoint.sendTestOms,send)
             console.log({resp})
+
             if(resp.errors){
                 setError(resp.errors)
-            }else{
-                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje Cardiovascular'})
-                setIsSearchResult(false)
+            }
+            else{
+                if(resp.success===false){
+                    setIsSearchResult(false)
+                    setAlertError(true)
+                }else{
+                    navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje Cardiovascular'})
+                    setIsSearchResult(false)
+                }
             }
             
         } catch (error) {
@@ -286,6 +310,21 @@ const TestCardiovascularOms = (props) => {
                     height={3}
                     btnText={'Aceptar'}
                     btnFunction={close}
+                    btnClose={'yes'}
+                    
+                />
+                : null
+        }
+        {
+            (alertError) ?
+                <WindowAlert
+                    bool={true}
+                    closeAlert={setAlertError}
+                    content={contentAlertError}
+                    width={50}
+                    height={3}
+                    btnText={'Aceptar'}
+                    btnFunction={closeError}
                     btnClose={'yes'}
                     
                 />

@@ -43,7 +43,7 @@ const TypeAlertScreen = (props) => {
     }
     const timeout = setTimeout(() => {
       setDebouncedValue(true);
-    },2000);
+    },5000);
 
   return () => {
     clearTimeout(timeout);
@@ -82,7 +82,7 @@ const TypeAlertScreen = (props) => {
       let brandsPeople = dataPeople.marcas;
       //Condicion previa caracterización.
       let testsToEvaluate = [
-          'DIABETES FINDRISC',
+          // 'DIABETES FINDRISC',
           'EPOC',
           'CARDIOVASCULAR',
           'RIESGO DE ASMA EN NIÑOS',
@@ -146,6 +146,8 @@ const TypeAlertScreen = (props) => {
         }
         )
       }
+
+      
 }
 
   
@@ -156,7 +158,7 @@ const TypeAlertScreen = (props) => {
      <>
       {(nameTestToApplicate.length !== 0)?
           <ScrollView>
-          {(data.edad>17 && !nameTestToApplicate.includes('CARDIOVASCULAR') && !nameTestToApplicate.includes('RIESGO CARDIOVASCULAR OMS'))?
+          {(data.edad>17 && data.edad<71 && !nameTestToApplicate.includes('CARDIOVASCULAR') && !nameTestToApplicate.includes('RIESGO CARDIOVASCULAR OMS'))?
             <ButtonImage
             nameImage='check-circle'
             text='Cardiovascular'
@@ -164,7 +166,7 @@ const TypeAlertScreen = (props) => {
             btnFunction={()=>navigator.replace('FilterTestCardiovascular',{data:dataPeople,datos:data,})}
             
           /> 
-          : (data.edad>17)?
+          : (data.edad>17 && data.edad<71)?
           <ButtonImage
             nameImage='check-circle'
             text='Cardiovascular'
@@ -321,7 +323,7 @@ const TypeAlertScreen = (props) => {
           
       :
       <ScrollView>
-      {(data.edad>17)?
+      {(data.edad>17 && data.edad<71)?
         <ButtonImage
         nameImage='check-circle'
         text='Cardiovascular'

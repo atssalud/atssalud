@@ -53,6 +53,7 @@ import FilterTestSRQ from '../screens/catchment/MentalHealth/FilterTestSRQ';
 import FilterItemTestMaternoPerinatal from '../screens/catchment/FilterItemTestMaternoPerinatal';
 import TestSuspectedPregnancy from '../screens/catchment/TestSuspectedPregnancy';
 import FilterTestMH from '../screens/catchment/MentalHealth/FilterTestMH';
+import TestHighReproductiveRisk from '../screens/catchment/TestHighReproductiveRisk';
 
 const Stack = createNativeStackNavigator();
 
@@ -148,6 +149,7 @@ const Navigator = () => {
               <Stack.Screen name="FilterItemTestMaternoPerinatal" component={FilterItemTestMaternoPerinatal} options={{  title: 'Filtro Test Materno Perinatal'}}/>
               <Stack.Screen name="TestSuspectedPregnancy" component={TestSuspectedPregnancy} options={{  title: 'Test Sospecha Embarazo'}}/>
               <Stack.Screen name="FilterTestMH" component={FilterTestMH} options={{  title: 'Filtro Test Salud Mental'}}/>
+              <Stack.Screen name="TestHighReproductiveRisk" component={TestHighReproductiveRisk} options={{  title: 'Test Alto Riesgo Reproductivo'}}/>
 
             </>
           )

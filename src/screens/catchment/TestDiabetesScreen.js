@@ -143,14 +143,23 @@ const TestDiabetesScreen = (props) => {
     }
 
 
-    const listadoPreguntas = (data) => {
+    const listadoPreguntas = (datas) => {
         const lista = []
-        data.map((i) => {
-            var name = i.options[0].name
-            var value = i.options[0].value
-            var question_id = i.id
-            lista.push({ question_id, name, value })
-            console.log({ question_id, name, value })
+        datas.map((i,item) => {
+            if(data.gender === 'F' && item===2){
+                var name = i.options[2].name
+                var value = i.options[2].value
+                var question_id = i.id
+                lista.push({ question_id, name, value })
+                console.log({ question_id, name, value })
+            }else{
+                var name = i.options[0].name
+                var value = i.options[0].value
+                var question_id = i.id
+                lista.push({ question_id, name, value })
+                console.log({ question_id, name, value })
+            }
+            
 
         })
         setAnswer(lista)

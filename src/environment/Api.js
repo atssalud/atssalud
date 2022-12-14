@@ -56,6 +56,8 @@ export const Endpoint = {
     sendSospechaEmbarazo:`${NODE_BASEURL}/tests/perinatalControlRisk`,
     listFilterTestMH:`${NODE_BASEURL}/tests/28`,
     sendFilterTestMH:`${NODE_BASEURL}/tests/questionnaireRiskFactorsMentalHealth`,
+    listTestHighReproductiveRisk:`${NODE_BASEURL}/tests/31`,
+    sendTestHighReproductiveRisk:`${NODE_BASEURL}/tests/highReproductiveRisk`,
     // validateToken:`${NODE_BASEURL}/token`,
 }   
 
