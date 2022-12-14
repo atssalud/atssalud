@@ -45,6 +45,7 @@ export const Endpoint = {
     sendTestOms:`${NODE_BASEURL}/tests/rcvOms`,
     sendTestCardiovascular:`${NODE_BASEURL}/tests/framingham`,
     sendValidationTestCardiovascular:`${NODE_BASEURL}/tests/is-cardiovascular`,
+    sendValidationTestEPOC:`${NODE_BASEURL}/tests/is-epoc`,
     sendTestHipertensionArterial:`${NODE_BASEURL}/tests/arterialHypertension`,
     sendTestEnfermedadRenalCronica:`${NODE_BASEURL}/tests/chronicKidneyDisease`,
     sendTestPoblacionRiesgo:`${NODE_BASEURL}/tests/populationAtRiskOrPresenceNutritionalAlterations`,
@@ -58,6 +59,8 @@ export const Endpoint = {
     sendFilterTestMH:`${NODE_BASEURL}/tests/questionnaireRiskFactorsMentalHealth`,
     listTestHighReproductiveRisk:`${NODE_BASEURL}/tests/31`,
     sendTestHighReproductiveRisk:`${NODE_BASEURL}/tests/highReproductiveRisk`,
+    listTestDementia:`${NODE_BASEURL}/tests/32`,
+    sendTestDementia:`${NODE_BASEURL}/tests/highReproductiveRisk`,
     // validateToken:`${NODE_BASEURL}/token`,
 }   
 

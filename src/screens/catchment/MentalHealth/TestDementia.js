@@ -1,22 +1,21 @@
-
 import React, { useContext, useEffect, useState } from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import CheckBox from '../../components/CheckBox';
-import { Styles } from '../../theme/GlobalStyle';
-import {Fonts} from '../../theme/Fonts'
-import { Colors } from '../../theme/Colors';
-import Button from '../../components/Button';
-import { Endpoint } from '../../environment/Api';
+import CheckBox from '../../../components/CheckBox';
+import { Styles } from '../../../theme/GlobalStyle';
+import {Fonts} from '../../../theme/Fonts'
+import { Colors } from '../../../theme/Colors';
+import Button from '../../../components/Button';
+import { Endpoint } from '../../../environment/Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import http from '../../services/http';
+import http from '../../../services/http';
 import { useNavigation } from '@react-navigation/native';
-import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
-import { AuthContext } from '../../context/AuthContext';
-import WindowAlert from '../../components/WindowAlert';
-import TextInputs from '../../components/TextInput';
-import TestSkeletonScreen from '../skeleton/TestSkeletonScreen';
+import TestSkeletonScreen from '../../skeleton/TestSkeletonScreen';
+import ViewAlertSkeletonScreen from '../../skeleton/ViewAlertSkeletonScreen';
+import { AuthContext } from '../../../context/AuthContext';
+import WindowAlert from '../../../components/WindowAlert';
+import TextInputs from '../../../components/TextInput';
 
-const TestHighReproductiveRisk = (props) => {
+const TestDementia = (props) => {
 
     const {logOut} = useContext(AuthContext)
     const [answer,setAnswer]=useState()
@@ -37,6 +36,7 @@ const TestHighReproductiveRisk = (props) => {
     const data = props.route.params.data
     console.log('daaataaa',data)
     const datos = props.route.params.datos
+    const points = props.route.params.points
 
     const navigator=useNavigation()
 
@@ -53,7 +53,7 @@ const TestHighReproductiveRisk = (props) => {
     const getQuestion=async()=>{
         
         try {
-            const resp = await http('get',Endpoint.listTestHighReproductiveRisk)
+            const resp = await http('get',Endpoint.listTestDementia)
             if(resp.message==='token no válido'){
                 logOut()
             }
@@ -69,27 +69,16 @@ const TestHighReproductiveRisk = (props) => {
 
     const listadoPreguntas=(data)=>{
         const lista=[]
-        data.map((i,index)=>{
-            var name=i.options[1].name
-            var value=i.options[1].value
+        console.log('length',data.length)
+        data.map((i)=>{
+            var name=i.options[0].name
+            var value=i.options[0].value
             var question_id=i.id
             lista.push({question_id,name,value})
+            // console.log({question_id,name,value})
+
         })
         setAnswer(lista)
-    }
-
-    const changeQAge=()=>{
-        
-        const edad=data.age
-
-        if (edad >35 && edad <18) {
-            answer[0].name='SI'
-            answer[0].value='1'
-        }
-        if (edad>17&&edad<26) {
-            answer[1].name='NO'
-            answer[1].value='0'
-        }
     }
    
 
@@ -105,6 +94,26 @@ const TestHighReproductiveRisk = (props) => {
         }
     }
 
+    const changeQAge=()=>{
+        
+        const edad=data.age
+
+        if (edad >65) {
+            answer[41].name='SI'
+            answer[41].value='1'
+        }else{
+            answer[41].name='NO'
+            answer[41].value='0'
+        }
+        if (edad > 75) {
+            answer[42].name='SI'
+            answer[42].value='2'
+        }else{
+            answer[42].name='NO'
+            answer[42].value='0'
+        }
+    }
+
     const sendValidator=()=>{
         changeQAge()
         setAlert(true)
@@ -115,7 +124,7 @@ const TestHighReproductiveRisk = (props) => {
     const contentAlert =
     <View style={styles.cAlert}>
         <Image
-            source={require('../../assets/icons/modal-alert-Icon.png')}
+            source={require('../../../assets/icons/modal-alert-Icon.png')}
             style={styles.imageAlert}
         />
         <Text style={styles.title}>Alerta</Text>
@@ -132,17 +141,18 @@ const TestHighReproductiveRisk = (props) => {
         const send={
             "dni":String(data.dni),
             "author_id":String(id),
+            "extra_values":points,
             "test":answer
         }
         console.log('send',JSON.stringify(send));
         try {
             console.log('entro')
-            const resp= await http('post',Endpoint.sendTestHighReproductiveRisk,send)
+            const resp= await http('post',Endpoint.sendTestDementia,send)
             console.log({resp})
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje Alto Riesgo Reproductivo'})
+                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje SRQ'})
                 setIsSearchResult(false)
             }
             
@@ -164,13 +174,17 @@ const TestHighReproductiveRisk = (props) => {
             <View style={styles.container}>
                 {(questions)?questions.map((item,id)=>{
 
-                    if(item.id !== 119){
-                        return(
-                            <View style={Styles.borderContainer} key={id}>
-                                <View style={styles.cQuestion}>
-                                    <Text style={styles.tQuestion}>{item.name}</Text>
-                                </View>
-                                <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+                if(item.id !== 165 && item.id !== 166){
+                
+                    return(
+                        <View style={Styles.borderContainer} key={id}>
+                            <View style={styles.cQuestion}>
+                                <Text style={styles.tQuestion}>{item.name}</Text>
+                            </View>
+                            {
+                                (item.options[0].name==="FALSE")?null
+                                :
+                                <View style={(id !==0)?{flexDirection:'row',justifyContent:'space-around'}:null}>
                                     <CheckBox
                                         text={item.options[0].name}
                                         value={(answer[id].value=== item.options[0].value)?true:false}
@@ -183,11 +197,31 @@ const TestHighReproductiveRisk = (props) => {
                                         disabled={false}
                                         onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
                                     />
+                                    {
+                                    (item.options.length >= 3)?
+                                    <CheckBox
+                                    text={item.options[2].name}
+                                    value={(answer[id].value === item.options[2].value)?true:false}
+                                    disabled={false}
+                                    onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[2].value),String(item.options[2].name))}
+                                    />:null
+                                    }
+                                    {
+                                        (item.options.length === 4)?
+                                            <CheckBox
+                                            text={item.options[3].name}
+                                            value={(answer[id].value === item.options[3].value)?true:false}
+                                            disabled={false}
+                                            onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[3].value),String(item.options[3].name))}
+                                            />:null
+                                    }
                                     
                                 </View>
-                            </View>
-                        )
-                    }
+                                
+                            }
+                        </View>
+                    )
+                }
                 
             }):null
             }
@@ -223,7 +257,7 @@ const TestHighReproductiveRisk = (props) => {
     
   )
 }
-export default TestHighReproductiveRisk;
+export default TestDementia;
 
 const styles= StyleSheet.create({
     container:{
@@ -281,4 +315,5 @@ const styles= StyleSheet.create({
         marginBottom: 10
     },
 })
+
 

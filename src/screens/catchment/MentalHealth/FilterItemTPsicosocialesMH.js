@@ -28,7 +28,7 @@ const FilterItemTPsicosocialesMH = (props) => {
               nameImage='check-circle'
               text='Demencia'
               size={30}
-              btnFunction={()=>navigator.navigate('FilterItemTPsicosocialesMH',{data:data,datos:datos,})}
+              btnFunction={()=>navigator.navigate('TestDementia',{data:data,datos:datos,})}
               />
             :null
           }

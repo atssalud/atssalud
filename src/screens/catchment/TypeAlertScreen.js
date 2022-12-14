@@ -82,14 +82,14 @@ const TypeAlertScreen = (props) => {
       let brandsPeople = dataPeople.marcas;
       //Condicion previa caracterización.
       let testsToEvaluate = [
-          // 'DIABETES FINDRISC',
+          'DIABETES FINDRISC',
           'EPOC',
           'CARDIOVASCULAR',
           'RIESGO DE ASMA EN NIÑOS',
           'HIPERTENSIÓN ARTERIAL',
           'ENFERMEDAD RENAL CRÓNICA',
           'RIESGO CARDIOVASCULAR OMS',
-          'SOSPECHA DE EMBARAZO',
+          // 'SOSPECHA DE EMBARAZO',
           'POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES'
       ];
       let brandsToEvaluate = [
@@ -293,7 +293,7 @@ const TypeAlertScreen = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>14  && data.edad<50 &&  !nameTestToApplicate.includes('SOSPECHA DE EMBARAZO') && data.genero==='F')?
+          {(data.edad>13  && data.edad<50 &&  !nameTestToApplicate.includes('SOSPECHA DE EMBARAZO') && data.genero==='F')?
             <ButtonImage
             nameImage='check-circle'
             text='Materno Perinatal'
@@ -301,7 +301,7 @@ const TypeAlertScreen = (props) => {
             btnFunction={()=>navigator.replace('FilterItemTestMaternoPerinatal',{data:dataPeople,datos:data,})}
           />
           :
-          (data.edad>14  && data.edad<50 && data.genero==='F')?
+          (data.edad>13  && data.edad<50 && data.genero==='F')?
           <ButtonImage
             nameImage='check-circle'
             text='Materno Perinatal'

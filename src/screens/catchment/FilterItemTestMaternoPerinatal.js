@@ -18,17 +18,12 @@ const FilterItemTestMaternoPerinatal = (props) => {
             size={30}
             btnFunction={()=>navigator.navigate('TestSuspectedPregnancy',{data:data,datos:datos,})}
           />
-          {
-            (data.age<18 || data.age>35)?
-              <ButtonImage
-              nameImage='check-circle'
-              text='Alto riesgo reproductivo'
-              size={30}
-              btnFunction={()=>navigator.navigate('TestHighReproductiveRisk',{data:data,datos:datos,})}
-            />
-            :null
-          }
-          
+          <ButtonImage
+            nameImage='check-circle'
+            text='Alto riesgo reproductivo'
+            size={30}
+            btnFunction={()=>navigator.navigate('TestHighReproductiveRisk',{data:data,datos:datos,})}
+          />
         </View>
     </View>
   )
