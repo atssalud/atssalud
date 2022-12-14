@@ -82,11 +82,15 @@ const TestHighReproductiveRisk = (props) => {
         
         const edad=data.age
 
-        if (edad >35 && edad <18) {
+        console.log({edad})
+
+        if (edad >35 || edad <18) {
+            console.log('alto',edad)
             answer[0].name='SI'
             answer[0].value='1'
         }
         if (edad>17&&edad<26) {
+            console.log('bajo',edad)
             answer[1].name='NO'
             answer[1].value='0'
         }
@@ -106,7 +110,7 @@ const TestHighReproductiveRisk = (props) => {
     }
 
     const sendValidator=()=>{
-        changeQAge()
+        
         setAlert(true)
     }
     const close = () => {
@@ -134,6 +138,7 @@ const TestHighReproductiveRisk = (props) => {
             "author_id":String(id),
             "test":answer
         }
+        changeQAge()
         console.log('send',JSON.stringify(send));
         try {
             console.log('entro')
