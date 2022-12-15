@@ -15,12 +15,13 @@ import { AuthContext } from '../../../context/AuthContext';
 import WindowAlert from '../../../components/WindowAlert';
 import TextInputs from '../../../components/TextInput';
 
-const TestDementia = (props) => {
+const TestAssist = (props) => {
 
     const {logOut} = useContext(AuthContext)
     const [answer,setAnswer]=useState()
     const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
+    const [nextquestion,setNextquestion]=useState(0)
     const [token,setToken]=useState()
     const [isSearch, setIsSearch] = useState(true)
     const [isSearchResult, setIsSearchResult] = useState(false)
@@ -34,7 +35,7 @@ const TestDementia = (props) => {
     })
 
     const data = props.route.params.data
-    console.log('daaataaa',data)
+    // console.log('daaataaa',data)
     const datos = props.route.params.datos
     const points = props.route.params.points
 
@@ -53,13 +54,14 @@ const TestDementia = (props) => {
     const getQuestion=async()=>{
         
         try {
-            const resp = await http('get',Endpoint.listTestDementia)
+            const resp = await http('get',Endpoint.listTestAssist)
             if(resp.message==='token no válido'){
                 logOut()
             }
-            console.log("Items:",JSON.stringify(resp));
-            setQuestions(resp)
+            // console.log("Items:",JSON.stringify(resp));
+            
             listadoPreguntas(resp)
+            listadoOpciones(resp)
             setIsSearch(false)
         } catch (error) {
             console.log('error',error)
@@ -69,24 +71,64 @@ const TestDementia = (props) => {
 
     const listadoPreguntas=(data)=>{
         const lista=[]
-        console.log('length',data.length)
-        data.map((i)=>{
-            var name=i.options[0].name
-            var value=i.options[0].value
-            var question_id=i.id
-            lista.push({question_id,name,value})
-            // console.log({question_id,name,value})
-
+        var options=[]
+        // console.log('length',data[0])
+        data.map((i,item)=>{
+            
+            if(i.options[0].name !=='FALSE'){
+                var id=item-1
+                if(data[id].options[0].name==='FALSE'){
+                    options.push(data[id])
+                }
+                options.push(i)
+            }else{
+                if(item !== 0){
+                    lista.push(options)
+                    // console.log({options})
+                    options=[]
+                }
+            }
         })
+        // console.log('lista',lista[0])
+        setQuestions(lista)
+    }
+    const listadoOpciones=(data)=>{
+        const lista=[]
+        var options=[]
+        data.map((i,item)=>{
+
+            if(i.options[0].name !=='FALSE'){
+                var id=item-1
+                if(data[id].options[0].name==='FALSE'){
+                    var name=data[id].options[0].name
+                    var value=data[id].options[0].value
+                    var question_id=data[id].id
+                    options.push({question_id,name,value})
+                }
+                var name=i.options[0].name
+                var value=i.options[0].value
+                var question_id=i.id
+        
+                options.push({question_id,name,value})
+            }else{
+                if(item !== 0){
+                    lista.push(options)
+                    options=[]
+                }
+            }
+        })
+        console.log('listaaaaa',lista[0])
         setAnswer(lista)
     }
    
 
     const itemCheckboxSelected = (id, value,name)=>{
-        console.log('asasa',id,value)
-        answer[id].value=value
-        answer[id].name=name
-        console.log(answer[id])
+        console.log('prueba',answer[0][id].name)
+        console.log('asasa',name,id,value)
+        answer[nextquestion][id].value=value
+        answer[nextquestion][id].name=name
+        console.log(answer[nextquestion])
+        console.log(answer[nextquestion][id])
         if(change===false){
             setChange(true)
         }else{
@@ -94,28 +136,8 @@ const TestDementia = (props) => {
         }
     }
 
-    const changeQAge=()=>{
-        
-        const edad=data.age
-
-        if (edad >65) {
-            answer[41].name='SI'
-            answer[41].value='1'
-        }else{
-            answer[41].name='NO'
-            answer[41].value='0'
-        }
-        if (edad > 75) {
-            answer[42].name='SI'
-            answer[42].value='2'
-        }else{
-            answer[42].name='NO'
-            answer[42].value='0'
-        }
-    }
 
     const sendValidator=()=>{
-        changeQAge()
         setAlert(true)
     }
     const close = () => {
@@ -147,7 +169,7 @@ const TestDementia = (props) => {
         console.log('send',JSON.stringify(send));
         try {
             console.log('entro')
-            const resp= await http('post',Endpoint.sendTestDementia,send)
+            const resp= await http('post',Endpoint.sendTestAssist,send)
             console.log({resp})
             if(resp.errors){
                 setError(resp.errors)
@@ -172,28 +194,28 @@ const TestDementia = (props) => {
         <ScrollView>
         {(answer)?
             <View style={styles.container}>
-                {(questions)?questions.map((item,id)=>{
-
-                if(item.id !== 165 && item.id !== 166){
-                
+                {(questions)?questions[nextquestion].map((item,id)=>{
                     return(
-                        <View style={Styles.borderContainer} key={id}>
+                        <View key={id}>
+                            {
+                                (nextquestion !==0 && answer[0][id].name ==='NO')?null:
+                                <View style={(item.options[0].name==="FALSE")?{marginTop:20}:Styles.borderContainer} key={id}>                      
                             <View style={styles.cQuestion}>
                                 <Text style={styles.tQuestion}>{item.name}</Text>
                             </View>
                             {
                                 (item.options[0].name==="FALSE")?null
                                 :
-                                <View style={(id !==0)?{flexDirection:'row',justifyContent:'space-around'}:null}>
+                                <View>
                                     <CheckBox
                                         text={item.options[0].name}
-                                        value={(answer[id].value=== item.options[0].value)?true:false}
+                                        value={(answer[nextquestion][id].value=== item.options[0].value)?true:false}
                                         disabled={false}
                                         onValueChange={(newValue) => itemCheckboxSelected(id,item.options[0].value,String(item.options[0].name))}
                                     />
                                     <CheckBox
                                         text={item.options[1].name}
-                                        value={(answer[id].value === item.options[1].value)?true:false}
+                                        value={(answer[nextquestion][id].value=== item.options[1].value)?true:false}
                                         disabled={false}
                                         onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
                                     />
@@ -201,35 +223,61 @@ const TestDementia = (props) => {
                                     (item.options.length >= 3)?
                                     <CheckBox
                                     text={item.options[2].name}
-                                    value={(answer[id].value === item.options[2].value)?true:false}
+                                    value={(answer[nextquestion][id].value=== item.options[2].value)?true:false}
                                     disabled={false}
                                     onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[2].value),String(item.options[2].name))}
                                     />:null
                                     }
                                     {
-                                        (item.options.length === 4)?
+                                        (item.options.length >= 4)?
                                             <CheckBox
                                             text={item.options[3].name}
-                                            value={(answer[id].value === item.options[3].value)?true:false}
+                                            value={(answer[nextquestion][id].value=== item.options[3].value)?true:false}
                                             disabled={false}
                                             onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[3].value),String(item.options[3].name))}
                                             />:null
                                     }
+                                    {
+                                        (item.options.length === 5)?
+                                            <CheckBox
+                                            text={item.options[3].name}
+                                            value={(answer[nextquestion][id].value=== item.options[4].value)?true:false}
+                                            disabled={false}
+                                            onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[4].value),String(item.options[4].name))}
+                                            />:null
+                                    }
+                                    
                                     
                                 </View>
                                 
                             }
+                                
+                            
+                            
                         </View>
+                            }
+                        </View>
+                        
                     )
-                }
+                
                 
             }):null
             }
-            
+            {
+                (nextquestion!==0)?
+                <View style={styles.cButton}>  
+                    <Button 
+                        title={"Anterior"}
+                        onPress={()=>setNextquestion(nextquestion-1)} 
+                        fill='solid'
+                    /> 
+                </View>
+                :null
+            }
             <View style={styles.cButton}>  
                 <Button 
-                    title={"Calcular"}
-                    onPress={()=>sendValidator()} 
+                    title={"Siguiente"}
+                    onPress={()=>setNextquestion(nextquestion+1)} 
                     fill='solid'
                 /> 
             </View>
@@ -257,7 +305,7 @@ const TestDementia = (props) => {
     
   )
 }
-export default TestDementia;
+export default TestAssist;
 
 const styles= StyleSheet.create({
     container:{
@@ -315,5 +363,4 @@ const styles= StyleSheet.create({
         marginBottom: 10
     },
 })
-
 

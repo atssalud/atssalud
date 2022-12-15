@@ -28,7 +28,7 @@ const FilterMentalHealth = (props) => {
                 nameImage='check-circle'
                 text='Población con riesgo o trastornos mentales y del comportamiento manifiestos debido a uso de sustancias psicoactivas y adicciones.'
                 size={30}
-                btnFunction={()=>navigator.navigate('FilterItemTMentalesMH',{data:data,datos:datos,})}
+                btnFunction={()=>navigator.navigate('TestAssist',{data:data,datos:datos,})}
               />
             :null
           }

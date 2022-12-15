@@ -60,7 +60,9 @@ export const Endpoint = {
     listTestHighReproductiveRisk:`${NODE_BASEURL}/tests/31`,
     sendTestHighReproductiveRisk:`${NODE_BASEURL}/tests/highReproductiveRisk`,
     listTestDementia:`${NODE_BASEURL}/tests/32`,
-    sendTestDementia:`${NODE_BASEURL}/tests/highReproductiveRisk`,
+    sendTestDementia:`${NODE_BASEURL}/tests/dementia`,
+    listTestAssist:`${NODE_BASEURL}/tests/33`,
+    sendTestAssist:`${NODE_BASEURL}/tests/assist`,
     // validateToken:`${NODE_BASEURL}/token`,
 }   
 

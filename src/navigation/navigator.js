@@ -45,7 +45,6 @@ import TestPoblacionRiesgo from '../screens/catchment/TestPoblacionRiesgo';
 import TestCardiovascularOms from '../screens/catchment/TestCardiovascularOms';
 import FilterMentalHealth from '../screens/catchment/MentalHealth/FilterMentalHealth';
 import FilterItemTPsicosocialesMH from '../screens/catchment/MentalHealth/FilterItemTPsicosocialesMH';
-import FilterItemTMentalesMH from '../screens/catchment/MentalHealth/FilterItemTMentalesMH';
 import FilterItemPRiesgoMH from '../screens/catchment/MentalHealth/FilterItemPRiesgoMH';
 import TestSRQ from '../screens/catchment/MentalHealth/TestSRQ';
 import TestRQC from '../screens/catchment/MentalHealth/TestRQC';
@@ -55,6 +54,7 @@ import TestSuspectedPregnancy from '../screens/catchment/TestSuspectedPregnancy'
 import FilterTestMH from '../screens/catchment/MentalHealth/FilterTestMH';
 import TestHighReproductiveRisk from '../screens/catchment/TestHighReproductiveRisk';
 import TestDementia from '../screens/catchment/MentalHealth/TestDementia';
+import TestAssist from '../screens/catchment/MentalHealth/TestAssist';
 
 const Stack = createNativeStackNavigator();
 
@@ -142,7 +142,6 @@ const Navigator = () => {
               <Stack.Screen name="TestCardiovascularOms" component={TestCardiovascularOms} options={{  title: 'Test Cardiovascular'}}/>
               <Stack.Screen name="FilterMentalHealth" component={FilterMentalHealth} options={{  title: 'Salud Mental'}}/>
               <Stack.Screen name="FilterItemTPsicosocialesMH" component={FilterItemTPsicosocialesMH} options={{  title: 'T. Psicosociales'}}/>
-              <Stack.Screen name="FilterItemTMentalesMH" component={FilterItemTMentalesMH} options={{  title: 'T. Mentales'}}/>
               <Stack.Screen name="FilterItemPRiesgoMH" component={FilterItemPRiesgoMH} options={{  title: 'Población en Riesgo ...'}}/>
               <Stack.Screen name="TestSRQ" component={TestSRQ} options={{  title: 'Test SRQ'}}/>
               <Stack.Screen name="TestRQC" component={TestRQC} options={{  title: 'Test RQC'}}/>
@@ -152,6 +151,7 @@ const Navigator = () => {
               <Stack.Screen name="FilterTestMH" component={FilterTestMH} options={{  title: 'Filtro Test Salud Mental'}}/>
               <Stack.Screen name="TestHighReproductiveRisk" component={TestHighReproductiveRisk} options={{  title: 'Test Alto Riesgo Reproductivo'}}/>
               <Stack.Screen name="TestDementia" component={TestDementia} options={{  title: 'Test Demencia'}}/>
+              <Stack.Screen name="TestAssist" component={TestAssist} options={{  title: 'Test Assist'}}/>
 
             </>
           )
