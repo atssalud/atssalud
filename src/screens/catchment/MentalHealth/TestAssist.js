@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import CheckBox from '../../../components/CheckBox';
 import { Styles } from '../../../theme/GlobalStyle';
 import {Fonts} from '../../../theme/Fonts'
@@ -105,11 +105,20 @@ const TestAssist = (props) => {
                     var question_id=data[id].id
                     options.push({question_id,name,value})
                 }
-                var name=i.options[0].name
-                var value=i.options[0].value
-                var question_id=i.id
-        
-                options.push({question_id,name,value})
+                if(item<12){
+                    var name=i.options[1].name
+                    var value=i.options[1].value
+                    var question_id=i.id
+            
+                    options.push({question_id,name,value})
+                }else{
+                    var name=i.options[0].name
+                    var value=i.options[0].value
+                    var question_id=i.id
+            
+                    options.push({question_id,name,value})
+                }
+                
             }else{
                 if(item !== 0){
                     lista.push(options)
@@ -183,6 +192,21 @@ const TestAssist = (props) => {
         }
     }
 
+    const nextOrBeforeQuestion=(action)=>{
+        const length = questions.length - 1
+        const count=nextquestion+1 
+
+        if(action==='+1'){
+            if(count > length){
+                sendValidator()
+            }else{
+                setNextquestion(nextquestion+1)
+            }
+        }else{
+            setNextquestion(nextquestion-1)
+        }
+    }
+
   return (
 
     <>
@@ -199,62 +223,116 @@ const TestAssist = (props) => {
                         <View key={id}>
                             {
                                 (nextquestion !==0 && answer[0][id].name ==='NO')?null:
-                                <View style={(item.options[0].name==="FALSE")?{marginTop:20}:Styles.borderContainer} key={id}>                      
-                            <View style={styles.cQuestion}>
-                                <Text style={styles.tQuestion}>{item.name}</Text>
-                            </View>
-                            {
-                                (item.options[0].name==="FALSE")?null
-                                :
-                                <View>
-                                    <CheckBox
-                                        text={item.options[0].name}
-                                        value={(answer[nextquestion][id].value=== item.options[0].value)?true:false}
-                                        disabled={false}
-                                        onValueChange={(newValue) => itemCheckboxSelected(id,item.options[0].value,String(item.options[0].name))}
-                                    />
-                                    <CheckBox
-                                        text={item.options[1].name}
-                                        value={(answer[nextquestion][id].value=== item.options[1].value)?true:false}
-                                        disabled={false}
-                                        onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
-                                    />
-                                    {
-                                    (item.options.length >= 3)?
-                                    <CheckBox
-                                    text={item.options[2].name}
-                                    value={(answer[nextquestion][id].value=== item.options[2].value)?true:false}
-                                    disabled={false}
-                                    onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[2].value),String(item.options[2].name))}
-                                    />:null
-                                    }
-                                    {
-                                        (item.options.length >= 4)?
-                                            <CheckBox
-                                            text={item.options[3].name}
-                                            value={(answer[nextquestion][id].value=== item.options[3].value)?true:false}
-                                            disabled={false}
-                                            onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[3].value),String(item.options[3].name))}
-                                            />:null
-                                    }
-                                    {
-                                        (item.options.length === 5)?
-                                            <CheckBox
-                                            text={item.options[3].name}
-                                            value={(answer[nextquestion][id].value=== item.options[4].value)?true:false}
-                                            disabled={false}
-                                            onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[4].value),String(item.options[4].name))}
-                                            />:null
-                                    }
-                                    
-                                    
-                                </View>
-                                
-                            }
-                                
-                            
-                            
-                        </View>
+                                    (nextquestion >1 && answer[1][id].name ==='Nunca')?
+                                        (nextquestion >4)?
+                                        <View style={(item.options[0].name==="FALSE")?{marginTop:20}:Styles.borderContainer} key={id}>                      
+                                        <View style={styles.cQuestion}>
+                                            <Text style={styles.tQuestion}>{item.name}</Text>
+                                        </View>
+                                        {
+                                            (item.options[0].name==="FALSE")?null
+                                            :
+                                            <View>
+                                                <CheckBox
+                                                    text={item.options[0].name}
+                                                    value={(answer[nextquestion][id].value=== item.options[0].value)?true:false}
+                                                    disabled={false}
+                                                    onValueChange={(newValue) => itemCheckboxSelected(id,item.options[0].value,String(item.options[0].name))}
+                                                />
+                                                <CheckBox
+                                                    text={item.options[1].name}
+                                                    value={(answer[nextquestion][id].value=== item.options[1].value)?true:false}
+                                                    disabled={false}
+                                                    onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
+                                                />
+                                                {
+                                                (item.options.length >= 3)?
+                                                <CheckBox
+                                                text={item.options[2].name}
+                                                value={(answer[nextquestion][id].value=== item.options[2].value)?true:false}
+                                                disabled={false}
+                                                onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[2].value),String(item.options[2].name))}
+                                                />:null
+                                                }
+                                                {
+                                                    (item.options.length >= 4)?
+                                                        <CheckBox
+                                                        text={item.options[3].name}
+                                                        value={(answer[nextquestion][id].value=== item.options[3].value)?true:false}
+                                                        disabled={false}
+                                                        onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[3].value),String(item.options[3].name))}
+                                                        />:null
+                                                }
+                                                {
+                                                    (item.options.length === 5)?
+                                                        <CheckBox
+                                                        text={item.options[3].name}
+                                                        value={(answer[nextquestion][id].value=== item.options[4].value)?true:false}
+                                                        disabled={false}
+                                                        onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[4].value),String(item.options[4].name))}
+                                                        />:null
+                                                }
+                                                
+                                                
+                                            </View>
+                                            
+                                        }
+                                        </View>
+                                        :null
+                                    :
+                                    <View style={(item.options[0].name==="FALSE")?{marginTop:20}:Styles.borderContainer} key={id}>                      
+                                        <View style={styles.cQuestion}>
+                                            <Text style={styles.tQuestion}>{item.name}</Text>
+                                        </View>
+                                        {
+                                            (item.options[0].name==="FALSE")?null
+                                            :
+                                            <View>
+                                                <CheckBox
+                                                    text={item.options[0].name}
+                                                    value={(answer[nextquestion][id].value=== item.options[0].value)?true:false}
+                                                    disabled={false}
+                                                    onValueChange={(newValue) => itemCheckboxSelected(id,item.options[0].value,String(item.options[0].name))}
+                                                />
+                                                <CheckBox
+                                                    text={item.options[1].name}
+                                                    value={(answer[nextquestion][id].value=== item.options[1].value)?true:false}
+                                                    disabled={false}
+                                                    onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
+                                                />
+                                                {
+                                                (item.options.length >= 3)?
+                                                <CheckBox
+                                                text={item.options[2].name}
+                                                value={(answer[nextquestion][id].value=== item.options[2].value)?true:false}
+                                                disabled={false}
+                                                onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[2].value),String(item.options[2].name))}
+                                                />:null
+                                                }
+                                                {
+                                                    (item.options.length >= 4)?
+                                                        <CheckBox
+                                                        text={item.options[3].name}
+                                                        value={(answer[nextquestion][id].value=== item.options[3].value)?true:false}
+                                                        disabled={false}
+                                                        onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[3].value),String(item.options[3].name))}
+                                                        />:null
+                                                }
+                                                {
+                                                    (item.options.length === 5)?
+                                                        <CheckBox
+                                                        text={item.options[3].name}
+                                                        value={(answer[nextquestion][id].value=== item.options[4].value)?true:false}
+                                                        disabled={false}
+                                                        onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[4].value),String(item.options[4].name))}
+                                                        />:null
+                                                }
+                                                
+                                                
+                                            </View>
+                                            
+                                        }
+                                    </View>
                             }
                         </View>
                         
@@ -268,7 +346,7 @@ const TestAssist = (props) => {
                 <View style={styles.cButton}>  
                     <Button 
                         title={"Anterior"}
-                        onPress={()=>setNextquestion(nextquestion-1)} 
+                        onPress={()=>nextOrBeforeQuestion('-1')} 
                         fill='solid'
                     /> 
                 </View>
@@ -277,7 +355,7 @@ const TestAssist = (props) => {
             <View style={styles.cButton}>  
                 <Button 
                     title={"Siguiente"}
-                    onPress={()=>setNextquestion(nextquestion+1)} 
+                    onPress={()=>nextOrBeforeQuestion('+1')} 
                     fill='solid'
                 /> 
             </View>
