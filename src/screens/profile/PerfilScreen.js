@@ -42,13 +42,25 @@ const PerfilScreen = () => {
   const getUser = async()=>{
     const userStr = await AsyncStorage.getItem('user');
     const { id } = JSON.parse(userStr);
+    // try { 
+    //   const res = await http('post',Endpoint.dataUser,{"user_id":id})
+    //   if(res.message==='token no válido'){
+    //     logOut()
+    //   }
+    //   console.log('resp',res)
+    //   setDataUser(res.data)
+      
+    // } catch (error) {
+    //     console.log('error',error);
+    //     setFailed(true)
+    // }
     try { 
-      const res = await http('post',Endpoint.dataUser,{"user_id":id})
+      const res = await http('get',Endpoint.dataUser(id))
       if(res.message==='token no válido'){
         logOut()
       }
       console.log('resp',res)
-      setDataUser(res.data)
+      setDataUser(res)
       
     } catch (error) {
         console.log('error',error);
@@ -150,7 +162,7 @@ const PerfilScreen = () => {
             <View style={styles.cBtnData}>
               <TouchableOpacity
                 style={styles.btnData}
-                onPress={()=> Alert.alert('Próximamente!','Próximamente estará habilitada esta opción')}
+                onPress={()=> navigator.navigate('PymentScreen',{dataUser:dataUser})}
               >
                 <Icon
                   name='credit-card'

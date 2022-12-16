@@ -69,22 +69,39 @@ const EditbankDataScreen = (props) => {
         }
     }
 
-    const {banco,cuenta,tipo_cuenta,idTipoCuenta,idBanco,onChange} = useForm({
+    const {banco,cuenta,tipo_cuenta,idTipoCuenta,idBanco,dni,dni_type,first_name,profession,last_name,movil,company,state,city,address,onChange} = useForm({
         banco:(bank)?bank:'',
         cuenta:(data.bank_account)?data.bank_account:'',
         tipo_cuenta:(accountType)?accountType:'',
         idBanco:(idBank)?idBank:'',
         idTipoCuenta:(idAccountType)?idAccountType:'',
-        
+        address:data.address,
+        city:data.city,
+        state:data.state,
+        movil:data.phone,
+        company:data.company,
+        dni:data.dni,
+        dni_type:data.dni_type,
+        first_name:data.first_name,
+        last_name:data.last_name,
+        profession:data.profession,
     })
     const saveData = async ()=>{
 
     
         const update={
-            'token':data.token,
-            'bank':idBanco,
-            'bank_account':cuenta,
-            'type_account':idTipoCuenta,
+        "dni":dni, 
+        "dni_type":dni_type, 
+        "first_name":first_name,
+        "last_name":last_name, 
+        "address":address, 
+        "city":city, 
+        "state":state, 
+        "movil":movil,
+        "profession":profession,
+        'bank':idBanco,
+        'bank_account':cuenta,
+        'type_account':idTipoCuenta,
         }
 
         console.log('dataa',update)

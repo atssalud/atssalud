@@ -39,7 +39,8 @@ const EditMyDataScreen = (props) => {
     const [token,setToken]=useState()
     const [error, setError] = useState()
 
-    const {last_name,first_name,profession,dni,dni_type,address,city,idCity,state,idState,phone,idCompany,company,onChange} = useForm({
+    console.log({data})
+    const {last_name,first_name,profession,dni,dni_type,address,city,idCity,bank_account,bank,type_account,state,idState,phone,idCompany,company,onChange} = useForm({
         idState:id_departament,
         address:data.address,
         city:'',
@@ -53,6 +54,9 @@ const EditMyDataScreen = (props) => {
         first_name:data.first_name,
         last_name:data.last_name,
         profession:data.profession,
+        bank_account:data.bank_account,
+        bank:data.bank,
+        type_account:data.type_account,
     })
 
     useEffect(() => {
@@ -150,8 +154,9 @@ const EditMyDataScreen = (props) => {
     }
     const saveData = async ()=>{
 
+        const userStr = await AsyncStorage.getItem('user');
+        const { id } = JSON.parse(userStr);
         const update={
-            "token":token,
             "dni":dni,
             "dni_type":dni_type,
             "first_name":first_name,
@@ -159,15 +164,19 @@ const EditMyDataScreen = (props) => {
             "address":address,
             "city":idCity,
             "state":idState,
-            "phone":phone,
-            "profession":"63",
-            "company":idCompany
+            "movil":phone,
+            "profession":profession,
+            // "company":idCompany,
+            "bank":bank,
+            "bank_account":bank_account,
+            "type_account":type_account,
         }
 
         console.log(update)
+        console.log(id)
 
         try {
-            const resp = await http('put',Endpoint.editDataUser,update);
+            const resp = await http('put',Endpoint.editDataUser(id),update);
             if(resp.message ==='token no válido'){
                 logOut()
               }

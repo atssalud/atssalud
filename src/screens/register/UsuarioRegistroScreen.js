@@ -113,12 +113,13 @@ const UsuarioRegisterScreen = () => {
             "address":userRegister.address.trim(),
             "city":userRegister.city,
             "state":userRegister.state,
-            "phone":userRegister.phone.trim(),
+            "movile":userRegister.phone.trim(),
             "profession":userRegister.profession,
             "company":userRegister.company,
             "email":userRegister.email.trim(),
             "password":userRegister.password.trim(),
-            "same_password":userRegister.same_password.trim()
+            "same_password":userRegister.same_password.trim(),
+            "role":"2"
         }
 
         console.log(send)

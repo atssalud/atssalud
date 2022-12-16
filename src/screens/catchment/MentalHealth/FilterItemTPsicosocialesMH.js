@@ -22,6 +22,18 @@ const FilterItemTPsicosocialesMH = (props) => {
           {/* si en depresion sale alto no se aplica demencia es decir se bloquea */}
 
           {/* enviar una alerta donde se le diga al medico que debe aplicar primero tanto depresion como esquizofrenia */}
+          
+          {/* si en esquizofrenia sale con riesgo (alto) no se aplica demencia es decir se bloquea */}
+          {
+            (data.age>15)?
+            <ButtonImage
+            nameImage='check-circle'
+            text='Esquizofrenia'
+            size={30}
+            btnFunction={()=>navigator.navigate('FilterItemTPsicosocialesMH',{data:data,datos:datos,})}
+            />
+            :null
+          }
           {
             (data.age>59)?
               <ButtonImage
@@ -30,17 +42,6 @@ const FilterItemTPsicosocialesMH = (props) => {
               size={30}
               btnFunction={()=>navigator.navigate('TestDementia',{data:data,datos:datos,})}
               />
-            :null
-          }
-          {/* si en esquizofrenia sale con riesgo (alto) no se aplica demencia es decir se bloquea */}
-          {
-            (data.age>11)?
-            <ButtonImage
-            nameImage='check-circle'
-            text='Esquizofrenia'
-            size={30}
-            btnFunction={()=>navigator.navigate('FilterItemTPsicosocialesMH',{data:data,datos:datos,})}
-            />
             :null
           }
           

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Endpoint } from '../environment/Api';
 
-const http = async (method, url, data, contentType='json',timeout = 6000)=>{
+const http = async (method, url, data, contentType='json',timeout = 10000)=>{
 
     const token = await AsyncStorage.getItem('token');
     const headers = {};

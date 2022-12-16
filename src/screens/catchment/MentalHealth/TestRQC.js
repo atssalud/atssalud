@@ -128,7 +128,7 @@ const TestRQC = (props) => {
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje Epoc'})
+                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje RQC'})
                 setIsSearchResult(false)
             }
             

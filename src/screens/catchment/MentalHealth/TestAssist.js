@@ -198,6 +198,7 @@ const TestAssist = (props) => {
 
         if(action==='+1'){
             if(count > length){
+                console.log(JSON.stringify(answer))
                 sendValidator()
             }else{
                 setNextquestion(nextquestion+1)
@@ -343,7 +344,7 @@ const TestAssist = (props) => {
             }
             {
                 (nextquestion!==0)?
-                <View style={styles.cButton}>  
+                <View style={styles.cButtonAtras}>  
                     <Button 
                         title={"Anterior"}
                         onPress={()=>nextOrBeforeQuestion('-1')} 
@@ -406,6 +407,10 @@ const styles= StyleSheet.create({
     },
     cButton:{
         marginBottom:10,
+        marginTop:20
+    },
+    cButtonAtras:{
+        marginBottom:-20,
         marginTop:20
     },
     imageAlert: {

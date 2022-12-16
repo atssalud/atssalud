@@ -55,6 +55,8 @@ import FilterTestMH from '../screens/catchment/MentalHealth/FilterTestMH';
 import TestHighReproductiveRisk from '../screens/catchment/TestHighReproductiveRisk';
 import TestDementia from '../screens/catchment/MentalHealth/TestDementia';
 import TestAssist from '../screens/catchment/MentalHealth/TestAssist';
+import PymentScreen from '../screens/profile/PymentScreen';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -152,6 +154,7 @@ const Navigator = () => {
               <Stack.Screen name="TestHighReproductiveRisk" component={TestHighReproductiveRisk} options={{  title: 'Test Alto Riesgo Reproductivo'}}/>
               <Stack.Screen name="TestDementia" component={TestDementia} options={{  title: 'Test Demencia'}}/>
               <Stack.Screen name="TestAssist" component={TestAssist} options={{  title: 'Test Assist'}}/>
+              <Stack.Screen name="PymentScreen" component={PymentScreen} options={{  title: 'Pagos'}}/>
 
             </>
           )
