@@ -128,7 +128,7 @@ const PymentScreen = (props) => {
                     />
                 </View>
         </View>
-        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+        <View style={{flexDirection:'row',justifyContent:'space-around'}}>
             <View style={styles.btnPagos}>
                     <View style={Styles.borderContainer}>
                         <View style={{justifyContent:'center',alignItems:'center'}}>
@@ -140,20 +140,12 @@ const PymentScreen = (props) => {
             <View style={styles.btnPagos}>
                     <View style={Styles.borderContainer}>
                         <View style={{justifyContent:'center',alignItems:'center'}}>
-                            <Text style={styles.title}>Cancelado: </Text>
+                            <Text style={styles.title}>Disponible: </Text>
                             <Text style={styles.valor} >$12.000</Text>
                         </View>
                     </View>
             </View>
             
-            <View style={styles.btnPagos}>
-                    <View style={Styles.borderContainer}>
-                        <View style={{justifyContent:'center',alignItems:'center'}}> 
-                            <Text style={styles.title}>Pendiente: </Text>
-                            <Text style={styles.valor} >$6.000</Text>
-                        </View>
-                    </View>
-            </View>
         </View>
         <View style={styles.container}>
                 <View style={Styles.borderContainer}>

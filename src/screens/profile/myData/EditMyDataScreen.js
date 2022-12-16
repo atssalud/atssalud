@@ -158,18 +158,18 @@ const EditMyDataScreen = (props) => {
         const { id } = JSON.parse(userStr);
         const update={
             "dni":dni,
-            "dni_type":dni_type,
+            "dni_type":String(dni_type),
             "first_name":first_name,
             "last_name":last_name,
             "address":address,
             "city":idCity,
             "state":idState,
             "movil":phone,
-            "profession":profession,
+            "profession":String(profession),
             // "company":idCompany,
-            "bank":bank,
+            "bank":String(bank),
             "bank_account":bank_account,
-            "type_account":type_account,
+            "type_account":String(type_account),
         }
 
         console.log(update)
@@ -191,7 +191,7 @@ const EditMyDataScreen = (props) => {
                         'Ha ocurrido un error, no se puedo actualizar los datos',
                         [
                             { text: 'OK',
-                            onPress: () => getUser()},
+                            onPress: () => getUser(id)},
                         ]
                     )
                 }else{
@@ -200,7 +200,7 @@ const EditMyDataScreen = (props) => {
                         'Se ha actualizado de forma exitosa',
                         [
                             { text: 'OK',
-                            onPress: () => getUser()},
+                            onPress: () => getUser(id)},
                         ]
                     )
                 }
@@ -213,13 +213,11 @@ const EditMyDataScreen = (props) => {
 
     }
 
-    const getUser = async()=>{
+    const getUser = async(id)=>{
     
         try { 
-          const data={
-            'token':token
-          }
-          const res = await http('post',Endpoint.dataUser,data)
+          
+          const res = await http('get',Endpoint.dataUser(id))
           if(res.message==='token no válido'){
             logOut()
           }

@@ -81,22 +81,22 @@ export const HomeScreen = () => {
                 <View style={styles.box}>
                     <Text style={styles.title}>Número de tamizajes generados</Text>
                     <Text style={styles.number}>54</Text>
-                    <Text style={styles.text}>Pacientes</Text>
+                    <Text style={styles.text}>Tamizajes</Text>
                 </View>
                 <View style={styles.box}>
                     <Text style={styles.title}>Número de tamizajes confirmados</Text>
                     <Text style={styles.number}>28</Text>
-                    <Text style={styles.text}>Pacientes</Text>
+                    <Text style={styles.text}>Tamizajes</Text>
                 </View>
                 <View style={styles.box}>
                     <Text style={styles.title}>Número de tamizajes Descartados</Text>
                     <Text style={styles.number}>14</Text>
-                    <Text style={styles.text}>Pacientes</Text>
+                    <Text style={styles.text}>Tamizajes</Text>
                 </View>
                 <View style={styles.box}>
                     <Text style={styles.title}>Número de tamizajes No verificados</Text>
                     <Text style={styles.number}>12</Text>
-                    <Text style={styles.text}>Pacientes</Text>
+                    <Text style={styles.text}>Tamizajes</Text>
                 </View>
             </View>
         </View>

@@ -11,6 +11,7 @@ import TextInputs from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from '../../../context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditbankDataScreen = (props) => {
 
@@ -88,56 +89,68 @@ const EditbankDataScreen = (props) => {
     })
     const saveData = async ()=>{
 
-    
+        const userStr = await AsyncStorage.getItem('user');
+        const { id } = JSON.parse(userStr);
+
         const update={
         "dni":dni, 
-        "dni_type":dni_type, 
+        "dni_type":String(dni_type), 
         "first_name":first_name,
         "last_name":last_name, 
         "address":address, 
-        "city":city, 
+        "city":String(city), 
         "state":state, 
-        "movil":movil,
-        "profession":profession,
-        'bank':idBanco,
+        "movil":'3012343234',
+        "profession":String(profession),
+        'bank':String(idBanco),
         'bank_account':cuenta,
-        'type_account':idTipoCuenta,
+        'type_account':String(idTipoCuenta),
         }
 
         console.log('dataa',update)
+        console.log({id})
         // console.log('data',data.identificacion)
 
         try {
-            const resp = await http('put',Endpoint.editDataBankUser,update);
-            if(resp.message==='token no válido'){
+            const resp = await http('put',Endpoint.editDataBankUser(id),update);
+            if(resp.message ==='token no válido'){
                 logOut()
               }
             console.log('respuesta',resp)
             if(resp.errors){
                 setError(resp.errors)
             }else{
+                if(resp.success===false){
+                    Alert.alert(
+                        'Notificación',
+                        'Ha ocurrido un error, no se puedo actualizar los datos',
+                        [
+                            { text: 'OK',
+                            onPress: () => getUser(id)},
+                        ]
+                    )
+                }else{
+                    Alert.alert(
+                        'Actualizando Datos',
+                        'Se ha actualizado de forma exitosa',
+                        [
+                            { text: 'OK',
+                            onPress: () => getUser(id)},
+                        ]
+                    )
+                }
                 
-                Alert.alert(
-                    'Actualizando Datos',
-                    'Se ha actualizado de forma exitosa',
-                    [
-                        { text: 'OK',
-                        onPress: () => getUser()},
-                    ]
-                )
+                
             }
         } catch (error) {
             console.error('error',error)
         }
         
     }
-    const getUser = async()=>{
+    const getUser = async(id)=>{
     
         try { 
-          const data={
-            'token':token
-          }
-          const res = await http('post',Endpoint.dataUser,data)
+          const res = await http('get',Endpoint.dataUser(id))
           if(res.message==='token no válido'){
             logOut()
           }
