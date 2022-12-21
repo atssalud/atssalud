@@ -30,6 +30,18 @@ const TestPoblacionRiesgo = (props) => {
         talla: ''
     })
 
+    const getIMC=async()=>{
+        const peso= await AsyncStorage.getItem('peso')
+        const talla = await AsyncStorage.getItem('talla')
+        setpeso((peso)?peso:'')
+        settalla((talla?talla:''))
+    }
+    
+    useEffect(() => {
+        getIMC()
+    }, [])
+    
+
     const data = props.route.params.data
     console.log('daaataaa',data)
     const datos = props.route.params.datos
@@ -83,6 +95,9 @@ const TestPoblacionRiesgo = (props) => {
             if(resp.errors){
                 setError(resp.errors)
             }else{
+                AsyncStorage.setItem('peso',String(peso))
+                AsyncStorage.setItem('talla',String(talla))
+
                 navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje Población en riesgo o presencia de alteraciones nutricionales'})
                 setIsSearchResult(false)
             }

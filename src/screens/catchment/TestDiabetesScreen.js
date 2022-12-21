@@ -27,8 +27,15 @@ const TestDiabetesScreen = (props) => {
     const [peso, setPeso] = useState('')
     const [talla, setTalla] = useState('')
 
-   
-    console.log('answerrrrrr',answer)
+
+    const getIMC = async () => {
+        const peso = await AsyncStorage.getItem('peso')
+        const talla = await AsyncStorage.getItem('talla')
+        setPeso((peso)?peso:'')
+        setTalla((talla?talla:''))
+    }
+
+    console.log('answerrrrrr', answer)
     const data = props.route.params.data
     console.log('daaataaa', data)
     const datos = props.route.params.datos
@@ -39,51 +46,51 @@ const TestDiabetesScreen = (props) => {
     })
 
     const calculateIMC = () => {
-        
-        const imc = peso / (talla*talla)
 
-        console.log({imc})
+        const imc = peso / (talla * talla)
+
+        console.log({ imc })
 
         if (imc < 25) {
-            answer[1].name='Menor a 25 kg/m2'
-            answer[1].value='0'
+            answer[1].name = 'Menor a 25 kg/m2'
+            answer[1].value = '0'
         }
         if (imc >= 25 && imc <= 30) {
-            answer[1].name='Entre 25 y 30 kg/m2'
-            answer[1].value='1'
+            answer[1].name = 'Entre 25 y 30 kg/m2'
+            answer[1].value = '1'
         }
         if (imc > 30) {
-            answer[1].name='Mayor a 30 kg/m2'
-            answer[1].value='3'
+            answer[1].name = 'Mayor a 30 kg/m2'
+            answer[1].value = '3'
         }
         changeQAge()
-        
+
 
     }
 
-    const changeQAge=()=>{
-        
-        const edad=data.age
+    const changeQAge = () => {
+
+        const edad = data.age
 
         if (edad < 45) {
-            answer[0].name='Menor a 45 años'
-            answer[0].value='0'
+            answer[0].name = 'Menor a 45 años'
+            answer[0].value = '0'
         }
-        if (edad  >= 45 && edad  < 55) {
-            answer[0].name='Entre 45 y 54 años'
-            answer[0].value='2'
+        if (edad >= 45 && edad < 55) {
+            answer[0].name = 'Entre 45 y 54 años'
+            answer[0].value = '2'
         }
-        if (edad  >= 55 && edad  < 65) {
-            answer[0].name='Entre 55 y 64 años'
-            answer[0].value='3'
+        if (edad >= 55 && edad < 65) {
+            answer[0].name = 'Entre 55 y 64 años'
+            answer[0].value = '3'
         }
-        if (edad  > 64) {
-            answer[0].name='Mayor a 64 años'
-            answer[0].value='4'
+        if (edad > 64) {
+            answer[0].name = 'Mayor a 64 años'
+            answer[0].value = '4'
         }
         sendValidator()
 
-        
+
     }
 
     const handleTest = () => {
@@ -105,7 +112,7 @@ const TestDiabetesScreen = (props) => {
         if (vTalla) {
             error.talla = 'Use punto'
         }
-        if (talla.trim().length>0 && peso.trim().length>0 && (vTalla=== false) && (vPeso === false)) {
+        if (talla.trim().length > 0 && peso.trim().length > 0 && (vTalla === false) && (vPeso === false)) {
             calculateIMC()
         }
 
@@ -117,7 +124,8 @@ const TestDiabetesScreen = (props) => {
 
     useEffect(() => {
         getToken()
-    }, [peso, talla])
+        getIMC()
+    }, [1])
 
 
     const getToken = async () => {
@@ -145,21 +153,21 @@ const TestDiabetesScreen = (props) => {
 
     const listadoPreguntas = (datas) => {
         const lista = []
-        datas.map((i,item) => {
-            if(data.gender === 'F' && item===2){
+        datas.map((i, item) => {
+            if (data.gender === 'F' && item === 2) {
                 var name = i.options[2].name
                 var value = i.options[2].value
                 var question_id = i.id
                 lista.push({ question_id, name, value })
                 console.log({ question_id, name, value })
-            }else{
+            } else {
                 var name = i.options[0].name
                 var value = i.options[0].value
                 var question_id = i.id
                 lista.push({ question_id, name, value })
                 console.log({ question_id, name, value })
             }
-            
+
 
         })
         setAnswer(lista)
@@ -201,7 +209,8 @@ const TestDiabetesScreen = (props) => {
         const user = await AsyncStorage.getItem('user');
         const { id } = JSON.parse(user);
         console.log(user);
-        console.log('verificadooooo',answer)
+        console.log('verificadooooo', answer)
+
         const send = {
             "dni": String(data.dni),
             "author_id": String(id),
@@ -215,6 +224,8 @@ const TestDiabetesScreen = (props) => {
             if (resp.errors) {
                 setError(resp.errors)
             } else {
+                AsyncStorage.setItem('peso', String(peso))
+                AsyncStorage.setItem('talla', String(talla))
                 navigator.replace('ViewAlertScreen', { data: resp.data, datos: datos, nameRisk: 'Tamizaje Diabetes' })
                 setIsSearchResult(false)
             }

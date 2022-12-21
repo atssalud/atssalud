@@ -20,6 +20,9 @@ import FailedService from './FailedService';
 
 const CatchmentScreen = () => {
 
+    AsyncStorage.removeItem('peso');
+    AsyncStorage.removeItem('talla');
+
     const navigator = useNavigation()
     const { logOut } = useContext(AuthContext)
 
