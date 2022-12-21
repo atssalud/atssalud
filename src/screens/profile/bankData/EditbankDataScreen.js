@@ -79,7 +79,7 @@ const EditbankDataScreen = (props) => {
         address:data.address,
         city:data.city,
         state:data.state,
-        movil:data.phone,
+        movil:data.movil,
         company:data.company,
         dni:data.dni,
         dni_type:data.dni_type,
@@ -100,11 +100,12 @@ const EditbankDataScreen = (props) => {
         "address":address, 
         "city":String(city), 
         "state":state, 
-        "movil":'3012343234',
+        "movil":movil,
         "profession":String(profession),
         'bank':String(idBanco),
         'bank_account':cuenta,
         'type_account':String(idTipoCuenta),
+        "company":String(company),
         }
 
         console.log('dataa',update)

@@ -98,7 +98,6 @@ const TypeAlertScreen = (props) => {
           'ENFERMEDAD CEREBROVASCULAR',
           'RIESGO DE ASMA EN NIÑOS',
           'HIPERTENSIÓN ARTERIAL',
-          'OBESIDAD',
           'ENFERMEDAD RENAL CRÓNICA',
           'POBLACIÓN CON RIESGO O ALTERACIONES EN SALUD BUCAL',
           'ENFERMEDADES RARAS',
@@ -293,7 +292,7 @@ const TypeAlertScreen = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>13  && data.edad<50 &&  !nameTestToApplicate.includes('SOSPECHA DE EMBARAZO') && data.genero==='F')?
+          {(data.edad>13 && data.edad<50 &&  !nameTestToApplicate.includes('SOSPECHA DE EMBARAZO') && data.genero==='F')?
             <ButtonImage
             nameImage='check-circle'
             text='Materno Perinatal'
@@ -397,7 +396,7 @@ const TypeAlertScreen = (props) => {
      />
       :null
       }
-      {(data.edad>14 && data.edad<50 && data.genero==='F')?
+      {(data.edad>13 && data.edad<50 && data.genero==='F')?
        <ButtonImage
        nameImage='check-circle'
        text='Materno Perinatal'

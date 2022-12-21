@@ -65,6 +65,8 @@ export const Endpoint = {
     sendTestDementia: `${NODE_BASEURL}/tests/dementia`,
     listTestAssist: `${NODE_BASEURL}/tests/33`,
     sendTestAssist: `${NODE_BASEURL}/tests/assist`,
+    listTestTestSchizophrenia: `${NODE_BASEURL}/tests/34`,
+    sendTestSchizophrenia: `${NODE_BASEURL}/tests/schizophrenia`,
     // validateToken:`${NODE_BASEURL}/token`,
 }
 

@@ -100,7 +100,7 @@ const MyDataScreen = (props) => {
             </View>
             <View style={styles.cData}>
                 <Text style={styles.textCampo}>Celular: </Text>
-                <Text style={styles.textData}>{data.phone}</Text>
+                <Text style={styles.textData}>{data.movil}</Text>
             </View>
             <View style={styles.cData}>
                 <Text style={styles.textCampo}>Eps: </Text>

@@ -43,16 +43,25 @@ const DataPatientScreen = (props) => {
             'DIABETES FINDRISC',
             'EPOC',
             'CARDIOVASCULAR',
-            'RIESGO DE ASMA EN NIÑOS',
+            'ASMA EN NIÑOS',
             'HIPERTENSIÓN ARTERIAL',
             'ENFERMEDAD RENAL CRÓNICA',
             'RIESGO CARDIOVASCULAR OMS',
+            'SOSPECHA DE EMBARAZO',
+            'POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES',
+            'SALUD MENTAL - SRQ',
+            'SALUD MENTAL - RQC',
+            'ALTO RIESGO REPRODUCTIVO',
+            'DEMENCIA',
+            'ASSIST',
+            'EZQUIZOFRENIA'
+
         ];
         let brandsToEvaluate = [
             'DIABETES MELLITUS',
             'ENFERMEDAD PULMONAR OBSTRUCTIVA CRÓNICA (EPOC)',
             'ENFERMEDAD CEREBROVASCULAR',
-            'RIESGO DE ASMA EN NIÑOS',
+            'ASMA EN NIÑOS',
             'HIPERTENSIÓN ARTERIAL',
             'ENFERMEDAD CEREBROVASCULAR',
             'OBESIDAD',

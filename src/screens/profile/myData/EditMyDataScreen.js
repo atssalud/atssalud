@@ -40,13 +40,13 @@ const EditMyDataScreen = (props) => {
     const [error, setError] = useState()
 
     console.log({data})
-    const {last_name,first_name,profession,dni,dni_type,address,city,idCity,bank_account,bank,type_account,state,idState,phone,idCompany,company,onChange} = useForm({
+    const {last_name,first_name,profession,dni,dni_type,address,city,idCity,bank_account,bank,type_account,state,idState,movil,idCompany,company,onChange} = useForm({
         idState:id_departament,
         address:data.address,
         city:'',
         idCity:'',
         state:data.state_name,
-        phone:data.phone,
+        movil:data.movil,
         company:data.company_name,
         idCompany:id_eps,
         dni:data.dni,
@@ -164,9 +164,9 @@ const EditMyDataScreen = (props) => {
             "address":address,
             "city":idCity,
             "state":idState,
-            "movil":phone,
+            "movil":movil,
             "profession":String(profession),
-            // "company":idCompany,
+            "company":String(idCompany),
             "bank":String(bank),
             "bank_account":bank_account,
             "type_account":String(type_account),
@@ -323,12 +323,12 @@ const EditMyDataScreen = (props) => {
             <TextInputs
                 label='Celular'
                 placeholder="3014567890"
-                onChangeText= {(value)=>onChangeText(value,'phone')}
-                value={phone}
+                onChangeText= {(value)=>onChangeText(value,'movil')}
+                value={movil}
             />
             {(error)?
-                (error.phone==='')?null:
-                <Text style={styles.textValid}>{error.phone}</Text>: null
+                (error.movil==='')?null:
+                <Text style={styles.textValid}>{error.movil}</Text>: null
             }
             <ListOptions
                 label='Eps:'

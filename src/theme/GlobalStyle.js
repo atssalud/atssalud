@@ -9,7 +9,7 @@ export const Styles=StyleSheet.create({
         paddingHorizontal:20,
         paddingBottom: 20.0,
         backgroundColor: 'white',
-        elevation: 2,
+        elevation: 4,
         shadowColor: 'rgba(0,0,0,1)',
         shadowOffset: {
             width: 0,

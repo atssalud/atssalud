@@ -15,7 +15,7 @@ import { AuthContext } from '../../../context/AuthContext';
 import WindowAlert from '../../../components/WindowAlert';
 import TextInputs from '../../../components/TextInput';
 
-const TestDementia = (props) => {
+const TestSchizophrenia = (props) => {
 
     const {logOut} = useContext(AuthContext)
     const [answer,setAnswer]=useState()
@@ -36,7 +36,6 @@ const TestDementia = (props) => {
     const data = props.route.params.data
     console.log('daaataaa',data)
     const datos = props.route.params.datos
-    const points = props.route.params.points
 
     const navigator=useNavigation()
 
@@ -53,7 +52,7 @@ const TestDementia = (props) => {
     const getQuestion=async()=>{
         
         try {
-            const resp = await http('get',Endpoint.listTestDementia)
+            const resp = await http('get',Endpoint.listTestTestSchizophrenia)
             if(resp.message==='token no válido'){
                 logOut()
             }
@@ -69,13 +68,12 @@ const TestDementia = (props) => {
 
     const listadoPreguntas=(data)=>{
         const lista=[]
-        console.log('length',data.length)
         data.map((i)=>{
-            var name=i.options[0].name
-            var value=i.options[0].value
+            var name=i.options[1].name
+            var value=i.options[1].value
             var question_id=i.id
             lista.push({question_id,name,value})
-            // console.log({question_id,name,value})
+            console.log({question_id,name,value})
 
         })
         setAnswer(lista)
@@ -94,28 +92,7 @@ const TestDementia = (props) => {
         }
     }
 
-    const changeQAge=()=>{
-        
-        const edad=data.age
-
-        if (edad >65 && edad <76) {
-            answer[41].name='SI'
-            answer[41].value='1'
-        }else{
-            answer[41].name='NO'
-            answer[41].value='0'
-        }
-        if (edad > 75) {
-            answer[42].name='SI'
-            answer[42].value='2'
-        }else{
-            answer[42].name='NO'
-            answer[42].value='0'
-        }
-    }
-
     const sendValidator=()=>{
-        changeQAge()
         setAlert(true)
     }
     const close = () => {
@@ -141,18 +118,17 @@ const TestDementia = (props) => {
         const send={
             "dni":String(data.dni),
             "author_id":String(id),
-            "extra_values":points,
             "test":answer
         }
-        console.log('send',JSON.stringify(send));
+        console.log(JSON.stringify(send));
         try {
             console.log('entro')
-            const resp= await http('post',Endpoint.sendTestDementia,send)
+            const resp= await http('post',Endpoint.sendTestSchizophrenia,send)
             console.log({resp})
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje Demencia'})
+                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Tamizaje Esquizofrenia'})
                 setIsSearchResult(false)
             }
             
@@ -173,55 +149,47 @@ const TestDementia = (props) => {
         {(answer)?
             <View style={styles.container}>
                 {(questions)?questions.map((item,id)=>{
-
-                if(item.id !== 165 && item.id !== 166){
                 
-                    return(
-                        <View style={(item.options[0].name==="FALSE")?Styles.borderContainer:{marginTop:20}} key={id}>
-                            <View style={styles.cQuestion}>
-                                <Text style={styles.tQuestion}>{item.name}</Text>
-                            </View>
-                            {
-                                (item.options[0].name==="FALSE")?null
-                                :
-                                <View style={(id !==0)?{flexDirection:'row',justifyContent:'space-around'}:null}>
-                                    <CheckBox
-                                        text={item.options[0].name}
-                                        value={(answer[id].value=== item.options[0].value)?true:false}
-                                        disabled={false}
-                                        onValueChange={(newValue) => itemCheckboxSelected(id,item.options[0].value,String(item.options[0].name))}
-                                    />
-                                    <CheckBox
-                                        text={item.options[1].name}
-                                        value={(answer[id].value === item.options[1].value)?true:false}
-                                        disabled={false}
-                                        onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
-                                    />
-                                    {
-                                    (item.options.length >= 3)?
-                                    <CheckBox
-                                    text={item.options[2].name}
-                                    value={(answer[id].value === item.options[2].value)?true:false}
-                                    disabled={false}
-                                    onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[2].value),String(item.options[2].name))}
-                                    />:null
-                                    }
-                                    {
-                                        (item.options.length === 4)?
-                                            <CheckBox
-                                            text={item.options[3].name}
-                                            value={(answer[id].value === item.options[3].value)?true:false}
-                                            disabled={false}
-                                            onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[3].value),String(item.options[3].name))}
-                                            />:null
-                                    }
-                                    
-                                </View>
-                                
-                            }
+                return(
+                    <View style={Styles.borderContainer} key={id}>
+                        <View style={styles.cQuestion}>
+                            <Text style={styles.tQuestion}>{item.name}</Text>
                         </View>
-                    )
-                }
+                        <View>
+                            <CheckBox
+                                text={item.options[0].name}
+                                value={(answer[id].value=== item.options[0].value)?true:false}
+                                disabled={false}
+                                onValueChange={(newValue) => itemCheckboxSelected(id,item.options[0].value,String(item.options[0].name))}
+                            />
+                            <CheckBox
+                                text={item.options[1].name}
+                                value={(answer[id].value === item.options[1].value)?true:false}
+                                disabled={false}
+                                onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
+                            />
+                            {
+                                (item.options.length >= 3)?
+                                <CheckBox
+                                text={item.options[2].name}
+                                value={(answer[id].value === item.options[2].value)?true:false}
+                                disabled={false}
+                                onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[2].value),String(item.options[2].name))}
+                                />:null
+                            }
+                            {
+                                (item.options.length === 4)?
+                                    <CheckBox
+                                    text={item.options[3].name}
+                                    value={(answer[id].value === item.options[3].value)?true:false}
+                                    disabled={false}
+                                    onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[3].value),String(item.options[3].name))}
+                                    />:null
+                            }
+                            
+                        </View>
+                    </View>
+                )
                 
             }):null
             }
@@ -257,7 +225,7 @@ const TestDementia = (props) => {
     
   )
 }
-export default TestDementia;
+export default TestSchizophrenia;
 
 const styles= StyleSheet.create({
     container:{

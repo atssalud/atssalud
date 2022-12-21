@@ -84,7 +84,6 @@ const TypeRiskScreen2 = (props) => {
           'RIESGO DE ASMA EN NIÑOS',
           'HIPERTENSIÓN ARTERIAL',
           'ENFERMEDAD CEREBROVASCULAR',
-          'OBESIDAD',
           'ENFERMEDAD RENAL CRÓNICA',
           'POBLACIÓN CON RIESGO O ALTERACIONES EN SALUD BUCAL',
           'ENFERMEDADES RARAS',
@@ -218,25 +217,6 @@ const TypeRiskScreen2 = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>=0 && !nameBrandToApplicate.includes('OBESIDAD'))?
-            <ButtonImage
-            fontSize={14}
-            nameImage='check-circle'
-            text='OBESIDAD'
-            size={25}
-            btnFunction={()=>navigator.replace('TestRiskScreen', { id: 10, data: data, title: 'OBESIDAD' })}
-          />
-          :
-          (data.edad>=0)?
-          <ButtonImage
-          fontSize={14}
-            nameImage='check-circle'
-            text='OBESIDAD'
-            size={25}
-            disabled={true}
-            color={Colors.GREY_LIGHT}
-          />:null
-          }
           {(data.edad>18 && !nameTestToApplicate.includes('ENFERMEDAD RENAL CRÓNICA') && !nameBrandToApplicate.includes('ENFERMEDAD RENAL CRÓNICA'))?
             <ButtonImage
             fontSize={14}
@@ -332,7 +312,7 @@ const TypeRiskScreen2 = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>=14 && !nameBrandToApplicate.includes('DEPRESIÓN'))?
+          {(data.edad>5 && !nameBrandToApplicate.includes('DEPRESIÓN'))?
             <ButtonImage
             fontSize={14}
             nameImage='check-circle'
@@ -341,7 +321,7 @@ const TypeRiskScreen2 = (props) => {
             btnFunction={()=>navigator.replace('TestRiskScreen', { id: 16, data: data, title: 'DEPRESIÓN' })}
           />
           :
-          (data.edad>=14)?
+          (data.edad>5)?
           <ButtonImage
           fontSize={14}
             nameImage='check-circle'
@@ -351,7 +331,7 @@ const TypeRiskScreen2 = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>=14 && !nameBrandToApplicate.includes('DEMENCIA'))?
+          {(data.edad>59 && !nameBrandToApplicate.includes('DEMENCIA'))?
             <ButtonImage
             fontSize={14}
             nameImage='check-circle'
@@ -360,7 +340,7 @@ const TypeRiskScreen2 = (props) => {
             btnFunction={()=>navigator.replace('TestRiskScreen', { id: 17, data: data, title: 'DEMENCIA' })}
           />
           :
-          (data.edad>=14)?
+          (data.edad>59)?
           <ButtonImage
           fontSize={14}
             nameImage='check-circle'
@@ -370,7 +350,7 @@ const TypeRiskScreen2 = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>=14 && !nameBrandToApplicate.includes('ESQUIZOFRENIA'))?
+          {(data.edad>12 && !nameBrandToApplicate.includes('ESQUIZOFRENIA'))?
             <ButtonImage
             fontSize={14}
             nameImage='check-circle'
@@ -379,7 +359,7 @@ const TypeRiskScreen2 = (props) => {
             btnFunction={()=>navigator.replace('TestRiskScreen', { id: 18, data: data, title: 'ESQUIZOFRENIA' })}
           />
           :
-          (data.edad>=14)?
+          (data.edad>12)?
           <ButtonImage
           fontSize={14}
             nameImage='check-circle'
@@ -389,7 +369,7 @@ const TypeRiskScreen2 = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>=14 && !nameBrandToApplicate.includes('INTENTO SUICIDA'))?
+          {(data.edad>5 && !nameBrandToApplicate.includes('INTENTO SUICIDA'))?
             <ButtonImage
             fontSize={14}
             nameImage='check-circle'
@@ -398,7 +378,7 @@ const TypeRiskScreen2 = (props) => {
             btnFunction={()=>navigator.replace('TestRiskScreen', { id: 19, data: data, title: 'INTENTO SUICIDA' })}
           />
           :
-          (data.edad>=14)?
+          (data.edad>5)?
           <ButtonImage
           fontSize={14}
             nameImage='check-circle'
@@ -408,7 +388,7 @@ const TypeRiskScreen2 = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>=14 && !nameBrandToApplicate.includes('CONSUMIDOR DE SUSTANCIAS PSICOACTIVAS'))?
+          {(data.edad>11 && !nameBrandToApplicate.includes('CONSUMIDOR DE SUSTANCIAS PSICOACTIVAS'))?
             <ButtonImage
             fontSize={14}
             nameImage='check-circle'
@@ -417,7 +397,7 @@ const TypeRiskScreen2 = (props) => {
             btnFunction={()=>navigator.replace('TestRiskScreen', { id: 20, data: data, title: 'CONSUMIDOR DE SUSTANCIAS PSICOACTIVAS' })}
           />
           :
-          (data.edad>=14)?
+          (data.edad>11)?
           <ButtonImage
           fontSize={14}
             nameImage='check-circle'
@@ -427,7 +407,7 @@ const TypeRiskScreen2 = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>=14 && !nameBrandToApplicate.includes('VICTIMA DEL CONFLICTO ARMADO'))?
+          {(data.edad>=0 && !nameBrandToApplicate.includes('VICTIMA DEL CONFLICTO ARMADO'))?
             <ButtonImage
             fontSize={14}
             nameImage='check-circle'
@@ -436,7 +416,7 @@ const TypeRiskScreen2 = (props) => {
             btnFunction={()=>navigator.replace('TestRiskScreen', { id: 21, data: data, title: 'VICTIMA DEL CONFLICTO ARMADO' })}
           />
           :
-          (data.edad>=14)?
+          (data.edad>= 0)?
           <ButtonImage
           fontSize={14}
             nameImage='check-circle'
@@ -446,7 +426,7 @@ const TypeRiskScreen2 = (props) => {
             color={Colors.GREY_LIGHT}
           />:null
           }
-          {(data.edad>=14 && !nameBrandToApplicate.includes('VICTIMA DE VIOLENCIA DE GENERO'))?
+          {(data.edad>=0 && !nameBrandToApplicate.includes('VICTIMA DE VIOLENCIA DE GENERO'))?
             <ButtonImage
             fontSize={14}
             nameImage='check-circle'
@@ -455,7 +435,7 @@ const TypeRiskScreen2 = (props) => {
             btnFunction={()=>navigator.replace('TestRiskScreen', { id: 22, data: data, title: 'VICTIMA DE VIOLENCIA DE GENERO' })}
           />
           :
-          (data.edad>=14)?
+          (data.edad>=0)?
           <ButtonImage
           fontSize={14}
             nameImage='check-circle'
@@ -511,16 +491,6 @@ const TypeRiskScreen2 = (props) => {
       />
       :null
       }
-      {(data.edad>=0)?
-         <ButtonImage
-         fontSize={14}
-         nameImage='check-circle'
-         text='OBESIDAD'
-         size={25}
-         btnFunction={()=>navigator.replace('TestRiskScreen', { id: 10, data: data, title: 'OBESIDAD' })}
-       />
-      :null
-      }
       {(data.edad>18)?
          <ButtonImage
          fontSize={14}
@@ -571,7 +541,7 @@ const TypeRiskScreen2 = (props) => {
       />
       :null
       }
-      {(data.edad>14)?
+      {(data.edad>5)?
          <ButtonImage
          fontSize={14}
          nameImage='check-circle'
@@ -581,7 +551,7 @@ const TypeRiskScreen2 = (props) => {
        />
       :null
       }
-      {(data.edad>14)?
+      {(data.edad>59)?
          <ButtonImage
          fontSize={14}
          nameImage='check-circle'
@@ -591,7 +561,7 @@ const TypeRiskScreen2 = (props) => {
        />
       :null
       }
-      {(data.edad>14)?
+      {(data.edad>12)?
          <ButtonImage
          fontSize={14}
          nameImage='check-circle'
@@ -600,7 +570,7 @@ const TypeRiskScreen2 = (props) => {
          btnFunction={()=>navigator.replace('TestRiskScreen', { id: 18, data: data, title: 'ESQUIZOFRENIA' })}/>
       :null
       }
-      {(data.edad>14)?
+      {(data.edad>5)?
          <ButtonImage
          fontSize={14}
          nameImage='check-circle'
@@ -610,7 +580,7 @@ const TypeRiskScreen2 = (props) => {
        />
       :null
       }
-      {(data.edad>14)?
+      {(data.edad>11)?
          <ButtonImage
          fontSize={14}
          nameImage='check-circle'
@@ -620,7 +590,7 @@ const TypeRiskScreen2 = (props) => {
        />
       :null
       }
-      {(data.edad>14)?
+      {(data.edad>=0)?
          <ButtonImage
          fontSize={14}
          nameImage='check-circle'
@@ -630,7 +600,7 @@ const TypeRiskScreen2 = (props) => {
        />
       :null
       }
-      {(data.edad>14)?
+      {(data.edad>=0)?
          <ButtonImage
          fontSize={14}
          nameImage='check-circle'

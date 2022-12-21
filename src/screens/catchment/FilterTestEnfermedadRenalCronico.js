@@ -17,12 +17,11 @@ const FilterTestEnfermedadRenalCronico = (props) => {
     const data = props.route.params.data
     const datos = props.route.params.datos
 
-    const [diagnostico,setdiagnostico]=useState(false)
     const [reporte,setreporte]=useState(false)
     const [alert,setAlert]= useState(false)
 
     const validarTest=()=>{
-        if((diagnostico=== true && reporte===true)||(data.age>=18 && reporte===true)){
+        if(data.age>=18 && reporte===true){
             navigator.replace('TestEnfermedadRenalCronica',{data:data,datos:datos,})
             
         }else{
@@ -50,25 +49,6 @@ const FilterTestEnfermedadRenalCronico = (props) => {
     
   return (
     <View style={styles.container}>
-        <View style={Styles.borderContainer}>
-            <View style={styles.cQuestion}>
-                <Text style={styles.tQuestion}>¿El paciente cuenta con un con diagnóstico confirmado de Hipertensión Arterial y/o Diabetes mellitus.?</Text>
-            </View>
-            <View style={styles.cCheckBox}>
-                <Checkbox
-                    text={'Si'}
-                    value={diagnostico}
-                    disabled={false}
-                    onValueChange={(newValue) => setdiagnostico(newValue)}
-                />
-                <Checkbox
-                    text={'No'}
-                    value={!diagnostico}
-                    disabled={false}
-                    onValueChange={(newValue) => setdiagnostico(!newValue)}
-                />
-            </View>
-        </View>
         <View style={Styles.borderContainer}>
             <View style={styles.cQuestion}>
             <Text style={styles.tQuestion}>¿Cuenta con un con reporte de Creatinina sérica del ultimo año.?</Text>

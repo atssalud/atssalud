@@ -130,7 +130,7 @@ const TestRiskScreen = (props) => {
     }
 
     const closeAlert=()=>{
-        navigator.replace('CatchmentOptionsScreen',{data:dataPatient})
+        navigator.replace('TypeRiskScreen2',{data:dataPatient})
     }
     const send=async()=>{
         setIsSearchResult(true)

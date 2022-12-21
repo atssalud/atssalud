@@ -76,6 +76,7 @@ const TestHighReproductiveRisk = (props) => {
             lista.push({question_id,name,value})
         })
         setAnswer(lista)
+        
     }
 
     const changeQAge=()=>{
@@ -89,7 +90,7 @@ const TestHighReproductiveRisk = (props) => {
             answer[0].name='SI'
             answer[0].value='1'
         }
-        if (edad>17&&edad<26) {
+        if (edad>17&&edad<36) {
             console.log('bajo',edad)
             answer[1].name='NO'
             answer[1].value='0'
@@ -98,10 +99,11 @@ const TestHighReproductiveRisk = (props) => {
    
 
     const itemCheckboxSelected = (id, value,name)=>{
+        changeQAge()
         console.log('asasa',id,value)
         answer[id].value=value
         answer[id].name=name
-        console.log(answer[id])
+        console.log('pregunta',answer)
         if(change===false){
             setChange(true)
         }else{
@@ -110,8 +112,8 @@ const TestHighReproductiveRisk = (props) => {
     }
 
     const sendValidator=()=>{
-        
         setAlert(true)
+        
     }
     const close = () => {
         send()
@@ -133,12 +135,13 @@ const TestHighReproductiveRisk = (props) => {
         const user = await AsyncStorage.getItem('user');
         const { id } =  JSON.parse(user);
         console.log(user);
+        
         const send={
             "dni":String(data.dni),
             "author_id":String(id),
             "test":answer
         }
-        changeQAge()
+        
         console.log('send',JSON.stringify(send));
         try {
             console.log('entro')
