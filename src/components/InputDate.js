@@ -15,6 +15,10 @@ const InputDate = (props) => {
     const [textTime, setTextTime] = useState('Seleccionar')
     const dimension=props.dimension
 
+    const months=[{'id':'01', 'item':'Enero'},{'id':'02', 'item':'Febrero'},{'id':'03', 'item':'Marzo'},{'id':'04', 'item':'Abril'},
+                  {'id':'05', 'item':'Mayo'},{'id':'06', 'item':'Junio'},{'id':'07', 'item':'Julio'},{'id':'08', 'item':'Agosto'},
+                  {'id':'09', 'item':'Septiembre'},{'id':'10', 'item':'Octubre'},{'id':'11', 'item':'Noviembre'},{'id':'12', 'item':'Diciembre'}]
+
     const onChange = (event, selectDate)=>{
         const currentDate = selectDate || date;
         setShow(Platform.OS === 'ios');
@@ -23,10 +27,22 @@ const InputDate = (props) => {
         let tempDate = new Date(currentDate)
         let fDate = tempDate.getFullYear()+'-'+ (tempDate.getMonth()+1) + '-' + tempDate.getDate()
         let fTime = tempDate.getHours() + ':' + tempDate.getMinutes()
-        setTextData(fDate)
+
+        const data=fDate.split('-')
+        let month=months[data[1]-1].item
+        let year =data[0]
+        let monthYear=`${month}-${year}`
+
+        if(props.monthYear){
+            setTextData(monthYear)
+        }else{
+            setTextData(fDate)
+        }
+
+        
         setTextTime(fTime)
         if(props.type === 'date'){
-            props.dateSelect(fDate,typeSelect)
+            props.dateSelect(fDate,typeSelect,monthYear)
         }else{
             props.timeSelect(fTime)
         }
@@ -39,7 +55,7 @@ const InputDate = (props) => {
     }
   return (
       <>
-        <SafeAreaView style={[(dimension ==='middle')?styles.dimension:null]}>
+        <SafeAreaView style={[(dimension ==='middle')?styles.dimension:{width:'80%'}]}>
             {(props.type === 'date') ?
 
             <View>
@@ -118,7 +134,7 @@ const styles = StyleSheet.create({
         marginBottom:15
     },
     dimension:{
-        width:Width/3,
+        width:Width/2,
         marginRight:40
     },
     label:{

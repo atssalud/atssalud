@@ -34,7 +34,7 @@ export const Endpoint = {
     editPatient: (dni) => { return `${NODE_BASEURL}/affiliates/${dni}`; },
     listItemTestAsthma: `${BASEURL}/list-items-test-childrem-asthma`,
     sendTestAsthma: `${BASEURL}/test-childrem-asthma`,
-    historial: `${BASEURL}/list-history-risk-user`,
+    historial: (author_id,page,monthId,year) => { return `${NODE_BASEURL}/results/history/${author_id}?page=${page}&per_page=20&month=${monthId}&year=${year}`},
     listTamizaje: `${NODE_BASEURL}/tests?type=TAMIZAJE`,
     listRiesgo: `${NODE_BASEURL}/tests?type=MARCA EN SALUD`,
     getCheckRisk: (idTest) => { return `${NODE_BASEURL}/tests/${idTest}`; },
@@ -67,7 +67,10 @@ export const Endpoint = {
     sendTestAssist: `${NODE_BASEURL}/tests/assist`,
     listTestTestSchizophrenia: `${NODE_BASEURL}/tests/34`,
     sendTestSchizophrenia: `${NODE_BASEURL}/tests/schizophrenia`,
+    getStatisticsMonth:(user_id,month,year) => { return `${NODE_BASEURL}/kpis/${user_id}?${(month)?`month=${month}&year=${year}`:`year=${year}`}`; },
+    getStatisticsTotal:(user_id,year) => { return `${NODE_BASEURL}/kpis/${user_id}?year=${year}`;},
     // validateToken:`${NODE_BASEURL}/token`,
+    changePassword: (author_id) => { return `${NODE_BASEURL}/users/password/${author_id}`; },
 }
 
 const Api = axios.create(Endpoint)

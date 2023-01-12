@@ -276,6 +276,8 @@ const TestAssist = (props) => {
 
     const validatorOptionQ2_6=(action)=>{
         var count=0
+        var count2=0
+        var numOption=0
     
         if(action==='+1'){
             
@@ -286,9 +288,20 @@ const TestAssist = (props) => {
                         count=count + Number(item.value)
                     }
                 })
+                answer[1].map((item,id)=>{
+                    if(id !==0){
+                        count2=count2 + Number(item.value)
+                    }
+                    if(Number(item.value)!==0){
+                        numOption=numOption+1
+                    }
+                })
                 if(count === 3 && answer[0][1].value === '3'){
                     setNextquestion(5)
-                }else{
+                }
+                if(count > 3 && count2 > 0 && numOption===1  && Number(answer[1][1].value) !==0 ){
+                    setNextquestion(5)
+                } else{
                     setNextquestion(nextquestion+1)
                 }
 
@@ -315,23 +328,29 @@ const TestAssist = (props) => {
                         count=count + Number(item.value)
                     }
                 })
+
+                answer[1].map((item,id)=>{
+                    if(id !==0){
+                        count2=count2 + Number(item.value)
+                    }
+                    if(Number(item.value)!==0){
+                        numOption=numOption+1
+                    }
+                })
+
+
                 if(count === 3 && answer[0][1].value === '3'){
+                    setNextquestion(3)
+                }
+                if(count2 === 0){
+                    setNextquestion(1)
+                }
+                if(count > 3 && count2 > 0 && numOption===1  && Number(answer[1][1].value) !==0 ){
                     setNextquestion(3)
                 }else{
                     setNextquestion(nextquestion-1)
                 }
 
-            }else{
-                answer[1].map((item,id)=>{
-                    if(id !==0){
-                        count=count + Number(item.value)
-                    }
-                })
-                if(count === 0){
-                    setNextquestion(1)
-                }else{
-                    setNextquestion(nextquestion-1)
-                }
             }
         }
         

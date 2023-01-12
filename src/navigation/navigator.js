@@ -58,6 +58,7 @@ import TestAssist from '../screens/catchment/MentalHealth/TestAssist';
 import PymentScreen from '../screens/profile/PymentScreen';
 import TestSchizophrenia from '../screens/catchment/MentalHealth/TestSchizophrenia';
 import ViewAlertScreen2 from '../screens/catchment/ViewAlertScreen2';
+import ChangePasswordScreen from '../screens/profile/myData/ChangePasswordScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -159,6 +160,7 @@ const Navigator = () => {
               <Stack.Screen name="PymentScreen" component={PymentScreen} options={{  title: 'Pagos'}}/>
               <Stack.Screen name="TestSchizophrenia" component={TestSchizophrenia} options={{  title: 'Test Esquizofrenia'}}/>
               <Stack.Screen name="ViewAlertScreen2" component={ViewAlertScreen2} options={{  title: 'Resultado Test', headerLeft: null}}/>
+              <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{  title: 'Cambiar Contraseña'}}/>
 
             </>
           )

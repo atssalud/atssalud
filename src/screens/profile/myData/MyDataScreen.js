@@ -112,7 +112,9 @@ const MyDataScreen = (props) => {
             </View>
             <View style={styles.cData2}>
                 <Text style={styles.textCampo}>Contraseña: </Text>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={()=>navigator.navigate('ChangePasswordScreen')}
+                >
                     <Text style={styles.tcambiarContraseña}>Cambiar contraseña</Text>
                 </TouchableOpacity>
             </View>

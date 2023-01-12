@@ -37,8 +37,10 @@ const UpdateDataPatientScreen = (props) => {
     const data = props.route.params.data
 
     const [userRegister, setUserRegister] = useState({
-        nombre:data.first_name,
-        apellido:data.last_name,
+        nombre:data.name,
+        segundoNombre:data.second_name,
+        apellido:data.surname,
+        segundoApellido:data.second_surname,
         tipoIdentificacion:data.dni_type_name,
         idTipoIdentificacion:data.dni_type,
         numIdentificacion:data.dni,
@@ -48,15 +50,20 @@ const UpdateDataPatientScreen = (props) => {
         departamento:'',
         ciudad:'',
         correo:'',
+        edad:data.age,
         fechaNacimiento:data.birthday,
         genero:data.gender,
+        nombreGenero:data.gender_name,
         edad:(data.birthday)?today.getFullYear()-data.birthday.split('-')[0]:'',
         ciudad_id:'',
         departamento_id:'',
         etnia:'',
         etniaId:'',
         grupoPoblacional:'',
-        grupoPoblacionalId:''
+        grupoPoblacionalId:'',
+        id:data.id,
+
+        
     })
 
     console.log('fecha', )
@@ -177,6 +184,16 @@ const UpdateDataPatientScreen = (props) => {
         //     'id':data.id
         // }
         const updateDatos={
+            "id":userRegister.id,
+            "dni": userRegister.numIdentificacion,
+            "dni_type": String(userRegister.idTipoIdentificacion),
+            "name": userRegister.nombre,
+            "second_name": userRegister.segundoNombre,
+            "second_surname": userRegister.segundoApellido,
+            "surname": userRegister.apellido,
+            "address": userRegister.direccion,
+            "gender": userRegister.genero,
+            "birthday": userRegister.fechaNacimiento,
             "address":userRegister.direccion,
             "city":userRegister.ciudad_id,
             "state":userRegister.departamento_id,
@@ -184,8 +201,14 @@ const UpdateDataPatientScreen = (props) => {
             "movil":userRegister.celular,
             "email":(checkboxEmail)?'sincorreo@sincorreo.com':userRegister.correo,
             "ethnic_group":userRegister.etnia,
-            "population_group":userRegister.grupoPoblacional
-    }
+            "population_group":userRegister.grupoPoblacional,    
+            "obj_city": {
+                "id":`${userRegister.departamento_id}${userRegister.ciudad_id}`,
+                "name":userRegister.ciudad,
+            },
+        
+           
+        }
         console.log('updateDatos',updateDatos)
        
         try {

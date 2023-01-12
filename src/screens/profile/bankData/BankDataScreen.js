@@ -53,9 +53,25 @@ const BankDataScreen = (props) => {
                 <Text style={styles.textCampo}>Tipo de cuenta: </Text>
                 <Text style={styles.textData}>{(data.type_account_name) ? data.type_account_name :'No registrado'}</Text>
             </View>
-            <View style={styles.cData2}>
+            <View style={styles.cData}>
                 <Text style={styles.textCampo}>Banco: </Text>
                 <Text style={styles.textData}>{(data.bank_name)? data.bank_name: 'No registrado'}</Text>
+            </View>
+            <View style={styles.cData}>
+                <Text style={styles.textCampo}>Declara Renta: </Text>
+                <Text style={styles.textData}>{(data.rent)? data.rent: 'No registrado'}</Text>
+            </View>
+            <View style={styles.cData}>
+                <Text style={styles.textCampo}>Rut: </Text>
+                <Text style={styles.textData}>{(data.rent)? data.rent: 'No registrado'}</Text>
+            </View>
+            <View style={styles.cData}>
+                <Text style={styles.textCampo}>Documento Identidad: </Text>
+                <Text style={styles.textData}>{(data.rent)? data.rent: 'No registrado'}</Text>
+            </View>
+            <View style={styles.cData2}>
+                <Text style={styles.textCampo}>Certificado Bancario: </Text>
+                <Text style={styles.textData}>{(data.rent)? data.rent: 'No registrado'}</Text>
             </View>
             <Button
                 title="Editar"

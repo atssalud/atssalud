@@ -82,7 +82,7 @@ const TypeAlertScreen = (props) => {
       let brandsPeople = dataPeople.marcas;
       //Condicion previa caracterización.
       let testsToEvaluate = [
-          // 'DIABETES FINDRISC',
+          'DIABETES FINDRISC',
           'EPOC',
           'CARDIOVASCULAR',
           'RIESGO DE ASMA EN NIÑOS',
@@ -90,10 +90,10 @@ const TypeAlertScreen = (props) => {
           'ENFERMEDAD RENAL CRÓNICA',
           'RIESGO CARDIOVASCULAR OMS',
           'SOSPECHA DE EMBARAZO',
-          // 'POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES'
+          'POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES'
       ];
       let brandsToEvaluate = [
-          // 'DIABETES MELLITUS',
+          'DIABETES MELLITUS',
           'ENFERMEDAD PULMONAR OBSTRUCTIVA CRÓNICA (EPOC)',
           'ENFERMEDAD CEREBROVASCULAR',
           'RIESGO DE ASMA EN NIÑOS',

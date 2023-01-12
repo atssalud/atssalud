@@ -4,8 +4,8 @@ import { StyleSheet, View } from 'react-native';
 import { ButtonImage } from '../../components/ButtonImage';
 
 const FilterItemTestMaternoPerinatal = (props) => {
-    const navigator=useNavigation()
-
+    
+  const navigator=useNavigation()
     const data = props.route.params.data
     const datos = props.route.params.datos
 

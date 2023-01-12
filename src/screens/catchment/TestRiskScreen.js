@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CheckBox from '../../components/CheckBox';
 import { Styles } from '../../theme/GlobalStyle';
 import {Fonts} from '../../theme/Fonts'
@@ -13,6 +13,7 @@ import TestSkeletonScreen from '../skeleton/TestSkeletonScreen';
 import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const TestRiskScreen = (props) => {
     
@@ -20,13 +21,16 @@ const TestRiskScreen = (props) => {
 
     const {logOut} = useContext(AuthContext)
     const [answer,setAnswer]=useState()
+    const [answerCriteria,setAnswerCriteria]=useState()
     const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
+    const [criteria,setCriteria]=useState()
     const [token,setToken]=useState()
     const [error, setError] = useState()
     const [isSearch, setIsSearch] = useState(true)
     const [isSearchResult, setIsSearchResult] = useState(false)
     const [checkBox, setCheckBox] = useState()
+    const [checkBoxCriteria, setCheckBoxCriteria] = useState()
     const [alert, setAlert] = useState(false)
     const [alertSearchResult, setAlertSearchResult] = useState(false)
 
@@ -40,17 +44,17 @@ const TestRiskScreen = (props) => {
     useEffect(() => {
       getToken()
       navigator.setOptions({
-        // headerLeft:()=>(
-        //     <TouchableOpacity
-        //         onPress={()=> navigator.replace('BankDataScreen',{dataUser:data})}
-        //     >
-        //         <Icon
-        //             name="chevron-left"
-        //             color= {'white'}
-        //             size={24}
-        //         />
-        //     </TouchableOpacity>
-        // ),
+        headerLeft:()=>(
+            <TouchableOpacity
+                onPress={()=> navigator.replace('TypeRiskScreen2',{data: dataPatient})}
+            >
+                <Icon
+                    name="chevron-left"
+                    color= {'white'}
+                    size={18}
+                />
+            </TouchableOpacity>
+        ),
     
         
     })
@@ -66,12 +70,16 @@ const TestRiskScreen = (props) => {
         
         try {
             const resp = await http('get',Endpoint.getCheckRisk(idTest))
-            console.log('respee',resp[0])
+            console.log('respee',resp)
             if(resp.message==='token no válido'){
                 logOut()
             }
             setQuestions(resp[0])
+            setCriteria(resp[1])
             listCkeckBox(resp[0].options.length)
+            if(resp[1]){
+                listCkeckBoxCriteria(resp[1].options.length)
+            }
             setIsSearch(false)
         } catch (error) {
             console.log('error',error)
@@ -85,6 +93,14 @@ const TestRiskScreen = (props) => {
         }
         
         setCheckBox(list)
+    }
+    const listCkeckBoxCriteria =(length)=>{
+        const list=[]
+        for (let i = 0; i < length; i++) {
+            list.push({item:false})
+        }
+        
+        setCheckBoxCriteria(list)
     }
     
     const itemCheckboxSelected = (id,value)=>{
@@ -105,6 +121,24 @@ const TestRiskScreen = (props) => {
             setCheckBox(checkBox)
         }
     }
+    const itemCheckboxCriteriaSelected = (id,value)=>{
+
+        let answ=[]
+        if (answerCriteria !== undefined) answerCriteria.map(item=> answ.push(item))
+        answ.push({'question_id':criteria.id,'name':value,'value':''})
+
+        const filter= removeDuplicates(answ)
+        setAnswerCriteria(filter)
+        console.log(filter)
+
+        if(checkBoxCriteria[id].item === false){
+            checkBoxCriteria[id].item=true
+            setCheckBoxCriteria(checkBoxCriteria)
+        }else{
+            checkBoxCriteria[id].item=false
+            setCheckBoxCriteria(checkBoxCriteria)
+        }
+    }
 
     const removeDuplicates=(elements)=>{
         let cleaned = []
@@ -122,9 +156,32 @@ const TestRiskScreen = (props) => {
         })
     }
 
+    
     const sendValidator=()=>{
-        setAlert(true)
+        if(answer){
+            if(answer.length>0){
+                if(criteria){
+                    if(answerCriteria){
+                        if(answerCriteria.length>0){
+                            setAlert(true)
+                        }else{
+                            Alert.alert('Alerta','Debe seleccionar el criterio de marca')
+                        }
+
+                    }else{
+                        Alert.alert('Alerta','Debe seleccionar el criterio de marca')
+                    }
+                }else{
+                    setAlert(true)
+                }
+            }else{
+                Alert.alert('Alerta','Debe seleccionar al menos un criterio')
+            }
+        }else{
+            Alert.alert('Alerta','Debe seleccionar al menos un criterio')
+        }
     }
+
     const close = () => {
         send()
     }
@@ -136,12 +193,13 @@ const TestRiskScreen = (props) => {
         setIsSearchResult(true)
         const user = await AsyncStorage.getItem('user');
         const { id } =  JSON.parse(user);
+        const answerTest=(answerCriteria)?answer.concat(answerCriteria):answer
 
         const send={
             "dni":dataPatient.numIdentificacion,
             "author_id":String(id),
             "test_id":String(idTest),
-            "test":answer
+            "test":answerTest
         }
         console.log(JSON.stringify(send));
         try {
@@ -214,6 +272,32 @@ const TestRiskScreen = (props) => {
                             }
                         </View>
                     </View>
+                    {
+                        (criteria)?
+
+                        <View style={Styles.borderContainer}>
+                            <View style={styles.cQuestion}>
+                                <Text style={styles.tQuestion}>{criteria.name}</Text>
+                            </View>
+                            <View>
+                                {
+                                    criteria.options.map((option,id)=>{
+                                        return(
+                                            <View style={{marginBottom:15}} key={id}>
+                                                <CheckBox
+                                                    text={option.name}
+                                                    value={checkBoxCriteria[id].item}
+                                                    onValueChange={(newValue) => itemCheckboxCriteriaSelected(id,option.name)}
+                                                />
+                                            </View>
+                                        )
+                                    })
+                                }
+                            </View>
+                        </View>
+
+                        :null
+                    }
                 
                 
                 <View style={styles.cButton}>  

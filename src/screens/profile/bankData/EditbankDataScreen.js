@@ -12,6 +12,8 @@ import Button from '../../../components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from '../../../context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SelectDocument from '../../../services/SelectDocument';
+import { UploadDocument } from '../../../components/UploadDocument';
 
 const EditbankDataScreen = (props) => {
 
@@ -26,7 +28,13 @@ const EditbankDataScreen = (props) => {
     const [nameBank, setNameBank] = useState()
     const [typeAccount, setTypeAccount] = useState()
     const [error, setError] = useState()
+    const [rut,setRut]=useState()
+    const [dniDoc,setDniDoc]=useState()
+    const [bankcertificate,setBankCertificate]=useState()
+    const [rent,setRent]=useState(data.rent)
     const token =data.token
+
+    const renta=[{'id':1,'item':'Si'},{'id':2,'item':'No'}]
 
     useEffect(() => {
         getTypeAccount()
@@ -70,7 +78,7 @@ const EditbankDataScreen = (props) => {
         }
     }
 
-    const {banco,cuenta,tipo_cuenta,idTipoCuenta,idBanco,dni,dni_type,first_name,profession,last_name,movil,company,state,city,address,onChange} = useForm({
+    const {banco,cuenta,tipo_cuenta,idTipoCuenta,idBanco,dni,dni_type,first_name,profession,last_name,movil,company,state,city,address,rent_name,onChange} = useForm({
         banco:(bank)?bank:'',
         cuenta:(data.bank_account)?data.bank_account:'',
         tipo_cuenta:(accountType)?accountType:'',
@@ -86,6 +94,7 @@ const EditbankDataScreen = (props) => {
         first_name:data.first_name,
         last_name:data.last_name,
         profession:data.profession,
+        renta:(rent)?rent:'',
     })
     const saveData = async ()=>{
 
@@ -167,9 +176,18 @@ const EditbankDataScreen = (props) => {
         onChange(value,text)
     };
 
+    const fileSelect=(file,)=>{
+        console.log({file})
+        setRut(file)
+    };
+
     const selectBank=(id,value)=>{
         console.log('valuee',value)
         onChange(id,'idBanco')
+    }
+    const selectRent=(id,value)=>{
+        console.log('valuee',value)
+        onChange(value,'rent_name')
     }
     const selectAccount=(id,value)=>{
         console.log('valuee',value,id)
@@ -203,6 +221,25 @@ const EditbankDataScreen = (props) => {
                 itemSelect={selectBank}
                 placeholder={banco}
                 isSelect={true}
+            />
+            <ListOptions
+                label='Declara Renta:'
+                options={renta}
+                itemSelect={selectRent}
+                placeholder={rent}
+                isSelect={true}
+            />
+            <UploadDocument
+                title='Rut'
+                document={setRut}
+            />
+            <UploadDocument
+                title='Documento de Identidad'
+                document={setDniDoc}
+            />
+            <UploadDocument
+                title='Certificado Bancario'
+                document={setBankCertificate}
             />
             <Button
                 title="Guardar"
@@ -276,4 +313,3 @@ const styles = StyleSheet.create({
         marginBottom:5
     },
 })
-
