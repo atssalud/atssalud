@@ -12,24 +12,33 @@ import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
 import LoadingScreen from '../LoadingScreen'
 import FailedService from '../catchment/FailedService';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 
 
 const PerfilScreen = () => {
   
   const navigator= useNavigation()
-  const {logOut} = useContext(AuthContext)
+  const {logOut,isConnected} = useContext(AuthContext)
   const [alert,setAlert]= useState(false)
 
   const [dataUser,setDataUser] = useState();
   const [token,setToken]=useState()
   const [failed,setFailed]=useState(false)
+  const [netInfo,setNetInfo]=useState(false)
   
 
   useEffect(()=> {
+    const unsubscribe = isConnected(setNetInfo)
     getToken()
-    
+
+    return()=>{
+      unsubscribe
+  }
   }, [])
+  
+
+  
   
   const getToken =async()=>{
     const userToken = await AsyncStorage.getItem('token');
@@ -38,6 +47,7 @@ const PerfilScreen = () => {
     getUser()
 
   }
+  // if(netInfo === false) return  <IsConnectedScreen />
 
   const getUser = async()=>{
     const userStr = await AsyncStorage.getItem('user');
@@ -117,6 +127,9 @@ const PerfilScreen = () => {
   return (
     
   <>
+    {
+      (netInfo === false)?<IsConnectedScreen/>:
+      <>
     {
       (dataUser)?
       <View  style={styles.container}>
@@ -217,6 +230,8 @@ const PerfilScreen = () => {
       </View>
       :(failed)?<FailedService/>:
       <LoadingScreen />
+    }
+    </>
     }
 
     {

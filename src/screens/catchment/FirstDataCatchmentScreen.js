@@ -17,9 +17,10 @@ import Button from '../../components/Button';
 import ListOptions from '../../components/ListOptions';
 import http from '../../services/http';
 import InputDate from '../../components/InputDate';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const FirstDataCatchmentScreen = (props) => {
-    const {logOut} = useContext(AuthContext)
+    const {logOut,isConnected} = useContext(AuthContext)
     const navigator = useNavigation()
     const genero=[{'id':'M', 'item':'M'},{'id':'F', 'item':'F'}]
     const [errorAlert,setErrorAlert]= useState(false)
@@ -59,13 +60,22 @@ const FirstDataCatchmentScreen = (props) => {
     const [eps,setEps]= useState()
     const [error, setError] = useState()
     const [token,setToken]=useState()
+    const [ netInfo,setNetInfo]=useState(false)
 
-    useEffect(() => {
+    useEffect(()=> {
+
+        const unsubscribe = isConnected(setNetInfo)
         getDniTypes()
         getDepartaments()
         getEps()
         getToken()
+        return()=>{
+            unsubscribe
+        }
+        
     }, [])
+
+  
 
     const getToken =async()=>{
         const userToken = await AsyncStorage.getItem('token')
@@ -213,133 +223,42 @@ const FirstDataCatchmentScreen = (props) => {
     
 
   return (
-    <View style={styles.container}>
-        <StatusBar barStyle='dark-content' />
+    <>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <View style={styles.container}>
+                <StatusBar barStyle='dark-content' />
 
-        <ScrollView style={Styles.borderContainer}>
+                <ScrollView style={Styles.borderContainer}>
 
-            <View>
-                <TextInputs
-                    label='Nombre'
-                    placeholder="Juan José"
-                    onChangeText= { (value) => setUserRegister({...userRegister ,nombre:value}) }
-                    value={userRegister.nombre}
+                    <View>
+                        <TextInputs
+                            label='Nombre'
+                            placeholder="Juan José"
+                            onChangeText= { (value) => setUserRegister({...userRegister ,nombre:value}) }
+                            value={userRegister.nombre}
 
-                />
-                {(error)?
-                    (error.first_name==='')?null:
-                    <Text style={styles.textValid}>{error.first_name}</Text>: null
-                }
-                    
-                <TextInputs
-                    label='Apellido'
-                    placeholder="Andrade Perez"
-                    onChangeText= { (value) => setUserRegister({...userRegister ,apellido:value}) }
-                    value={userRegister.apellido}
-
-                />
-                {(error)?
-                    (error.last_name==='')?null:
-                    <Text style={styles.textValid}>{error.last_name}</Text>: null
-                }
-                <View style={styles.cText}>
-                    <Text style={styles.text}>Tipo identificación</Text>
-                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                        <Text style={styles.subtitle}>{typeDni}</Text>
-                        <Icon
-                            name='chevron-down'
-                            color={Colors.GREY}
-                            size={20}
-                            style={{marginRight:10,marginTop:10}}
-                        />
-                    </View>
-                </View>
-
-                <View style={[styles.cText]}>
-                    <Text style={styles.text}>Num de indentificación:</Text> 
-                    <Text style={styles.tEdad}>{dni}</Text>
-                </View>
-
-                <ListOptions
-                    label='Genero'
-                    options={genero}
-                    itemSelect={tipogeneroSelect}
-
-                    placeholder={userRegister.genero}
-                    isSelect={(userRegister.genero)? true:false}
-                />
-                {(error)?
-                    (error.gender==='')?null:
-                    <Text style={styles.textValid}>{error.gender}</Text>: null
-                }
-                
-                <InputDate
-                    label='F.de nacimiento'
-                    dateSelect={dateSelect}
-                    type={'date'}
-
-                    text={userRegister.fechaNacimiento}
-                />
-                {(error)?
-                    (error.birthday==='')?null:
-                    <Text style={styles.textValid}>{error.birthday}</Text>: null
-                }
-
-                <View style={[styles.cText]}>
-                    <Text style={styles.text}>Edad:</Text> 
-                    <Text style={(userRegister.edad)?styles.tEdad:styles.subtitle2}>{(userRegister.edad)?userRegister.edad:'25'}</Text>
-                </View>
-                {(error)?
-                    (error.birthday==='')?null:
-                    <Text style={styles.textValid}>La edad es requerida</Text>: null
-                }
-                
-                
-                <TextInputs
-                    label='Celular'
-                    placeholder="3014567890"
-                    onChangeText= { (value) => setUserRegister({...userRegister ,celular:value}) }
-                    value={userRegister.celular}
-
-                />
-                {(error)?
-                    (error.phone==='')?null:
-                    <Text style={styles.textValid}>{error.phone}</Text>: null
-                }
-
-                <ListOptions
-                    label='Departamento'
-                    options={departaments}
-                    itemSelect={departamentSelect}
-
-                    placeholder={userRegister.departamento}
-                    isSelect={(userRegister.departamento)? true:false}
-                />
-                {(error)?
-                    (error.state==='')?null:
-                    <Text style={styles.textValid}>{error.state}</Text>: null
-                }
-                    
-                    {(userRegister.departamento)?
-                        <View>
-                        <ListOptions
-                        label='Ciudad'
-                        options={cities}
-                        itemSelect={citySelect}
-                        placeholder={userRegister.ciudad}
-                        isSelect={(userRegister.ciudad)? true:false}
                         />
                         {(error)?
-                            (error.city==='')?null:
-                            <Text style={styles.textValid}>{error.city}</Text>: null
+                            (error.first_name==='')?null:
+                            <Text style={styles.textValid}>{error.first_name}</Text>: null
                         }
-                        </View>
-                        :
-                        <View>
+                            
+                        <TextInputs
+                            label='Apellido'
+                            placeholder="Andrade Perez"
+                            onChangeText= { (value) => setUserRegister({...userRegister ,apellido:value}) }
+                            value={userRegister.apellido}
+
+                        />
+                        {(error)?
+                            (error.last_name==='')?null:
+                            <Text style={styles.textValid}>{error.last_name}</Text>: null
+                        }
                         <View style={styles.cText}>
-                            <Text style={styles.text}>Ciudad</Text>
+                            <Text style={styles.text}>Tipo identificación</Text>
                             <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                <Text style={(userRegister.ciudad)?styles.subtitle:styles.subtitle2}>{(userRegister.ciudad)?userRegister.ciudad:'Seleccionar'}</Text>
+                                <Text style={styles.subtitle}>{typeDni}</Text>
                                 <Icon
                                     name='chevron-down'
                                     color={Colors.GREY}
@@ -348,76 +267,173 @@ const FirstDataCatchmentScreen = (props) => {
                                 />
                             </View>
                         </View>
-                        {(error)?
-                            (error.city==='')?null:
-                            <Text style={styles.textValid}>{error.city}</Text>: null
-                        }
-                        </View>
-                    }
-                
-                    <TextInputs
-                        label='Dirección'
-                        placeholder="cra 6b #34-45"
-                        onChangeText= { (value) => setUserRegister({...userRegister ,direccion:value}) }
-                        value={userRegister.direccion}
-    
-                    />
-                    {(error)?
-                        (error.address==='')?null:
-                        <Text style={styles.textValid}>{error.address}</Text>: null
-                    }
-                
-                    <TextInputs
-                        label='Correo'
-                        placeholder="ejemplo@gmail.com"
-                        onChangeText= { (value) => setUserRegister({...userRegister ,correo:value}) }
-                        value={userRegister.correo}
-                    />
-                    {(error)?
-                        (error.email==='')?null:
-                        <Text style={styles.textValid}>{error.email}</Text>: null
-                    }
-                    
-                
-            </View>
 
-            <View style={styles.cButton}>  
-                <Button 
-                    title={"Registrar"}
-                    onPress={()=>register()} 
-                    fill='solid'
-                /> 
+                        <View style={[styles.cText]}>
+                            <Text style={styles.text}>Num de indentificación:</Text> 
+                            <Text style={styles.tEdad}>{dni}</Text>
+                        </View>
+
+                        <ListOptions
+                            label='Genero'
+                            options={genero}
+                            itemSelect={tipogeneroSelect}
+
+                            placeholder={userRegister.genero}
+                            isSelect={(userRegister.genero)? true:false}
+                        />
+                        {(error)?
+                            (error.gender==='')?null:
+                            <Text style={styles.textValid}>{error.gender}</Text>: null
+                        }
+                        
+                        <InputDate
+                            label='F.de nacimiento'
+                            dateSelect={dateSelect}
+                            type={'date'}
+
+                            text={userRegister.fechaNacimiento}
+                        />
+                        {(error)?
+                            (error.birthday==='')?null:
+                            <Text style={styles.textValid}>{error.birthday}</Text>: null
+                        }
+
+                        <View style={[styles.cText]}>
+                            <Text style={styles.text}>Edad:</Text> 
+                            <Text style={(userRegister.edad)?styles.tEdad:styles.subtitle2}>{(userRegister.edad)?userRegister.edad:'25'}</Text>
+                        </View>
+                        {(error)?
+                            (error.birthday==='')?null:
+                            <Text style={styles.textValid}>La edad es requerida</Text>: null
+                        }
+                        
+                        
+                        <TextInputs
+                            label='Celular'
+                            placeholder="3014567890"
+                            onChangeText= { (value) => setUserRegister({...userRegister ,celular:value}) }
+                            value={userRegister.celular}
+
+                        />
+                        {(error)?
+                            (error.phone==='')?null:
+                            <Text style={styles.textValid}>{error.phone}</Text>: null
+                        }
+
+                        <ListOptions
+                            label='Departamento'
+                            options={departaments}
+                            itemSelect={departamentSelect}
+
+                            placeholder={userRegister.departamento}
+                            isSelect={(userRegister.departamento)? true:false}
+                        />
+                        {(error)?
+                            (error.state==='')?null:
+                            <Text style={styles.textValid}>{error.state}</Text>: null
+                        }
+                            
+                            {(userRegister.departamento)?
+                                <View>
+                                <ListOptions
+                                label='Ciudad'
+                                options={cities}
+                                itemSelect={citySelect}
+                                placeholder={userRegister.ciudad}
+                                isSelect={(userRegister.ciudad)? true:false}
+                                />
+                                {(error)?
+                                    (error.city==='')?null:
+                                    <Text style={styles.textValid}>{error.city}</Text>: null
+                                }
+                                </View>
+                                :
+                                <View>
+                                <View style={styles.cText}>
+                                    <Text style={styles.text}>Ciudad</Text>
+                                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                        <Text style={(userRegister.ciudad)?styles.subtitle:styles.subtitle2}>{(userRegister.ciudad)?userRegister.ciudad:'Seleccionar'}</Text>
+                                        <Icon
+                                            name='chevron-down'
+                                            color={Colors.GREY}
+                                            size={20}
+                                            style={{marginRight:10,marginTop:10}}
+                                        />
+                                    </View>
+                                </View>
+                                {(error)?
+                                    (error.city==='')?null:
+                                    <Text style={styles.textValid}>{error.city}</Text>: null
+                                }
+                                </View>
+                            }
+                        
+                            <TextInputs
+                                label='Dirección'
+                                placeholder="cra 6b #34-45"
+                                onChangeText= { (value) => setUserRegister({...userRegister ,direccion:value}) }
+                                value={userRegister.direccion}
+            
+                            />
+                            {(error)?
+                                (error.address==='')?null:
+                                <Text style={styles.textValid}>{error.address}</Text>: null
+                            }
+                        
+                            <TextInputs
+                                label='Correo'
+                                placeholder="ejemplo@gmail.com"
+                                onChangeText= { (value) => setUserRegister({...userRegister ,correo:value}) }
+                                value={userRegister.correo}
+                            />
+                            {(error)?
+                                (error.email==='')?null:
+                                <Text style={styles.textValid}>{error.email}</Text>: null
+                            }
+                            
+                        
+                    </View>
+
+                    <View style={styles.cButton}>  
+                        <Button 
+                            title={"Registrar"}
+                            onPress={()=>register()} 
+                            fill='solid'
+                        /> 
+                    </View>
+            </ScrollView>
+                {
+                    (errorAlert) ?
+                        <WindowAlert
+                        bool={true}
+                        closeAlert={setErrorAlert}
+                        content={contentErrorAlert}
+                        width={50}
+                        height={3}
+                        btnText={'Aceptar'}
+                        btnFunction={closeError}
+                        />
+                    : null
+                }
+                {
+                    (alert) ?
+                        <WindowAlert
+                        bool={true}
+                        closeAlert={setAlert}
+                        content={contentAlert}
+                        width={50}
+                        height={3}
+                        btnText={'Aceptar'}
+                        btnFunction={close}
+                        />
+                    : null
+                }
+            
+                
             </View>
-    </ScrollView>
-        {
-            (errorAlert) ?
-                <WindowAlert
-                bool={true}
-                closeAlert={setErrorAlert}
-                content={contentErrorAlert}
-                width={50}
-                height={3}
-                btnText={'Aceptar'}
-                btnFunction={closeError}
-                />
-            : null
         }
-        {
-            (alert) ?
-                <WindowAlert
-                bool={true}
-                closeAlert={setAlert}
-                content={contentAlert}
-                width={50}
-                height={3}
-                btnText={'Aceptar'}
-                btnFunction={close}
-                />
-            : null
-        }
-       
         
-    </View>
+    </>
   )
 }
 export default FirstDataCatchmentScreen;

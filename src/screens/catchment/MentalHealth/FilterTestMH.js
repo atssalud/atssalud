@@ -14,10 +14,16 @@ import ViewAlertSkeletonScreen from '../../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../../context/AuthContext';
 import WindowAlert from '../../../components/WindowAlert';
 import TextInputs from '../../../components/TextInput';
+import IsConnectedScreen from '../../IsConnectedScreen';
 
 const FilterTestMH = (props) => {
 
-    const {logOut} = useContext(AuthContext)
+    const {logOut,isConnected} = useContext(AuthContext)
+    const navigator=useNavigation()
+
+    const data = props.route.params.data
+    const datos = props.route.params.datos
+
     const [answer,setAnswer]=useState()
     const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
@@ -33,16 +39,18 @@ const FilterTestMH = (props) => {
         años: ''
     })
 
-    const data = props.route.params.data
-    console.log('daaataaa',data)
-    const datos = props.route.params.datos
+    const [ netInfo,setNetInfo]=useState(false)
 
-    const navigator=useNavigation()
+    useEffect(()=> {
 
-    useEffect(() => {
-      getToken()
+        const unsubscribe = isConnected(setNetInfo)
+        getToken()
+        return()=>{
+            unsubscribe
+        }
+        
     }, [])
-    
+
     const getToken =async()=>{
         const userToken = await AsyncStorage.getItem('token')
         getQuestion(userToken)
@@ -120,8 +128,10 @@ const FilterTestMH = (props) => {
     }
 
   return (
-
     <>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
     {
         (isSearch)?
         <TestSkeletonScreen/>
@@ -188,7 +198,10 @@ const FilterTestMH = (props) => {
         
         </ScrollView>
     }
+            </>
+        }
     </>
+    
     
   )
 }

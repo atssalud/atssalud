@@ -1,15 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Alert, Image, StyleSheet, Text, View } from 'react-native';
 import Button from '../../components/Button';
 import Checkbox from '../../components/CheckBox';
 import WindowAlert from '../../components/WindowAlert';
+import { AuthContext } from '../../context/AuthContext';
 import { Endpoint } from '../../environment/Api';
 import http from '../../services/http';
 import { Colors } from '../../theme/Colors';
 import { Fonts } from '../../theme/Fonts';
 import { Styles } from '../../theme/GlobalStyle';
+import IsConnectedScreen from '../IsConnectedScreen';
 import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 
 
@@ -28,12 +30,20 @@ const FilterTestEpocScreen = (props) => {
     const [token,setToken]= useState('')
     const [isSearchResult, setIsSearchResult] = useState(false)
 
+    const {isConnected} = useContext(AuthContext)
+    const [ netInfo,setNetInfo]=useState(false)
 
-    useEffect(() => {
+    useEffect(()=> {
+
+        const unsubscribe = isConnected(setNetInfo)
         getToken()
-      }, [])
-      
-      const getToken =async()=>{
+        return()=>{
+            unsubscribe
+        }
+        
+    }, [])
+
+    const getToken =async()=>{
           const userToken = await AsyncStorage.getItem('token')
           setToken(userToken)
       
@@ -96,98 +106,104 @@ const FilterTestEpocScreen = (props) => {
   return (
     <>
         {
-        (isSearchResult)?
-            <ViewAlertSkeletonScreen/>
-        :
-            <View style={styles.container}>
-        <View style={Styles.borderContainer}>
-            <View style={styles.cQuestion}>
-                <Text style={styles.tQuestion}>¿Es o fue fumador?</Text>
-            </View>
-            <View style={styles.cCheckBox}>
-                <Checkbox
-                    text={'Si'}
-                    value={fumador}
-                    disabled={false}
-                    onValueChange={(newValue) => setFumador(newValue)}
-                />
-                <Checkbox
-                    text={'No'}
-                    value={!fumador}
-                    disabled={false}
-                    onValueChange={(newValue) => setFumador(!newValue)}
-                />
-            </View>
-        </View>
-        <View style={Styles.borderContainer}>
-            <View style={styles.cQuestion}>
-            <Text style={styles.tQuestion}>¿Estuvo expuesto a biomasa?</Text>
-            </View>
-            <View style={styles.cCheckBox}>
-                <Checkbox
-                    text={'Si'}
-                    value={biomasa}
-                    disabled={false}
-                    onValueChange={(newValue) => setBiomasa(newValue)}
-                />
-                <Checkbox
-                    text={'No'}
-                    value={!biomasa}
-                    disabled={false}
-                    onValueChange={(newValue) => setBiomasa(!newValue)}
-                />
-            </View>
-        </View>
-        {
-            (biomasa === true)?
-
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
+            {
+            (isSearchResult)?
+                <ViewAlertSkeletonScreen/>
+            :
+                <View style={styles.container}>
             <View style={Styles.borderContainer}>
-            <View style={styles.cQuestion}>
-                <Text style={styles.tQuestion}>¿Estuvo expuesto a biomasa por</Text>
-                <Text style={styles.tQuestion}>más de 10 años seguidos?</Text>
+                <View style={styles.cQuestion}>
+                    <Text style={styles.tQuestion}>¿Es o fue fumador?</Text>
+                </View>
+                <View style={styles.cCheckBox}>
+                    <Checkbox
+                        text={'Si'}
+                        value={fumador}
+                        disabled={false}
+                        onValueChange={(newValue) => setFumador(newValue)}
+                    />
+                    <Checkbox
+                        text={'No'}
+                        value={!fumador}
+                        disabled={false}
+                        onValueChange={(newValue) => setFumador(!newValue)}
+                    />
+                </View>
             </View>
-            <View style={styles.cCheckBox}>
-                <Checkbox
-                    text={'Si'}
-                    value={biomasa10}
-                    disabled={false}
-                    onValueChange={(newValue) => setBiomasa10(newValue)}
-                />
-                <Checkbox
-                    text={'No'}
-                    value={!biomasa10}
-                    disabled={false}
-                    onValueChange={(newValue) => setBiomasa10(!newValue)}
-                />
+            <View style={Styles.borderContainer}>
+                <View style={styles.cQuestion}>
+                <Text style={styles.tQuestion}>¿Estuvo expuesto a biomasa?</Text>
+                </View>
+                <View style={styles.cCheckBox}>
+                    <Checkbox
+                        text={'Si'}
+                        value={biomasa}
+                        disabled={false}
+                        onValueChange={(newValue) => setBiomasa(newValue)}
+                    />
+                    <Checkbox
+                        text={'No'}
+                        value={!biomasa}
+                        disabled={false}
+                        onValueChange={(newValue) => setBiomasa(!newValue)}
+                    />
+                </View>
             </View>
-        </View>:null
-        }
-        <View style={styles.cButton}>
-        <Button
-          title="Aplicar Test"
-          onPress={() => validarTest()}
-          color='secondary'
-          fill='solid'
-        />
-        </View>
-        {
-            (alert) ?
-                <WindowAlert
-                bool={true}
-                closeAlert={setAlert}
-                content={contentAlert}
-                width={50}
-                height={3}
-                btnText={'Aceptar'}
-                btnFunction={close}
-                btnClose={'yes'}
-                />
-            : null
-        }
+            {
+                (biomasa === true)?
 
+                <View style={Styles.borderContainer}>
+                <View style={styles.cQuestion}>
+                    <Text style={styles.tQuestion}>¿Estuvo expuesto a biomasa por</Text>
+                    <Text style={styles.tQuestion}>más de 10 años seguidos?</Text>
+                </View>
+                <View style={styles.cCheckBox}>
+                    <Checkbox
+                        text={'Si'}
+                        value={biomasa10}
+                        disabled={false}
+                        onValueChange={(newValue) => setBiomasa10(newValue)}
+                    />
+                    <Checkbox
+                        text={'No'}
+                        value={!biomasa10}
+                        disabled={false}
+                        onValueChange={(newValue) => setBiomasa10(!newValue)}
+                    />
+                </View>
+            </View>:null
+            }
+            <View style={styles.cButton}>
+            <Button
+            title="Aplicar Test"
+            onPress={() => validarTest()}
+            color='secondary'
+            fill='solid'
+            />
             </View>
+            {
+                (alert) ?
+                    <WindowAlert
+                    bool={true}
+                    closeAlert={setAlert}
+                    content={contentAlert}
+                    width={50}
+                    height={3}
+                    btnText={'Aceptar'}
+                    btnFunction={close}
+                    btnClose={'yes'}
+                    />
+                : null
+            }
+
+                </View>
+            } 
+        
+            </>
         }
-    
+        
     </>
   )
 }

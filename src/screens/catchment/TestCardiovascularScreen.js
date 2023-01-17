@@ -13,22 +13,31 @@ import { Endpoint } from '../../environment/Api'
 import { useNavigation } from '@react-navigation/native'
 import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen'
 import { AuthContext } from '../../context/AuthContext'
+import IsConnectedScreen from '../IsConnectedScreen'
 
 const TestCardiovascularScreen = (props) => {
 
     const navigator = useNavigation()
+    const {logOut,isConnected} = useContext(AuthContext)
+
     const data = props.route.params.data
     const datos = props.route.params.datos
-    const {logOut} = useContext(AuthContext)
 
     const siNo=[{'id':'0','item':'No'},{'id':'1','item':'Si'}]
     
     const [token,setToken]=useState()
     const [error, setError] = useState()
     const [isSearchResult, setIsSearchResult] = useState(false)
+    const [ netInfo,setNetInfo]=useState(false)
 
-    useEffect(() => {
+    useEffect(()=> {
+
+        const unsubscribe = isConnected(setNetInfo)
         getToken()
+        return()=>{
+            unsubscribe
+        }
+        
     }, [])
 
     const getToken =async()=>{
@@ -93,103 +102,109 @@ const TestCardiovascularScreen = (props) => {
     }
   return (
     <>
-        {(isSearchResult)?
-            <ViewAlertSkeletonScreen/>
-            :
-            <View style={[Styles.borderContainer,styles.container]}>
-                <View style={{flexDirection:'row',}}>
-                    <View style={[styles.cText,{marginRight:40}]}>
-                        <Text style={styles.text}>Genero:</Text>
-                        <Text style={styles.subtitle}>{gender}</Text>
-                    </View>  
-                    <View style={styles.cText}>
-                        <Text style={styles.text}>Edad:</Text>
-                        <Text style={styles.subtitle}>{age}</Text>
-                    </View>  
-                </View>
-                <View style={{flexDirection:'row',}}>
-                    <View>
-                    <TextInputs
-                        label='Colesterol Total'
-                        placeholder="150"
-                        onChangeText= { (value) => onChange(value,'total_cholesterol') }
-                        value={total_cholesterol}
-                        dimension='middle'
-                        keyboardType='numeric'
-                    />
-                    {(error)?
-                        (error.total_cholesterol==='')?null:
-                        <Text style={styles.textValid}>{error.total_cholesterol}</Text>: null
-                    }
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
+            {(isSearchResult)?
+                <ViewAlertSkeletonScreen/>
+                :
+                <View style={[Styles.borderContainer,styles.container]}>
+                    <View style={{flexDirection:'row',}}>
+                        <View style={[styles.cText,{marginRight:40}]}>
+                            <Text style={styles.text}>Genero:</Text>
+                            <Text style={styles.subtitle}>{gender}</Text>
+                        </View>  
+                        <View style={styles.cText}>
+                            <Text style={styles.text}>Edad:</Text>
+                            <Text style={styles.subtitle}>{age}</Text>
+                        </View>  
                     </View>
-                    <View>
-                    <TextInputs
-                        label='HDL'
-                        placeholder="45"
-                        onChangeText= { (value) => onChange(value,'hdl') }
-                        value={hdl}
-                        dimension='middle'
-                        keyboardType='numeric'
-                    />
-                    {(error)?
-                        (error.hdl==='')?null:
-                        <Text style={styles.textValid}>{error.hdl}</Text>: null
-                    }
-                    </View>
-                </View>
-                <View style={{flexDirection:'row',}}>
-                    <View>
-                    <TextInputs
-                        label='P.Sistólica'
-                        placeholder="120"
-                        onChangeText= { (value) => onChange(value,'systolic_pressure') }
-                        value={systolic_pressure}
-                        dimension='middle'
-                        keyboardType='numeric'
-                    />
-                    {(error)?
-                        (error.systolic_pressure==='')?null:
-                        <Text style={styles.textValid}>{error.systolic_pressure}</Text>: null
-                    }
-                    </View>
-                    <View style={{marginTop:2}}>
-                    <ListOptions
-                        label='Fumador'
-                        options={siNo}
-                        itemSelect={smokingSelect}
-                        dimension='middle'
-                        placeholder={'No'}
+                    <View style={{flexDirection:'row',}}>
+                        <View>
+                        <TextInputs
+                            label='Colesterol Total'
+                            placeholder="150"
+                            onChangeText= { (value) => onChange(value,'total_cholesterol') }
+                            value={total_cholesterol}
+                            dimension='middle'
+                            keyboardType='numeric'
                         />
-                    {(error)?
-                        (error.smoking==='')?null:
-                        <Text style={styles.textValid}>{error.smoking}</Text>: null
-                    }
-                    </View>
-                </View>
-                <View style={{flexDirection:'row',}}>
-                <View>
-                    <ListOptions
-                        label='¿ Tiene tratamiento para Hipertensión Arterial ?'
-                        options={siNo}
-                        itemSelect={tratamientoSelect}
-                        dimension='middle'
-                        placeholder={'No'}
+                        {(error)?
+                            (error.total_cholesterol==='')?null:
+                            <Text style={styles.textValid}>{error.total_cholesterol}</Text>: null
+                        }
+                        </View>
+                        <View>
+                        <TextInputs
+                            label='HDL'
+                            placeholder="45"
+                            onChangeText= { (value) => onChange(value,'hdl') }
+                            value={hdl}
+                            dimension='middle'
+                            keyboardType='numeric'
                         />
-                    {(error)?
-                        (error.tratamiento==='')?null:
-                        <Text style={styles.textValid}>{error.tratamiento}</Text>: null
-                    }
+                        {(error)?
+                            (error.hdl==='')?null:
+                            <Text style={styles.textValid}>{error.hdl}</Text>: null
+                        }
+                        </View>
+                    </View>
+                    <View style={{flexDirection:'row',}}>
+                        <View>
+                        <TextInputs
+                            label='P.Sistólica'
+                            placeholder="120"
+                            onChangeText= { (value) => onChange(value,'systolic_pressure') }
+                            value={systolic_pressure}
+                            dimension='middle'
+                            keyboardType='numeric'
+                        />
+                        {(error)?
+                            (error.systolic_pressure==='')?null:
+                            <Text style={styles.textValid}>{error.systolic_pressure}</Text>: null
+                        }
+                        </View>
+                        <View style={{marginTop:2}}>
+                        <ListOptions
+                            label='Fumador'
+                            options={siNo}
+                            itemSelect={smokingSelect}
+                            dimension='middle'
+                            placeholder={'No'}
+                            />
+                        {(error)?
+                            (error.smoking==='')?null:
+                            <Text style={styles.textValid}>{error.smoking}</Text>: null
+                        }
+                        </View>
+                    </View>
+                    <View style={{flexDirection:'row',}}>
+                    <View>
+                        <ListOptions
+                            label='¿ Tiene tratamiento para Hipertensión Arterial ?'
+                            options={siNo}
+                            itemSelect={tratamientoSelect}
+                            dimension='middle'
+                            placeholder={'No'}
+                            />
+                        {(error)?
+                            (error.tratamiento==='')?null:
+                            <Text style={styles.textValid}>{error.tratamiento}</Text>: null
+                        }
+                        </View>
+                    </View>
+                    <View style={styles.cButton}>  
+                        <Button
+                            title="Calcular"
+                            onPress={()=>send()} 
+                            fill='solid'
+                        /> 
                     </View>
                 </View>
-                <View style={styles.cButton}>  
-                    <Button
-                        title="Calcular"
-                        onPress={()=>send()} 
-                        fill='solid'
-                    /> 
-                </View>
-            </View>
+            }
+            </>
         }
+        
     </>
   )
 }

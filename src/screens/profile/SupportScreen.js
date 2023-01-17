@@ -9,9 +9,10 @@ import WindowAlert from '../../components/WindowAlert';
 import { Styles } from '../../theme/GlobalStyle';
 import { Fonts } from '../../theme/Fonts';
 import { AuthContext } from '../../context/AuthContext';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const SupportScreen = () => {
-    const {logOut} = useContext(AuthContext)
+    const {logOut,isConnected} = useContext(AuthContext)
 
     const [type, setType]= useState('Petición')
     const [typeId, setTypeId]= useState('1')
@@ -26,12 +27,18 @@ const SupportScreen = () => {
     const {description, onChange} = useForm({
         description:'',
     })
+    const [ netInfo,setNetInfo]=useState(false)
 
-    useEffect(() => {
+    useEffect(()=> {
+
+        const unsubscribe = isConnected(setNetInfo)
         // listCompanies()
+        return()=>{
+            unsubscribe
+        }
+        
     }, [])
 
-    
     const onChangeText=(value,text)=>{
         onChange(value,text)
     };
@@ -111,7 +118,10 @@ const SupportScreen = () => {
     </View>
 
   return (
-    <View style={styles.container}>
+    <>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <View style={styles.container}>
         <View>
             <View style={styles.cpImageText}>
                 <View style={[Styles.borderContainer,{flexDirection:'row'}]}>
@@ -184,7 +194,10 @@ const SupportScreen = () => {
             : null
         }
 
-    </View>
+            </View>
+        }
+    </>
+    
   )
 }
 export default SupportScreen;

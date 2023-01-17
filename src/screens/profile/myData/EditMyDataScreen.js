@@ -13,6 +13,7 @@ import TextInputs from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../../../context/AuthContext';
+import IsConnectedScreen from '../../IsConnectedScreen';
 
 const EditMyDataScreen = (props) => {
 
@@ -20,17 +21,16 @@ const EditMyDataScreen = (props) => {
     //colocar como obligatorio el campo de ciudad de nacimiento para
     // que deje realizar los cambios
 
-    const {logOut} = useContext(AuthContext)
+    const {logOut,isConnected} = useContext(AuthContext)
+    const navigator= useNavigation()
+
     const data = props.route.params.dataUser
     const photos = data.avatar
     const initialDepartament=data.state
 
-    const navigator= useNavigation()
-
     const [cities, setCities] = useState()
     const [departaments, setDepartaments] = useState()
     const [eps,setEps]= useState()
-
     const [id_eps, setIdEps] = useState(data.company)
     const [id_departament, setIdDepartament] = useState(data.state)
     const [id_city, setIdCity] = useState(data.city)
@@ -38,8 +38,6 @@ const EditMyDataScreen = (props) => {
     const [type, setType] = useState()
     const [token,setToken]=useState()
     const [error, setError] = useState()
-
-    console.log({data})
     const {last_name,first_name,profession,dni,dni_type,address,city,idCity,bank_account,bank,type_account,state,idState,movil,idCompany,company,onChange} = useForm({
         idState:id_departament,
         address:data.address,
@@ -58,8 +56,10 @@ const EditMyDataScreen = (props) => {
         bank:data.bank,
         type_account:data.type_account,
     })
+    const [ netInfo,setNetInfo]=useState(false)
 
     useEffect(() => {
+        const unsubscribe = isConnected(setNetInfo)
         getToken()
         getDepartaments()
         getEps()
@@ -80,6 +80,9 @@ const EditMyDataScreen = (props) => {
             ),
     
         })
+        return()=>{
+            unsubscribe
+        }
     }, [idState])
 
     const getToken =async()=>{
@@ -253,8 +256,10 @@ const EditMyDataScreen = (props) => {
     </View>
 
   return (
-
-<ScrollView style={styles.container}>
+    <>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <ScrollView style={styles.container}>
         <View style={styles.cImageText}
         >
             <View style={styles.cPhoto}>
@@ -347,7 +352,10 @@ const EditMyDataScreen = (props) => {
                 fill='solid'
             />
         </View>
-    </ScrollView>
+            </ScrollView>
+        }
+    </>
+    
   )
 }
 export default EditMyDataScreen

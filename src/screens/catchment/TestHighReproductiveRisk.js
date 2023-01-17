@@ -15,10 +15,15 @@ import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
 import TextInputs from '../../components/TextInput';
 import TestSkeletonScreen from '../skeleton/TestSkeletonScreen';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const TestHighReproductiveRisk = (props) => {
+    const navigator=useNavigation()
+    const {logOut,isConnected} = useContext(AuthContext)
 
-    const {logOut} = useContext(AuthContext)
+    const data = props.route.params.data
+    const datos = props.route.params.datos
+
     const [answer,setAnswer]=useState()
     const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
@@ -26,24 +31,22 @@ const TestHighReproductiveRisk = (props) => {
     const [isSearch, setIsSearch] = useState(true)
     const [isSearchResult, setIsSearchResult] = useState(false)
     const [alert, setAlert] = useState(false)
-
-    const [numPaquete, setNumPaquete] = useState('')
-    const [años, setAños] = useState('')
     const [error, setError] = useState({
         numPaquete: '',
         años: ''
     })
+    const [ netInfo,setNetInfo]=useState(false)
 
-    const data = props.route.params.data
-    console.log('daaataaa',data)
-    const datos = props.route.params.datos
+    useEffect(()=> {
 
-    const navigator=useNavigation()
-
-    useEffect(() => {
-      getToken()
+        const unsubscribe = isConnected(setNetInfo)
+        getToken()
+        return()=>{
+            unsubscribe
+        }
+        
     }, [])
-    
+
     const getToken =async()=>{
         const userToken = await AsyncStorage.getItem('token')
         getQuestion(userToken)
@@ -160,73 +163,78 @@ const TestHighReproductiveRisk = (props) => {
     }
 
   return (
-
     <>
-    {
-        (isSearch)?
-        <TestSkeletonScreen/>
-        :(isSearchResult)?
-        <ViewAlertSkeletonScreen/>:
-        <ScrollView>
-        {(answer)?
-            <View style={styles.container}>
-                {(questions)?questions.map((item,id)=>{
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
+        {
+            (isSearch)?
+            <TestSkeletonScreen/>
+            :(isSearchResult)?
+            <ViewAlertSkeletonScreen/>:
+            <ScrollView>
+            {(answer)?
+                <View style={styles.container}>
+                    {(questions)?questions.map((item,id)=>{
 
-                    if(item.id !== 119){
-                        return(
-                            <View style={Styles.borderContainer} key={id}>
-                                <View style={styles.cQuestion}>
-                                    <Text style={styles.tQuestion}>{item.name}</Text>
+                        if(item.id !== 119){
+                            return(
+                                <View style={Styles.borderContainer} key={id}>
+                                    <View style={styles.cQuestion}>
+                                        <Text style={styles.tQuestion}>{item.name}</Text>
+                                    </View>
+                                    <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+                                        <CheckBox
+                                            text={item.options[0].name}
+                                            value={(answer[id].value=== item.options[0].value)?true:false}
+                                            disabled={false}
+                                            onValueChange={(newValue) => itemCheckboxSelected(id,item.options[0].value,String(item.options[0].name))}
+                                        />
+                                        <CheckBox
+                                            text={item.options[1].name}
+                                            value={(answer[id].value === item.options[1].value)?true:false}
+                                            disabled={false}
+                                            onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
+                                        />
+                                        
+                                    </View>
                                 </View>
-                                <View style={{flexDirection:'row',justifyContent:'space-around'}}>
-                                    <CheckBox
-                                        text={item.options[0].name}
-                                        value={(answer[id].value=== item.options[0].value)?true:false}
-                                        disabled={false}
-                                        onValueChange={(newValue) => itemCheckboxSelected(id,item.options[0].value,String(item.options[0].name))}
-                                    />
-                                    <CheckBox
-                                        text={item.options[1].name}
-                                        value={(answer[id].value === item.options[1].value)?true:false}
-                                        disabled={false}
-                                        onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
-                                    />
-                                    
-                                </View>
-                            </View>
-                        )
-                    }
+                            )
+                        }
+                    
+                }):null
+                }
                 
-            }):null
+                <View style={styles.cButton}>  
+                    <Button 
+                        title={"Calcular"}
+                        onPress={()=>sendValidator()} 
+                        fill='solid'
+                    /> 
+                </View>
+            </View>
+            :null}
+            {
+                (alert) ?
+                    <WindowAlert
+                        bool={true}
+                        closeAlert={setAlert}
+                        content={contentAlert}
+                        width={50}
+                        height={3}
+                        btnText={'Aceptar'}
+                        btnFunction={close}
+                        btnClose={'yes'}
+                        
+                    />
+                    : null
             }
             
-            <View style={styles.cButton}>  
-                <Button 
-                    title={"Calcular"}
-                    onPress={()=>sendValidator()} 
-                    fill='solid'
-                /> 
-            </View>
-        </View>
-        :null}
-        {
-            (alert) ?
-                <WindowAlert
-                    bool={true}
-                    closeAlert={setAlert}
-                    content={contentAlert}
-                    width={50}
-                    height={3}
-                    btnText={'Aceptar'}
-                    btnFunction={close}
-                    btnClose={'yes'}
-                    
-                />
-                : null
+            </ScrollView>
+        }
+            </>
         }
         
-        </ScrollView>
-    }
     </>
     
   )

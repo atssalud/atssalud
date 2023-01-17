@@ -14,11 +14,14 @@ import WindowAlert from '../../components/WindowAlert'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Checkbox from '../../components/CheckBox'
 import { AuthContext } from '../../context/AuthContext'
+import IsConnectedScreen from '../IsConnectedScreen'
 
 const UpdateDataPatientScreen = (props) => {
-    const {logOut} = useContext(AuthContext)
-
+    const {logOut,isConnected} = useContext(AuthContext)
     const navigator = useNavigation()
+    const today= new Date()
+
+    const data = props.route.params.data
 
     const etnia=[{'id':'1', 'item':'Indígena'},{'id':'2', 'item':'ROM(Gitano)'},{'id':'3', 'item':'Raizal'},{'id':'4', 'item':'Palenquero'},
                   {'id':'5', 'item':'Negro,Mulato,Afrocolombiano o Afrodescendiente'},{'id':'6', 'item':'Otro'},{'id':'7', 'item':'Ninguno'}]
@@ -31,11 +34,6 @@ const UpdateDataPatientScreen = (props) => {
     const [errorAlert,setErrorAlert]= useState(false)
     const [alert,setAlert]= useState(false)
     const [checkboxEmail,setCheckboxEmail]= useState(false)
-
-    const today= new Date()
-
-    const data = props.route.params.data
-
     const [userRegister, setUserRegister] = useState({
         nombre:data.name,
         segundoNombre:data.second_name,
@@ -65,9 +63,6 @@ const UpdateDataPatientScreen = (props) => {
 
         
     })
-
-    console.log('fecha', )
-
    
     const [departaments,setDepartaments]= useState()
     const [cities,setCities]= useState()
@@ -75,8 +70,10 @@ const UpdateDataPatientScreen = (props) => {
     const [eps,setEps]= useState()
     const [error, setError] = useState()
     const [token,setToken]=useState()
+    const [ netInfo,setNetInfo]=useState(false)
 
     useEffect(() => {
+        const unsubscribe = isConnected(setNetInfo)
         navigator.setOptions({
             headerRight:()=>(
                 <TouchableOpacity
@@ -91,11 +88,16 @@ const UpdateDataPatientScreen = (props) => {
                 </TouchableOpacity>
             ),
           })
+        
         getDniTypes()
         getDepartaments()
         getEps()
         getToken()
-    }, [])
+
+        return()=>{
+            unsubscribe
+        }
+    }, [netInfo])
 
     const getToken =async()=>{
         const userToken = await AsyncStorage.getItem('token')
@@ -278,7 +280,11 @@ const UpdateDataPatientScreen = (props) => {
     }
 
   return (
-    <View style={styles.container}>
+    <>
+        {
+            (netInfo === false)?<IsConnectedScreen/>
+            :
+            <View style={styles.container}>
         <StatusBar barStyle='dark-content' />
 
         <ScrollView style={Styles.borderContainer}>
@@ -451,7 +457,10 @@ const UpdateDataPatientScreen = (props) => {
         }
        
         
-    </View>
+            </View>
+        }
+    </>
+    
   )
 }
 export default UpdateDataPatientScreen;

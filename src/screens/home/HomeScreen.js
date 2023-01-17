@@ -1,24 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import InputDate from '../../components/InputDate';
 import ListOptions from '../../components/ListOptions';
+import { AuthContext } from '../../context/AuthContext';
 import { Endpoint } from '../../environment/Api';
 import http from '../../services/http';
 import { Colors } from '../../theme/Colors';
 import { Fonts } from '../../theme/Fonts';
 import { Styles } from '../../theme/GlobalStyle';
+import IsConnectedScreen from '../IsConnectedScreen';
 import LoadingScreen from '../LoadingScreen';
 
 export const HomeScreen = () => {
-
+    const {isConnected} = useContext(AuthContext)
     const date=new Date()
     const mes=date.getMonth()
     const año=date.getFullYear()
 
-    console.log(mes)
-    
-    
     const months=[{'id':'01', 'item':'Enero'},{'id':'02', 'item':'Febrero'},{'id':'03', 'item':'Marzo'},{'id':'04', 'item':'Abril'},
                   {'id':'05', 'item':'Mayo'},{'id':'06', 'item':'Junio'},{'id':'07', 'item':'Julio'},{'id':'08', 'item':'Agosto'},
                   {'id':'09', 'item':'Septiembre'},{'id':'10', 'item':'Octubre'},{'id':'11', 'item':'Noviembre'},{'id':'12', 'item':'Diciembre'}]
@@ -30,12 +29,19 @@ export const HomeScreen = () => {
     const [confirm, setConfirm] = useState()
     const [discarded, setDiscarded] = useState()
     const [no_verified, setNo_verified] = useState()
-
     const [year, setYear] = useState(año)
     const [monthYear, setMonthYear] = useState(`${month}-${year}`)
+    const [ netInfo,setNetInfo]=useState(false)
 
-
-
+    useEffect(() => {
+        const unsubscribe = isConnected(setNetInfo)
+        
+        getStatisticsMonth()
+        getStatisticsTotal()
+        return()=>{
+            unsubscribe
+        }
+    }, [monthId,year])
 
     const filterSelect=(date,type,monthYear)=>{
         console.log(date)
@@ -45,13 +51,7 @@ export const HomeScreen = () => {
         setMonthId(months[data[1]-1].id)
         setMonthYear(monthYear)
     }
-
-    useEffect(() => {
-        getStatisticsMonth()
-        getStatisticsTotal()
-    }, [monthId,year])
     
-
     const getStatisticsMonth=async()=>{
         const user = await AsyncStorage.getItem('user');
         const { id } =  JSON.parse(user);
@@ -94,8 +94,10 @@ export const HomeScreen = () => {
     }
 
   return (
-
     <>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
         <View style={[Styles.borderContainer,{justifyContent:'center',alignItems:'center',marginTop:35,marginBottom:10,marginHorizontal:20}]}>
             <InputDate
                 label='Filtro mes y año'
@@ -138,7 +140,10 @@ export const HomeScreen = () => {
     :
         <LoadingScreen/>
     }
+            </>
+        }
     </>
+    
   )
 }
 export default HomeScreen;

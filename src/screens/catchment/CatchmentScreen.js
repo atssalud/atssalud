@@ -17,6 +17,8 @@ import DataPatientSkeletonScreen from '../skeleton/DataPatientSkeletonScreen';
 import LoadingScreen from '../LoadingScreen';
 import { AuthContext } from '../../context/AuthContext';
 import FailedService from './FailedService';
+import IsConnectedScreen from '../IsConnectedScreen';
+import NetInfo from "@react-native-community/netinfo";
 
 const CatchmentScreen = () => {
 
@@ -24,7 +26,7 @@ const CatchmentScreen = () => {
     AsyncStorage.removeItem('talla');
 
     const navigator = useNavigation()
-    const { logOut } = useContext(AuthContext)
+    const { logOut,isConnected } = useContext(AuthContext)
 
     const [alert, setAlert] = useState(false)
     const [errorAlert, setErrorAlert] = useState(false)
@@ -32,6 +34,7 @@ const CatchmentScreen = () => {
     const [dniTypes, setDniTypes] = useState()
     const [token, setToken] = useState()
     const [isSearch, setIsSearch] = useState(false)
+    const [netInfo,setNetInfo]=useState(false)
 
     const { typeDni, idDni, numberDni, onChange } = useForm({
         typeDni: 'CC',
@@ -41,11 +44,17 @@ const CatchmentScreen = () => {
 
     const [error, setError] = useState()
 
-    useEffect(() => {
+    useEffect(()=> {
+
+        const unsubscribe = isConnected(setNetInfo)
         getDniTypes()
         getToken()
-    }, [])
 
+        return()=>{
+            unsubscribe
+        }
+        
+    }, [])
 
     const getDniTypes = async () => {
         try {
@@ -55,7 +64,7 @@ const CatchmentScreen = () => {
             }
             setDniTypes(res)
         } catch (error) {
-            console.log('error', error)
+            console.log('error getDniTypes', error)
         }
     }
 
@@ -65,32 +74,6 @@ const CatchmentScreen = () => {
 
     }
 
-    // const send=async()=>{
-
-    //     const data={
-    //         "dni":numberDni,
-    //     }
-    //     console.log({data})
-    //     try {
-    //         const resp= await http('post',Endpoint.findPeople,data)
-    //         console.log('find',resp)
-    //         if(resp.errors){
-    //             setError(resp.errors)
-    //         }else{
-    //             if(Object.keys(resp.data).length === 0){
-    //                 Alert.alert('Notificación','Este usuario no se encuentra registrado')
-    //             }else{
-    //                 navigator.navigate('DataPatientScreen',{data:resp.data,dni:numberDni})
-    //             }
-    //         }
-
-    //         console.log('resp',resp)
-
-    //     } catch (error) {
-    //         console.log('errorrrr',error)
-    //         setErrorAlert(true)
-    //     }
-    // }
     const send = async () => {
 
         const send = {
@@ -161,6 +144,9 @@ const CatchmentScreen = () => {
     return (
         <>
             {
+                (netInfo === false)?<IsConnectedScreen/>:
+            <>
+            {
                 (isSearch) ?
                     (errorAlert)?<FailedService/>:
                     <LoadingScreen />
@@ -194,7 +180,7 @@ const CatchmentScreen = () => {
                                     style={styles.Btn}
                                     onPress={() => send()}
                                 >
-                                    <Text style={styles.tBtn}>Buscar</Text>
+                                    <Text style={styles.tBtn}>Busqueda</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -215,6 +201,8 @@ const CatchmentScreen = () => {
                         }
                     </View>
             }
+            </>
+        }
         </>
     )
 }

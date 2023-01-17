@@ -14,12 +14,16 @@ import { AuthContext } from '../../../context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SelectDocument from '../../../services/SelectDocument';
 import { UploadDocument } from '../../../components/UploadDocument';
+import IsConnectedScreen from '../../IsConnectedScreen';
 
 const EditbankDataScreen = (props) => {
 
-    const {logOut} = useContext(AuthContext)
+    const {logOut,isConnected} = useContext(AuthContext)
+
     const data = props.route.params.dataUser
-    console.log('dataaaa', data)
+
+    const renta=[{'id':1,'item':'Si'},{'id':2,'item':'No'}]
+
     const navigator= useNavigation()
     const [bank, setBank] = useState(data.bank_name)
     const [idBank, setIdBank] = useState(data.bank)
@@ -33,10 +37,10 @@ const EditbankDataScreen = (props) => {
     const [bankcertificate,setBankCertificate]=useState()
     const [rent,setRent]=useState(data.rent)
     const token =data.token
-
-    const renta=[{'id':1,'item':'Si'},{'id':2,'item':'No'}]
+    const [ netInfo,setNetInfo]=useState(false)
 
     useEffect(() => {
+        const unsubscribe = isConnected(setNetInfo)
         getTypeAccount()
         getNameBank()
         navigator.setOptions({
@@ -53,6 +57,9 @@ const EditbankDataScreen = (props) => {
             ),
     
         })
+        return()=>{
+            unsubscribe
+        }
     }, [])
     
     const getTypeAccount = async()=>{
@@ -195,8 +202,10 @@ const EditbankDataScreen = (props) => {
     }
 
   return (
-
-    <View style={styles.container}>
+    <>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <View style={styles.container}>
         <View style={styles.cTextInput}>
             <TextInputs
                 label='Número de cuenta'
@@ -247,7 +256,10 @@ const EditbankDataScreen = (props) => {
                 fill='solid'
             />
         </View>
-    </View>
+            </View>
+        }
+    </>
+    
   )
 }
 export default EditbankDataScreen

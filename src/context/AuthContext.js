@@ -120,14 +120,16 @@ export const AuthProvider = ({children})=>{
         })
     }
 
-    const isConnected=()=>{
-        NetInfo.fetch().then(state => {
-            if(state.isConnected === false){
-            dispatch({
-                type:'isNotConnected'
-            })}
-            console.log('isConnected',state.isConnected)
+    const isConnected=(status)=>{
+        NetInfo.addEventListener(state => {
+            status(state.isConnected)
            });
+
+        // NetInfo.fetch().then(state => {
+        //     isConnected=state.isConnected
+        //   });
+        // console.log('isConnecteeeed',isConnected)
+        // return isConnected
     }
 
     // const changeToken=async()=>{

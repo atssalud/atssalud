@@ -14,10 +14,16 @@ import ViewAlertSkeletonScreen from '../../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../../context/AuthContext';
 import WindowAlert from '../../../components/WindowAlert';
 import TextInputs from '../../../components/TextInput';
+import IsConnectedScreen from '../../IsConnectedScreen';
 
 const TestSRQ = (props) => {
+    const navigator=useNavigation()
+    const {logOut,isConnected} = useContext(AuthContext)
 
-    const {logOut} = useContext(AuthContext)
+    const data = props.route.params.data
+    const datos = props.route.params.datos
+    const points = props.route.params.points
+
     const [answer,setAnswer]=useState()
     const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
@@ -32,18 +38,18 @@ const TestSRQ = (props) => {
         numPaquete: '',
         años: ''
     })
+    const [ netInfo,setNetInfo]=useState(false)
 
-    const data = props.route.params.data
-    console.log('daaataaa',data)
-    const datos = props.route.params.datos
-    const points = props.route.params.points
+    useEffect(()=> {
 
-    const navigator=useNavigation()
-
-    useEffect(() => {
-      getToken()
+        const unsubscribe = isConnected(setNetInfo)
+        getToken()
+        return()=>{
+            unsubscribe
+        }
+        
     }, [])
-    
+
     const getToken =async()=>{
         const userToken = await AsyncStorage.getItem('token')
         getQuestion(userToken)
@@ -140,8 +146,10 @@ const TestSRQ = (props) => {
     }
 
   return (
-
     <>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
     {
         (isSearch)?
         <TestSkeletonScreen/>
@@ -223,7 +231,11 @@ const TestSRQ = (props) => {
         
         </ScrollView>
     }
+            </>
+
+        }
     </>
+    
     
   )
 }

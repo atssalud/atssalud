@@ -12,9 +12,15 @@ import { useNavigation } from '@react-navigation/native';
 import TestSkeletonScreen from '../skeleton/TestSkeletonScreen';
 import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../context/AuthContext';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const TestMentalHealthScreen = (props) => {
-    const {logOut} = useContext(AuthContext)
+    const navigator=useNavigation()
+    const {logOut,isConnected} = useContext(AuthContext)
+
+    const data = props.route.params.data
+    const datos = props.route.params.datos
+
     const [answer,setAnswer]=useState()
     const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
@@ -22,17 +28,18 @@ const TestMentalHealthScreen = (props) => {
     const [error, setError] = useState()
     const [isSearch, setIsSearch] = useState(true)
     const [isSearchResult, setIsSearchResult] = useState(false)
+    const [ netInfo,setNetInfo]=useState(false)
 
-    const data = props.route.params.data
-    console.log('daaataaa',data)
-    const datos = props.route.params.datos
+    useEffect(()=> {
 
-    const navigator=useNavigation()
-
-    useEffect(() => {
-      getToken()
+        const unsubscribe = isConnected(setNetInfo)
+        getToken()
+        return()=>{
+            unsubscribe
+        }
+        
     }, [])
-    
+
     const getToken =async()=>{
         const userToken = await AsyncStorage.getItem('token')
         getQuestion(userToken)
@@ -112,66 +119,71 @@ const TestMentalHealthScreen = (props) => {
 
 
   return (
-
     <>
-    {
-        (isSearch)?
-        <TestSkeletonScreen/>
-        :(isSearchResult)?
-        <ViewAlertSkeletonScreen/>:
-        <ScrollView>
-        {(answer)?
-            <View style={styles.container}>
-            {(questions)?questions.map((item,id)=>{
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
+        {
+            (isSearch)?
+            <TestSkeletonScreen/>
+            :(isSearchResult)?
+            <ViewAlertSkeletonScreen/>:
+            <ScrollView>
+            {(answer)?
+                <View style={styles.container}>
+                {(questions)?questions.map((item,id)=>{
 
-                return(
-                    <View style={Styles.borderContainer} key={id}>
-                        <View style={styles.cQuestion}>
-                            <Text style={styles.tQuestion}>{item.name}</Text>
+                    return(
+                        <View style={Styles.borderContainer} key={id}>
+                            <View style={styles.cQuestion}>
+                                <Text style={styles.tQuestion}>{item.name}</Text>
+                            </View>
+                            <View>
+                                <CheckBox
+                                    text={item.options[0].name}
+                                    value={(answer[id].answer=== '0')?true:false}
+                                    disabled={false}
+                                    onValueChange={(newValue) => itemCheckboxSelected(id,'0')}
+                                />
+                                <CheckBox
+                                    text={item.options[1].name}
+                                    value={(answer[id].answer === '1')?true:false}
+                                    disabled={false}
+                                    onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value))}
+                                />
+                                <CheckBox
+                                    text={item.options[2].name}
+                                    value={(answer[id].answer === '2')?true:false}
+                                    disabled={false}
+                                    onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[2].value))}
+                                />
+                                <CheckBox
+                                    text={item.options[3].name}
+                                    value={(answer[id].answer === '3')?true:false}
+                                    disabled={false}
+                                    onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[3].value))}
+                                />
+                            </View>
                         </View>
-                        <View>
-                            <CheckBox
-                                text={item.options[0].name}
-                                value={(answer[id].answer=== '0')?true:false}
-                                disabled={false}
-                                onValueChange={(newValue) => itemCheckboxSelected(id,'0')}
-                            />
-                            <CheckBox
-                                text={item.options[1].name}
-                                value={(answer[id].answer === '1')?true:false}
-                                disabled={false}
-                                onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value))}
-                            />
-                            <CheckBox
-                                text={item.options[2].name}
-                                value={(answer[id].answer === '2')?true:false}
-                                disabled={false}
-                                onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[2].value))}
-                            />
-                            <CheckBox
-                                text={item.options[3].name}
-                                value={(answer[id].answer === '3')?true:false}
-                                disabled={false}
-                                onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[3].value))}
-                            />
-                        </View>
-                    </View>
-                )
-            }):null
-            }
-            
-            <View style={styles.cButton}>  
-                <Button 
-                    title={"Calcular"}
-                    onPress={()=>send()} 
-                    fill='solid'
-                /> 
+                    )
+                }):null
+                }
+                
+                <View style={styles.cButton}>  
+                    <Button 
+                        title={"Calcular"}
+                        onPress={()=>send()} 
+                        fill='solid'
+                    /> 
+                </View>
             </View>
-        </View>
-        :null}
+            :null}
+            
+            </ScrollView>
+        }
+            </>
+        }
         
-        </ScrollView>
-    }
     </>
     
   )

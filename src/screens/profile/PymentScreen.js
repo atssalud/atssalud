@@ -9,10 +9,11 @@ import http from '../../services/http'
 import { Colors } from '../../theme/Colors'
 import { Fonts } from '../../theme/Fonts'
 import { Styles } from '../../theme/GlobalStyle'
+import IsConnectedScreen from '../IsConnectedScreen'
 import LoadingScreen from '../LoadingScreen'
 
 const PymentScreen = () => {
-    const {logOut} = useContext(AuthContext)
+    const {logOut,isConnected} = useContext(AuthContext)
 
     const date=new Date()
     const mes=date.getMonth()
@@ -30,9 +31,15 @@ const PymentScreen = () => {
     const [historyRisk, setHistoryRisk] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [total, setTotal] = useState()
+    const [ netInfo,setNetInfo]=useState(false)
 
     useEffect(() => {
-      getHistorial()
+        const unsubscribe = isConnected(setNetInfo)
+        getHistorial()
+        return()=>{
+            unsubscribe
+        }
+      
     }, [currentPage,monthId])
     
 
@@ -127,6 +134,9 @@ const PymentScreen = () => {
 
   return (
     <>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
         <View style={styles.btnPagos}>
             <View style={{justifyContent:'center',alignItems:'center',marginTop:35,}}>
             <InputDate
@@ -168,7 +178,10 @@ const PymentScreen = () => {
             
         }
         
+            </>
+        }
     </>
+    
 
   )
 }

@@ -14,12 +14,12 @@ import { Fonts } from '../../theme/Fonts';
 import Button from '../../components/Button';
 import ListOptions from '../../components/ListOptions';
 import http from '../../services/http';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const UsuarioRegisterScreen = () => {
 
     const navigator = useNavigation()
-
-    // const profession=[{'id':'1','profession':'Médico General'},{'id':'2','profession':'Odontólogo'},{'id':'3','profession':'Oncólogo'},{'id':'4','profession':'Enfermer@'},]
+    const {isConnected} = useContext(AuthContext)
 
     const [errorAlert,setErrorAlert]= useState(false)
     const [alert,setAlert]= useState(false)
@@ -29,7 +29,6 @@ const UsuarioRegisterScreen = () => {
     const [dniTypes,setDniTypes]= useState()
     const [eps,setEps]= useState()
     const [message,setMessage]= useState()
-
     const [userRegister, setUserRegister] = useState({
         dni:'',
         dni_type:'',
@@ -45,16 +44,20 @@ const UsuarioRegisterScreen = () => {
         password:'',
         same_password:'',
     })
-
     const [error, setError] = useState()
+    const [ netInfo,setNetInfo]=useState(false)
 
     useEffect(() => {
+        const unsubscribe = isConnected(setNetInfo)
         getDniTypes()
         getProfessions()
         getDepartaments()
         getEps()
         if (userRegister.state){
             getCities()
+        }
+        return()=>{
+            unsubscribe
         }
     }, [userRegister.state])
     
@@ -197,7 +200,10 @@ const UsuarioRegisterScreen = () => {
     var dimension=height/3
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container} >
         <StatusBar barStyle='dark-content' />
         
@@ -394,7 +400,11 @@ const UsuarioRegisterScreen = () => {
         }
        
        </View>   
-    </ScrollView>
+            </ScrollView>
+        }
+    
+    </>
+    
   )
 }
 export default UsuarioRegisterScreen;

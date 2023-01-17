@@ -14,11 +14,11 @@ import { Styles } from '../../theme/GlobalStyle';
 import TextInputs from '../../components/TextInput';
 import { Fonts } from '../../theme/Fonts';
 import Button from '../../components/Button';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const LoginScreen = () => {
 
-    const {signIn,errorMessage,removeError} = useContext(AuthContext)
-
+    const {signIn,errorMessage,removeError,isConnected} = useContext(AuthContext)
     const navigator = useNavigation()
 
     const [help,setHelp]=useState(false)
@@ -53,10 +53,11 @@ const LoginScreen = () => {
         email,
         password
     })
-    
 
+    const [ netInfo,setNetInfo]=useState(false)
 
     useEffect(() => {
+        const unsubscribe = isConnected(setNetInfo)
         // getUser()
         // getPassword()
         if (errorMessage.length === 0) return;
@@ -73,6 +74,9 @@ const LoginScreen = () => {
                     }
                 ]
             )
+        }
+        return()=>{
+            unsubscribe
         }
         
     },[errorMessage,removeError,signIn]);
@@ -137,7 +141,10 @@ const LoginScreen = () => {
     var dimension=height/3
 
   return (
-    <View style={styles.container}>
+    <>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <View style={styles.container}>
         <StatusBar barStyle='dark-content' />
         
         <View style={{justifyContent:'center',alignItems:'center',marginTop:10, height:dimension}}>
@@ -218,7 +225,10 @@ const LoginScreen = () => {
             : null
         }
         
-    </View>
+            </View>
+        }
+    </>
+    
   )
 }
 export default LoginScreen;

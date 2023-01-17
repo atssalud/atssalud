@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View,Text,TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Button from '../../../components/Button';
 import WindowAlert from '../../../components/WindowAlert';
@@ -12,23 +12,29 @@ import { Styles } from '../../../theme/GlobalStyle';
 import { Fonts } from '../../../theme/Fonts';
 import { AuthContext } from '../../../context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import IsConnectedScreen from '../../IsConnectedScreen';
 
 const ChangePasswordScreen =()=>{
-
+    const {isConnected} = useContext(AuthContext)
     const navigator = useNavigation()
-    const {logOut} = useContext(AuthContext)
-
 
     const [alert,setAlert]= useState(false)
     const [errorAlert,setErrorAlert]= useState(false)
     const [messageError,setMessageError]= useState('')
-
     const {password,onChange} = useForm({
         password:''
     })
-
     const [error,setError]=useState()
+    const [ netInfo,setNetInfo]=useState(false)
 
+    useEffect(()=> {
+
+        const unsubscribe = isConnected(setNetInfo)
+        return()=>{
+            unsubscribe
+        }
+        
+    }, [])
 
     const send=async()=>{
 
@@ -92,8 +98,10 @@ const ChangePasswordScreen =()=>{
     }
 
     return(
-
-        <View style={styles.container}>
+        <>
+            {
+                (netInfo=== false)? <IsConnectedScreen/>:
+                <View style={styles.container}>
         
             <View style={Styles.borderContainer}>
                 <TextInput
@@ -145,7 +153,10 @@ const ChangePasswordScreen =()=>{
                     />
                 : null
             }
-        </View>
+                </View>
+            }
+        </>
+        
     )
 }
 

@@ -14,10 +14,16 @@ import ViewAlertSkeletonScreen from '../../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../../context/AuthContext';
 import WindowAlert from '../../../components/WindowAlert';
 import TextInputs from '../../../components/TextInput';
+import IsConnectedScreen from '../../IsConnectedScreen';
 
 const TestDementia = (props) => {
+    const navigator=useNavigation()
+    const {logOut,isConnected} = useContext(AuthContext)
 
-    const {logOut} = useContext(AuthContext)
+    const data = props.route.params.data
+    const datos = props.route.params.datos
+    const points = props.route.params.points
+
     const [answer,setAnswer]=useState()
     const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
@@ -25,25 +31,22 @@ const TestDementia = (props) => {
     const [isSearch, setIsSearch] = useState(true)
     const [isSearchResult, setIsSearchResult] = useState(false)
     const [alert, setAlert] = useState(false)
-
-    const [numPaquete, setNumPaquete] = useState('')
-    const [años, setAños] = useState('')
     const [error, setError] = useState({
         numPaquete: '',
         años: ''
     })
+    const [ netInfo,setNetInfo]=useState(false)
 
-    const data = props.route.params.data
-    console.log('daaataaa',data)
-    const datos = props.route.params.datos
-    const points = props.route.params.points
+    useEffect(()=> {
 
-    const navigator=useNavigation()
-
-    useEffect(() => {
-      getToken()
+        const unsubscribe = isConnected(setNetInfo)
+        getToken()
+        return()=>{
+            unsubscribe
+        }
+        
     }, [])
-    
+
     const getToken =async()=>{
         const userToken = await AsyncStorage.getItem('token')
         getQuestion(userToken)
@@ -94,28 +97,30 @@ const TestDementia = (props) => {
         }
     }
 
-    const changeQAge=()=>{
+    const changeQAge=async()=>{
         
         const edad=data.age
 
+        console.log('41',answer[42])
+        console.log('42',answer[43])
+
         if (edad >65 && edad <76) {
-            answer[41].name='SI'
-            answer[41].value='1'
-        }else{
-            answer[41].name='NO'
-            answer[41].value='0'
-        }
-        if (edad > 75) {
             answer[42].name='SI'
-            answer[42].value='2'
+            answer[42].value='1'
         }else{
             answer[42].name='NO'
             answer[42].value='0'
         }
+        if (edad > 75) {
+            answer[43].name='SI'
+            answer[43].value='2'
+        }else{
+            answer[43].name='NO'
+            answer[43].value='0'
+        }
     }
 
     const sendValidator=()=>{
-        changeQAge()
         setAlert(true)
     }
     const close = () => {
@@ -134,10 +139,10 @@ const TestDementia = (props) => {
     </View>
 
     const send=async()=>{
+        await changeQAge()
         setIsSearchResult(true)
         const user = await AsyncStorage.getItem('user');
         const { id } =  JSON.parse(user);
-        console.log(user);
         const send={
             "dni":String(data.dni),
             "author_id":String(id),
@@ -162,8 +167,10 @@ const TestDementia = (props) => {
     }
 
   return (
-
     <>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
     {
         (isSearch)?
         <TestSkeletonScreen/>
@@ -253,7 +260,10 @@ const TestDementia = (props) => {
         
         </ScrollView>
     }
+            </>
+        }
     </>
+    
     
   )
 }

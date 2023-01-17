@@ -14,10 +14,16 @@ import ViewAlertSkeletonScreen from '../../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../../context/AuthContext';
 import WindowAlert from '../../../components/WindowAlert';
 import TextInputs from '../../../components/TextInput';
+import IsConnectedScreen from '../../IsConnectedScreen';
 
 const TestAssist = (props) => {
+    const navigator=useNavigation()
+    const {logOut,isConnected} = useContext(AuthContext)
 
-    const {logOut} = useContext(AuthContext)
+    const data = props.route.params.data
+    const datos = props.route.params.datos
+    const points = props.route.params.points
+
     const [answer,setAnswer]=useState()
     const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
@@ -28,25 +34,22 @@ const TestAssist = (props) => {
     const [alert, setAlert] = useState(false)
     const [alertOption, setAlertOption] = useState(false)
     const [qst, setQst] = useState(0)
-
-    const [numPaquete, setNumPaquete] = useState('')
-    const [años, setAños] = useState('')
     const [error, setError] = useState({
         numPaquete: '',
         años: ''
     })
+    const [ netInfo,setNetInfo]=useState(false)
 
-    const data = props.route.params.data
-    // console.log('daaataaa',data)
-    const datos = props.route.params.datos
-    const points = props.route.params.points
+    useEffect(()=> {
 
-    const navigator=useNavigation()
-
-    useEffect(() => {
-      getToken()
+        const unsubscribe = isConnected(setNetInfo)
+        getToken()
+        return()=>{
+            unsubscribe
+        }
+        
     }, [])
-    
+
     const getToken =async()=>{
         const userToken = await AsyncStorage.getItem('token')
         getQuestion(userToken)
@@ -218,15 +221,7 @@ const TestAssist = (props) => {
         setIsSearchResult(true)
         const user = await AsyncStorage.getItem('user');
         const { id } =  JSON.parse(user);
-        console.log(user);
-
-        console.log(answer[0][1])
-        console.log(answer[1][1])
-        console.log(answer[2][1])
-        console.log(answer[3][1])
-        console.log(answer[4][1])
-        console.log(answer[5][1])
-        console.log(answer[6][1])
+       
         const send={
             "dni":String(data.dni),
             "author_id":String(id),
@@ -372,8 +367,10 @@ const TestAssist = (props) => {
     }
 
   return (
-
     <>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
     {
         (isSearch)?
         <TestSkeletonScreen/>
@@ -566,7 +563,10 @@ const TestAssist = (props) => {
         
         </ScrollView>
     }
+            </>
+        }
     </>
+    
     
   )
 }

@@ -14,9 +14,16 @@ import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
 import TextInputs from '../../components/TextInput';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const TestDiabetesScreen = (props) => {
-    const { logOut } = useContext(AuthContext)
+    const navigator = useNavigation()
+    const { logOut,isConnected } = useContext(AuthContext)
+
+    const data = props.route.params.data
+    const datos = props.route.params.datos
+
+    
     const [answer, setAnswer] = useState()
     const [change, setChange] = useState()
     const [questions, setQuestions] = useState()
@@ -26,24 +33,29 @@ const TestDiabetesScreen = (props) => {
     const [alert, setAlert] = useState(false)
     const [peso, setPeso] = useState('')
     const [talla, setTalla] = useState('')
+    const [error, setError] = useState({
+        peso: '',
+        talla: ''
+    })
+    const [ netInfo,setNetInfo]=useState(false)
 
+    useEffect(()=> {
 
+        const unsubscribe = isConnected(setNetInfo)
+        getToken()
+        getIMC()
+        return()=>{
+            unsubscribe
+        }
+        
+    }, [])
+   
     const getIMC = async () => {
         const peso = await AsyncStorage.getItem('peso')
         const talla = await AsyncStorage.getItem('talla')
         setPeso((peso)?peso:'')
         setTalla((talla?talla:''))
     }
-
-    console.log('answerrrrrr', answer)
-    const data = props.route.params.data
-    console.log('daaataaa', data)
-    const datos = props.route.params.datos
-
-    const [error, setError] = useState({
-        peso: '',
-        talla: ''
-    })
 
     const calculateIMC = () => {
 
@@ -118,15 +130,6 @@ const TestDiabetesScreen = (props) => {
 
         setError(error)
     }
-
-
-    const navigator = useNavigation()
-
-    useEffect(() => {
-        getToken()
-        getIMC()
-    }, [1])
-
 
     const getToken = async () => {
         const userToken = await AsyncStorage.getItem('token')
@@ -237,131 +240,136 @@ const TestDiabetesScreen = (props) => {
 
 
     return (
-
         <>
             {
-                (isSearch) ?
-                    <TestSkeletonScreen />
-                    : (isSearchResult) ?
-                        <ViewAlertSkeletonScreen /> :
-                        <ScrollView>
+                (netInfo=== false)? <IsConnectedScreen/>:
+                <>
+                {
+                    (isSearch) ?
+                        <TestSkeletonScreen />
+                        : (isSearchResult) ?
+                            <ViewAlertSkeletonScreen /> :
+                            <ScrollView>
 
-                            {(answer) ?
-                                <View style={styles.container}>
+                                {(answer) ?
+                                    <View style={styles.container}>
 
-                                    <View style={Styles.borderContainer}>
-                                        <View style={styles.cQuestion}>
-                                            <Text style={styles.tQuestion}>Índice de masa corporal IMC (Peso kg/ Talla mts2)</Text>
-                                            <View style={{ flexDirection: 'row', marginTop: 15, justifyContent: 'center', width: '100%', marginLeft: 50 }}>
+                                        <View style={Styles.borderContainer}>
+                                            <View style={styles.cQuestion}>
+                                                <Text style={styles.tQuestion}>Índice de masa corporal IMC (Peso kg/ Talla mts2)</Text>
+                                                <View style={{ flexDirection: 'row', marginTop: 15, justifyContent: 'center', width: '100%', marginLeft: 50 }}>
 
-                                                <View>
-                                                    <TextInputs
-                                                        label={'Peso'}
-                                                        placeholder={'Ej: 35'}
-                                                        keyboardType='numeric'
-                                                        dimension='middle'
-                                                        onChangeText={(value) => setPeso(value)}
-                                                        value={peso}
-                                                    />
-                                                    {(error) ?
-                                                        (error.peso === '') ? null :
-                                                            <Text style={styles.textValid}>{error.peso}</Text> : null
-                                                    }
-                                                </View>
-                                                <View>
-                                                    <TextInputs
-                                                        label={'Talla'}
-                                                        placeholder={'Ej: 1.5'}
-                                                        keyboardType='numeric'
-                                                        dimension='middle'
-                                                        onChangeText={(value) => setTalla(value)}
-                                                        value={talla}
-                                                    />
-                                                    {(error) ?
-                                                        (error.talla === '') ? null :
-                                                            <Text style={styles.textValid}>{error.talla}</Text> : null
-                                                    }
-                                                </View>
-                                            </View>
-
-                                        </View>
-                                    </View>
-
-                                    {(questions) ? questions.map((item, id) => {
-
-                                        if (item.id !== 1 && item.id !== 2) {
-                                            return (
-                                                <View style={Styles.borderContainer} key={id}>
-                                                    <View style={styles.cQuestion}>
-                                                        <Text style={styles.tQuestion}>{item.name}</Text>
+                                                    <View>
+                                                        <TextInputs
+                                                            label={'Peso'}
+                                                            placeholder={'Ej: 35'}
+                                                            keyboardType='numeric'
+                                                            dimension='middle'
+                                                            onChangeText={(value) => setPeso(value)}
+                                                            value={peso}
+                                                        />
+                                                        {(error) ?
+                                                            (error.peso === '') ? null :
+                                                                <Text style={styles.textValid}>{error.peso}</Text> : null
+                                                        }
                                                     </View>
                                                     <View>
-                                                        <CheckBox
-                                                            text={item.options[0].name}
-                                                            value={(answer[id].name === item.options[0].name) ? true : false}
-                                                            disabled={false}
-                                                            onValueChange={(newValue) => itemCheckboxSelected(id, item.options[0].value, String(item.options[0].name))}
+                                                        <TextInputs
+                                                            label={'Talla'}
+                                                            placeholder={'Ej: 1.5'}
+                                                            keyboardType='numeric'
+                                                            dimension='middle'
+                                                            onChangeText={(value) => setTalla(value)}
+                                                            value={talla}
                                                         />
-                                                        <CheckBox
-                                                            text={item.options[1].name}
-                                                            value={(answer[id].name === item.options[1].name) ? true : false}
-                                                            disabled={false}
-                                                            onValueChange={(newValue) => itemCheckboxSelected(id, String(item.options[1].value), String(item.options[1].name))}
-                                                        />
-                                                        {
-                                                            (item.options.length >= 3) ?
-                                                                <CheckBox
-                                                                    text={item.options[2].name}
-                                                                    value={(answer[id].name === item.options[2].name) ? true : false}
-                                                                    disabled={false}
-                                                                    onValueChange={(newValue) => itemCheckboxSelected(id, String(item.options[2].value), String(item.options[2].name))}
-                                                                /> : null
+                                                        {(error) ?
+                                                            (error.talla === '') ? null :
+                                                                <Text style={styles.textValid}>{error.talla}</Text> : null
                                                         }
-                                                        {
-                                                            (item.options.length === 4) ?
-                                                                <CheckBox
-                                                                    text={item.options[3].name}
-                                                                    value={(answer[id].name === item.options[3].name) ? true : false}
-                                                                    disabled={false}
-                                                                    onValueChange={(newValue) => itemCheckboxSelected(id, String(item.options[3].value), String(item.options[3].name))}
-                                                                /> : null
-                                                        }
-
                                                     </View>
                                                 </View>
-                                            )
+
+                                            </View>
+                                        </View>
+
+                                        {(questions) ? questions.map((item, id) => {
+
+                                            if (item.id !== 1 && item.id !== 2) {
+                                                return (
+                                                    <View style={Styles.borderContainer} key={id}>
+                                                        <View style={styles.cQuestion}>
+                                                            <Text style={styles.tQuestion}>{item.name}</Text>
+                                                        </View>
+                                                        <View>
+                                                            <CheckBox
+                                                                text={item.options[0].name}
+                                                                value={(answer[id].name === item.options[0].name) ? true : false}
+                                                                disabled={false}
+                                                                onValueChange={(newValue) => itemCheckboxSelected(id, item.options[0].value, String(item.options[0].name))}
+                                                            />
+                                                            <CheckBox
+                                                                text={item.options[1].name}
+                                                                value={(answer[id].name === item.options[1].name) ? true : false}
+                                                                disabled={false}
+                                                                onValueChange={(newValue) => itemCheckboxSelected(id, String(item.options[1].value), String(item.options[1].name))}
+                                                            />
+                                                            {
+                                                                (item.options.length >= 3) ?
+                                                                    <CheckBox
+                                                                        text={item.options[2].name}
+                                                                        value={(answer[id].name === item.options[2].name) ? true : false}
+                                                                        disabled={false}
+                                                                        onValueChange={(newValue) => itemCheckboxSelected(id, String(item.options[2].value), String(item.options[2].name))}
+                                                                    /> : null
+                                                            }
+                                                            {
+                                                                (item.options.length === 4) ?
+                                                                    <CheckBox
+                                                                        text={item.options[3].name}
+                                                                        value={(answer[id].name === item.options[3].name) ? true : false}
+                                                                        disabled={false}
+                                                                        onValueChange={(newValue) => itemCheckboxSelected(id, String(item.options[3].value), String(item.options[3].name))}
+                                                                    /> : null
+                                                            }
+
+                                                        </View>
+                                                    </View>
+                                                )
+                                            }
+                                        }) : null
                                         }
-                                    }) : null
-                                    }
 
-                                    <View style={styles.cButton}>
-                                        <Button
-                                            title={"Calcular"}
-                                            onPress={() => handleTest()}
-                                            fill='solid'
-                                        />
+                                        <View style={styles.cButton}>
+                                            <Button
+                                                title={"Calcular"}
+                                                onPress={() => handleTest()}
+                                                fill='solid'
+                                            />
+                                        </View>
                                     </View>
-                                </View>
-                                : null
-                            }
-                            {
-                                (alert) ?
-                                    <WindowAlert
-                                        bool={true}
-                                        closeAlert={setAlert}
-                                        content={contentAlert}
-                                        width={50}
-                                        height={3}
-                                        btnText={'Aceptar'}
-                                        btnFunction={close}
-                                        btnClose={'yes'}
-
-                                    />
                                     : null
-                            }
+                                }
+                                {
+                                    (alert) ?
+                                        <WindowAlert
+                                            bool={true}
+                                            closeAlert={setAlert}
+                                            content={contentAlert}
+                                            width={50}
+                                            height={3}
+                                            btnText={'Aceptar'}
+                                            btnFunction={close}
+                                            btnClose={'yes'}
 
-                        </ScrollView>
+                                        />
+                                        : null
+                                }
+
+                            </ScrollView>
+                }
+                </>
             }
+            
         </>
 
     )

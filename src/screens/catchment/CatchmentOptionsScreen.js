@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { ButtonImage } from '../../components/ButtonImage'
@@ -7,12 +7,28 @@ import { Endpoint } from '../../environment/Api'
 import http from '../../services/http'
 import { Fonts } from '../../theme/Fonts'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { AuthContext } from '../../context/AuthContext'
+import IsConnectedScreen from '../IsConnectedScreen'
 
 const CatchmentOptionsScreen = (props) => {
     const navigator = useNavigation()
     const data = props.route.params.data
+    
+    const {isConnected} = useContext(AuthContext)
+    const [ netInfo,setNetInfo]=useState(false)
 
-    console.log('daaa',data)
+    useEffect(()=> {
+
+        const unsubscribe = isConnected(setNetInfo)
+        return()=>{
+            unsubscribe
+        }
+        
+    }, [])
+
+    // {
+    //     (netInfo=== false)? <IsConnectedScreen/>:
+    // }
 
     const searchListTest = async (option) => {
         if (option === 'tamizaje') {
@@ -42,24 +58,30 @@ const CatchmentOptionsScreen = (props) => {
 
 
     return (
-        <ScrollView style={style.container}>
-            <ButtonImage
-                nameImage='file-text-o'
-                text='Tamizaje'
-                size={30}
-                btnFunction={() => searchListTest('tamizaje')}
+        <>
+            {
+                (netInfo=== false)? <IsConnectedScreen/>:
+                <ScrollView style={style.container}>
+                <ButtonImage
+                    nameImage='file-text-o'
+                    text='Tamizaje'
+                    size={30}
+                    btnFunction={() => searchListTest('tamizaje')}
 
-            />
-            <ButtonImage
-                nameImage='check-square-o'
-                text='Marcación'
-                size={30}
-                btnFunction={() => searchListTest('marca')}
+                />
+                <ButtonImage
+                    nameImage='check-square-o'
+                    text='Marcación'
+                    size={30}
+                    btnFunction={() => searchListTest('marca')}
 
-            />
+                />
 
 
-        </ScrollView>
+                </ScrollView>
+            }
+            
+        </>
     )
 }
 export default CatchmentOptionsScreen;

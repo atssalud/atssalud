@@ -14,27 +14,35 @@ import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
 import TextInputs from '../../components/TextInput';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const TestEnfermedadRenalCronica = (props) => {
+    const navigator=useNavigation()
+    const {isConnected} = useContext(AuthContext)
 
-    const {logOut} = useContext(AuthContext)
+    const data = props.route.params.data
+    const datos = props.route.params.datos
+
     const [isSearchResult, setIsSearchResult] = useState(false)
     const [alert, setAlert] = useState(false)
-
     const [peso, setpeso] = useState('')
     const [creatinina, setcreatinina] = useState('')
-    
     const [error, setError] = useState({
         peso: '',
         creatinina: ''
     })
+    const [ netInfo,setNetInfo]=useState(false)
 
-    const data = props.route.params.data
-    console.log('daaataaa',data)
-    const datos = props.route.params.datos
+    useEffect(()=> {
 
-    const navigator=useNavigation()
+        const unsubscribe = isConnected(setNetInfo)
+        return()=>{
+            unsubscribe
+        }
+        
+    }, [])
 
+   
     const sendValidator=()=>{
         setAlert(true)
     }
@@ -42,16 +50,16 @@ const TestEnfermedadRenalCronica = (props) => {
         send()
     }
     const contentAlert =
-    <View style={styles.cAlert}>
-        <Image
-            source={require('../../assets/icons/modal-alert-Icon.png')}
-            style={styles.imageAlert}
-        />
-        <Text style={styles.title}>Alerta</Text>
-        <View style={styles.ctextAlert}>
-            <Text style={styles.textAlert}>¿ Desea proceder a Tamizar Paciente ?</Text>
+        <View style={styles.cAlert}>
+            <Image
+                source={require('../../assets/icons/modal-alert-Icon.png')}
+                style={styles.imageAlert}
+            />
+            <Text style={styles.title}>Alerta</Text>
+            <View style={styles.ctextAlert}>
+                <Text style={styles.textAlert}>¿ Desea proceder a Tamizar Paciente ?</Text>
+            </View>
         </View>
-    </View>
 
     const send=async()=>{
         setIsSearchResult(true)
@@ -99,9 +107,6 @@ const TestEnfermedadRenalCronica = (props) => {
         }
     }
 
-    
-
-
     const handleTest = () => {
 
         const error = []
@@ -132,76 +137,81 @@ const TestEnfermedadRenalCronica = (props) => {
 
 
   return (
-
-    <>
-    {
-        (isSearchResult)?
-        <ViewAlertSkeletonScreen/>:
-        <ScrollView>
-        <View style={styles.container}>
-                <View style={Styles.borderContainer}>
-                <View style={styles.cQuestion}>
-                    <Text style={styles.tQuestion}>Digite los siguientes valores:</Text>
-                    <View style={{ flexDirection: 'row', marginTop: 15, justifyContent: 'center', width: '100%', marginLeft: 50 }}>
-                      <View>
-                          <TextInputs
-                              label={'Peso'}
-                              placeholder={'Ej: 70'}
-                              keyboardType='numeric'
-                              dimension='middle'
-                              onChangeText={(value) => setpeso(value)}
-                              value={peso}
-                          />
-                          {(error) ?
-                              (error.peso === '') ? null :
-                                  <Text style={styles.textValid}>{error.peso}</Text> : null
-                          }
-                      </View>
-                      <View>
-                          <TextInputs
-                              label={'Creatinina Sérica (mg / dl)'}
-                              placeholder={'Ej: 0.7'}
-                              keyboardType='numeric'
-                              dimension='middle'
-                              onChangeText={(value) => setcreatinina(value)}
-                              value={creatinina}
-                          />
-                          {(error) ?
-                              (error.creatinina === '') ? null :
-                                  <Text style={styles.textValid}>{error.creatinina}</Text> : null
-                          }
-                      </View>
-                    </View>
-
-                </View>
-            </View>
-            
-            <View style={styles.cButton}>  
-                <Button 
-                    title={"Calcular"}
-                    onPress={()=>handleTest()} 
-                    fill='solid'
-                /> 
-            </View>
-        </View>
+    <> 
         {
-            (alert) ?
-                <WindowAlert
-                    bool={true}
-                    closeAlert={setAlert}
-                    content={contentAlert}
-                    width={50}
-                    height={3}
-                    btnText={'Aceptar'}
-                    btnFunction={close}
-                    btnClose={'yes'}
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
+            {
+                (isSearchResult)?
+                <ViewAlertSkeletonScreen/>:
+                <ScrollView>
+                <View style={styles.container}>
+                        <View style={Styles.borderContainer}>
+                        <View style={styles.cQuestion}>
+                            <Text style={styles.tQuestion}>Digite los siguientes valores:</Text>
+                            <View style={{ flexDirection: 'row', marginTop: 15, justifyContent: 'center', width: '100%', marginLeft: 50 }}>
+                            <View>
+                                <TextInputs
+                                    label={'Peso'}
+                                    placeholder={'Ej: 70'}
+                                    keyboardType='numeric'
+                                    dimension='middle'
+                                    onChangeText={(value) => setpeso(value)}
+                                    value={peso}
+                                />
+                                {(error) ?
+                                    (error.peso === '') ? null :
+                                        <Text style={styles.textValid}>{error.peso}</Text> : null
+                                }
+                            </View>
+                            <View>
+                                <TextInputs
+                                    label={'Creatinina Sérica (mg / dl)'}
+                                    placeholder={'Ej: 0.7'}
+                                    keyboardType='numeric'
+                                    dimension='middle'
+                                    onChangeText={(value) => setcreatinina(value)}
+                                    value={creatinina}
+                                />
+                                {(error) ?
+                                    (error.creatinina === '') ? null :
+                                        <Text style={styles.textValid}>{error.creatinina}</Text> : null
+                                }
+                            </View>
+                            </View>
+    
+                        </View>
+                    </View>
                     
-                />
-                : null
+                    <View style={styles.cButton}>  
+                        <Button 
+                            title={"Calcular"}
+                            onPress={()=>handleTest()} 
+                            fill='solid'
+                        /> 
+                    </View>
+                </View>
+                {
+                    (alert) ?
+                        <WindowAlert
+                            bool={true}
+                            closeAlert={setAlert}
+                            content={contentAlert}
+                            width={50}
+                            height={3}
+                            btnText={'Aceptar'}
+                            btnFunction={close}
+                            btnClose={'yes'}
+                            
+                        />
+                        : null
+                }
+                
+                </ScrollView>
+            }
+            </>
         }
-        
-        </ScrollView>
-    }
+       
     </>
     
   )

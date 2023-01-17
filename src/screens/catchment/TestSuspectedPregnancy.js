@@ -15,10 +15,15 @@ import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
 import TextInputs from '../../components/TextInput';
 import InputDate from '../../components/InputDate';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const TestSuspectedPregnancy = (props) => {
+    const navigator=useNavigation()
+    const {isConnected} = useContext(AuthContext)
+    
+    const data = props.route.params.data
+    const datos = props.route.params.datos
 
-    const {logOut} = useContext(AuthContext)
     const [answer,setAnswer]=useState()
     const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
@@ -27,21 +32,22 @@ const TestSuspectedPregnancy = (props) => {
     const [isSearchResult, setIsSearchResult] = useState(false)
     const [alert, setAlert] = useState(false)
     const [alert2, setAlert2] = useState(false)
-
     const [fecha, setfecha] = useState('')
     const [error, setError] = useState({
         fecha: '',
     })
+    const [ netInfo,setNetInfo]=useState(false)
 
-    const data = props.route.params.data
-    const datos = props.route.params.datos
+    useEffect(()=> {
 
-    const navigator=useNavigation()
-
-    useEffect(() => {
-      getToken()
+        const unsubscribe = isConnected(setNetInfo)
+        getToken()
+        return()=>{
+            unsubscribe
+        }
+        
     }, [])
-    
+
     const getToken =async()=>{
         const userToken = await AsyncStorage.getItem('token')
         getQuestion(userToken)
@@ -79,7 +85,6 @@ const TestSuspectedPregnancy = (props) => {
         setAnswer(lista)
     }
    
-
     const itemCheckboxSelected = (id, value,name)=>{
         console.log('asasa',id,value)
         answer[id].value=name
@@ -182,107 +187,112 @@ const TestSuspectedPregnancy = (props) => {
 
 
   return (
-
     <>
-    {
-        (isSearch)?
-        <TestSkeletonScreen/>
-        :(isSearchResult)?
-        <ViewAlertSkeletonScreen/>:
-        <ScrollView>
-        {(answer)?
-            <View style={styles.container}>
-            {(questions)?questions.map((item,id)=>{
-                if (item.id !== 57) {
-                return(
-                    <View style={Styles.borderContainer} key={id}>
-                        <View style={styles.cQuestion}>
-                            <Text style={styles.tQuestion}>{item.name}</Text>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
+        {
+            (isSearch)?
+            <TestSkeletonScreen/>
+            :(isSearchResult)?
+            <ViewAlertSkeletonScreen/>:
+            <ScrollView>
+            {(answer)?
+                <View style={styles.container}>
+                {(questions)?questions.map((item,id)=>{
+                    if (item.id !== 57) {
+                    return(
+                        <View style={Styles.borderContainer} key={id}>
+                            <View style={styles.cQuestion}>
+                                <Text style={styles.tQuestion}>{item.name}</Text>
+                            </View>
+                            <View>
+                                <CheckBox
+                                    text={item.options[0].name}
+                                    value={(answer[id].name=== item.options[0].name)?true:false}
+                                    disabled={false}
+                                    onValueChange={(newValue) => itemCheckboxSelected(id,item.options[0].value,String(item.options[0].name))}
+                                />
+                                <CheckBox
+                                    text={item.options[1].name}
+                                    value={(answer[id].name === item.options[1].name)?true:false}
+                                    disabled={false}
+                                    onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
+                                />
+                                
+                            </View>
                         </View>
-                        <View>
-                            <CheckBox
-                                text={item.options[0].name}
-                                value={(answer[id].name=== item.options[0].name)?true:false}
-                                disabled={false}
-                                onValueChange={(newValue) => itemCheckboxSelected(id,item.options[0].value,String(item.options[0].name))}
-                            />
-                            <CheckBox
-                                text={item.options[1].name}
-                                value={(answer[id].name === item.options[1].name)?true:false}
-                                disabled={false}
-                                onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value),String(item.options[1].name))}
-                            />
-                            
-                        </View>
-                    </View>
-                )
+                    )
+                    }
+                }):null
                 }
-            }):null
+                {
+                (answer)?
+                    (answer[0].name ==='SI')?
+                    <View style={Styles.borderContainer}>
+                    <View style={styles.cQuestion}>
+                        <Text style={styles.tQuestion}>¿Cuál es la fecha de su ultima menstruación (FUM)?</Text>
+                        <View>
+                        <InputDate
+                                dateSelect={dateSelect}
+                                type={'date'}
+                                dimension='middle'
+                            />
+                            {(error)?
+                                (error.fecha==='')?null:
+                                <Text style={styles.textValid}>{error.fecha}</Text>: null
+                            }
+                    </View>
+                    </View>
+                </View>:null
+                :null
+                }
+                
+                <View style={styles.cButton}>  
+                    <Button 
+                        title={"Calcular"}
+                        onPress={()=>sendValidator()} 
+                        fill='solid'
+                    /> 
+                </View>
+            </View>
+            :null}
+            {
+                (alert) ?
+                    <WindowAlert
+                        bool={true}
+                        closeAlert={setAlert}
+                        content={contentAlert}
+                        width={50}
+                        height={3}
+                        btnText={'Aceptar'}
+                        btnFunction={close}
+                        btnClose={'yes'}
+                        
+                    />
+                    : null
             }
             {
-              (answer)?
-                (answer[0].name ==='SI')?
-                <View style={Styles.borderContainer}>
-                <View style={styles.cQuestion}>
-                    <Text style={styles.tQuestion}>¿Cuál es la fecha de su ultima menstruación (FUM)?</Text>
-                    <View>
-                    <InputDate
-                            dateSelect={dateSelect}
-                            type={'date'}
-                            dimension='middle'
-                        />
-                        {(error)?
-                            (error.fecha==='')?null:
-                            <Text style={styles.textValid}>{error.fecha}</Text>: null
-                        }
-                  </View>
-                </View>
-            </View>:null
-              :null
+                (alert2) ?
+                    <WindowAlert
+                        bool={true}
+                        closeAlert={setAlert2}
+                        content={contentAlert2}
+                        width={50}
+                        height={3}
+                        btnText={'Aceptar'}
+                        btnFunction={close2}
+                        btnClose={'yes'}
+                        
+                    />
+                    : null
             }
             
-            <View style={styles.cButton}>  
-                <Button 
-                    title={"Calcular"}
-                    onPress={()=>sendValidator()} 
-                    fill='solid'
-                /> 
-            </View>
-        </View>
-        :null}
-        {
-            (alert) ?
-                <WindowAlert
-                    bool={true}
-                    closeAlert={setAlert}
-                    content={contentAlert}
-                    width={50}
-                    height={3}
-                    btnText={'Aceptar'}
-                    btnFunction={close}
-                    btnClose={'yes'}
-                    
-                />
-                : null
+            </ScrollView>
         }
-        {
-            (alert2) ?
-                <WindowAlert
-                    bool={true}
-                    closeAlert={setAlert2}
-                    content={contentAlert2}
-                    width={50}
-                    height={3}
-                    btnText={'Aceptar'}
-                    btnFunction={close2}
-                    btnClose={'yes'}
-                    
-                />
-                : null
+            </>
         }
         
-        </ScrollView>
-    }
     </>
     
   )

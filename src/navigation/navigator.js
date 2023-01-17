@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/login/LoginScreen';
 import UsuarioRegisterScreen from '../screens/register/UsuarioRegistroScreen';
@@ -65,13 +65,9 @@ const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
 
-  
-
-  const { status, isConnected} = useContext(AuthContext)
-  // isConnected()
+  const {status} = useContext(AuthContext)
 
   if (status === 'checking') return <LoadingScreen />;
-  // if (status === 'isNotConnected') return <IsConnectedScreen/>;
 
   return (
     <Stack.Navigator

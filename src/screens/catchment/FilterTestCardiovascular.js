@@ -1,15 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Alert, Image, StyleSheet, Text, View } from 'react-native';
 import Button from '../../components/Button';
 import Checkbox from '../../components/CheckBox';
 import WindowAlert from '../../components/WindowAlert';
+import { AuthContext } from '../../context/AuthContext';
 import { Endpoint } from '../../environment/Api';
 import http from '../../services/http';
 import { Colors } from '../../theme/Colors';
 import { Fonts } from '../../theme/Fonts';
 import { Styles } from '../../theme/GlobalStyle';
+import IsConnectedScreen from '../IsConnectedScreen';
 import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 
 
@@ -26,9 +28,15 @@ const FilterTestCardiovascular = (props) => {
     const [token,setToken]= useState('')
     const [isSearchResult, setIsSearchResult] = useState(false)
 
+    const {isConnected} = useContext(AuthContext)
+    const [ netInfo,setNetInfo]=useState(false)
 
     useEffect(() => {
+        const unsubscribe = isConnected(setNetInfo)
         getToken()
+        return()=>{
+            unsubscribe
+        }
       }, [])
       
       const getToken =async()=>{
@@ -86,79 +94,86 @@ const FilterTestCardiovascular = (props) => {
     
   return (
     <>
-        {
-        (isSearchResult)?
-            <ViewAlertSkeletonScreen/>
-        :
-        <View style={styles.container}>
-        <View style={Styles.borderContainer}>
-            <View style={styles.cQuestion}>
-                <Text style={styles.tQuestion}>¿Cuenta con alguno de los antecedentes verificados por historia clínica?</Text>
-                <Text style={styles.tOption}>- Infarto agudo de miocardio previo. </Text>
-                <Text style={styles.tOption}>- Enfermedad cerebrocascular previa.</Text>
-                <Text style={styles.tOption}>- Aneurisma de cualquier origen. </Text>
-                <Text style={styles.tOption}>- Enfermedad arterial periférica previa. </Text>
-            </View>
-            <View style={styles.cCheckBox}>
-                <Checkbox
-                    text={'Si'}
-                    value={antecedente}
-                    onValueChange={(newValue) => setAntecedente(newValue)}
-                />
-                <Checkbox
-                    text={'No'}
-                    value={!antecedente}
-                    onValueChange={(newValue) => setAntecedente(!newValue)}
-                />
-            </View>
-        </View>
-        {
-            (antecedente===true)?null:
+    {
+        (netInfo=== false)? <IsConnectedScreen/>:
+        <>
+            {
+            (isSearchResult)?
+                <ViewAlertSkeletonScreen/>
+            :
+            <View style={styles.container}>
             <View style={Styles.borderContainer}>
-            <View style={styles.cQuestion}>
-                <Text style={styles.tQuestion}>¿Cuenta con  resultados de Colesterol Total y Colesterol HDL del ultimo año?</Text>
+                <View style={styles.cQuestion}>
+                    <Text style={styles.tQuestion}>¿Cuenta con alguno de los antecedentes verificados por historia clínica?</Text>
+                    <Text style={styles.tOption}>- Infarto agudo de miocardio previo. </Text>
+                    <Text style={styles.tOption}>- Enfermedad cerebrocascular previa.</Text>
+                    <Text style={styles.tOption}>- Aneurisma de cualquier origen. </Text>
+                    <Text style={styles.tOption}>- Enfermedad arterial periférica previa. </Text>
+                </View>
+                <View style={styles.cCheckBox}>
+                    <Checkbox
+                        text={'Si'}
+                        value={antecedente}
+                        onValueChange={(newValue) => setAntecedente(newValue)}
+                    />
+                    <Checkbox
+                        text={'No'}
+                        value={!antecedente}
+                        onValueChange={(newValue) => setAntecedente(!newValue)}
+                    />
+                </View>
             </View>
-            <View style={styles.cCheckBox}>
-                <Checkbox
-                    text={'Si'}
-                    value={examenes}
-                    disabled={false}
-                    onValueChange={(newValue) => setExamenes(newValue)}
-                />
-                <Checkbox
-                    text={'No'}
-                    value={!examenes}
-                    disabled={false}
-                    onValueChange={(newValue) => setExamenes(!newValue)}
-                />
+            {
+                (antecedente===true)?null:
+                <View style={Styles.borderContainer}>
+                <View style={styles.cQuestion}>
+                    <Text style={styles.tQuestion}>¿Cuenta con  resultados de Colesterol Total y Colesterol HDL del ultimo año?</Text>
+                </View>
+                <View style={styles.cCheckBox}>
+                    <Checkbox
+                        text={'Si'}
+                        value={examenes}
+                        disabled={false}
+                        onValueChange={(newValue) => setExamenes(newValue)}
+                    />
+                    <Checkbox
+                        text={'No'}
+                        value={!examenes}
+                        disabled={false}
+                        onValueChange={(newValue) => setExamenes(!newValue)}
+                    />
+                </View>
             </View>
-        </View>
-        }
-        <View style={styles.cButton}>
-        <Button
-          title="Aplicar Test"
-          onPress={() => validarTest()}
-          color='secondary'
-          fill='solid'
-        />
-        </View>
-        {
-            (alert) ?
-                <WindowAlert
-                bool={true}
-                closeAlert={setAlert}
-                content={contentAlert}
-                width={50}
-                height={3}
-                btnText={'Aceptar'}
-                btnFunction={close}
-                />
-            : null
-        }
+            }
+            <View style={styles.cButton}>
+            <Button
+            title="Aplicar Test"
+            onPress={() => validarTest()}
+            color='secondary'
+            fill='solid'
+            />
+            </View>
+            {
+                (alert) ?
+                    <WindowAlert
+                    bool={true}
+                    closeAlert={setAlert}
+                    content={contentAlert}
+                    width={50}
+                    height={3}
+                    btnText={'Aceptar'}
+                    btnFunction={close}
+                    />
+                : null
+            }
 
-    </View>
-        }
-    
+        </View>
+            }
+        
+        </>
+    }
+
+        
     </>
   )
 }

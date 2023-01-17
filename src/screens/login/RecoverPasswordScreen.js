@@ -11,12 +11,12 @@ import { Colors } from '../../theme/Colors';
 import { Styles } from '../../theme/GlobalStyle';
 import { Fonts } from '../../theme/Fonts';
 import { AuthContext } from '../../context/AuthContext';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const RecoverPasswordScreen =()=>{
 
     const navigator = useNavigation()
-    const {logOut} = useContext(AuthContext)
-
+    const {logOut,isConnected} = useContext(AuthContext)
 
     const [alert,setAlert]= useState(false)
     const [errorAlert,setErrorAlert]= useState(false)
@@ -25,7 +25,16 @@ const RecoverPasswordScreen =()=>{
     const {correo,onChange} = useForm({
         correo:''
     })
+    const [ netInfo,setNetInfo]=useState(false)
 
+    useEffect(()=> {
+
+        const unsubscribe = isConnected(setNetInfo)
+        return()=>{
+            unsubscribe
+        }
+        
+    }, [])
 
     const send=async()=>{
         console.log({correo})
@@ -85,8 +94,10 @@ const RecoverPasswordScreen =()=>{
     }
 
     return(
-
-        <View style={styles.container}>
+        <>
+            {
+                (netInfo=== false)? <IsConnectedScreen/>:
+                <View style={styles.container}>
         
             <View style={Styles.borderContainer}>
                 <TextInput
@@ -132,7 +143,10 @@ const RecoverPasswordScreen =()=>{
                     />
                 : null
             }
-        </View>
+                </View> 
+            }
+        </>
+        
     )
 }
 

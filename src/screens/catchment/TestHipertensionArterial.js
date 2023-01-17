@@ -14,26 +14,33 @@ import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
 import TextInputs from '../../components/TextInput';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const TestHipertensionArterial = (props) => {
+    const navigator=useNavigation()
+    const {isConnected} = useContext(AuthContext)
 
-    const {logOut} = useContext(AuthContext)
+    const data = props.route.params.data
+    const datos = props.route.params.datos
+
     const [isSearchResult, setIsSearchResult] = useState(false)
     const [alert, setAlert] = useState(false)
-
     const [pSistolica, setPSistolica] = useState('')
     const [pDiastolica, setPDiastolica] = useState('')
-    
     const [error, setError] = useState({
         pSistolica: '',
         pDiastolica: ''
     })
+    const [ netInfo,setNetInfo]=useState(false)
 
-    const data = props.route.params.data
-    console.log('daaataaa',data)
-    const datos = props.route.params.datos
+    useEffect(()=> {
 
-    const navigator=useNavigation()
+        const unsubscribe = isConnected(setNetInfo)
+        return()=>{
+            unsubscribe
+        }
+        
+    }, [])
 
     const sendValidator=()=>{
         setAlert(true)
@@ -91,9 +98,6 @@ const TestHipertensionArterial = (props) => {
         }
     }
 
-    
-
-
     const handleTest = () => {
 
         const error = []
@@ -124,77 +128,82 @@ const TestHipertensionArterial = (props) => {
 
 
   return (
-
     <>
-    {
-        (isSearchResult)?
-        <ViewAlertSkeletonScreen/>:
-        <ScrollView>
-        <View style={styles.container}>
-                <View style={Styles.borderContainer}>
-                <View style={styles.cQuestion}>
-                    <Text style={styles.tQuestion}>Haga toma de presión y digite los siguienes datos:</Text>
-                    <View style={{ flexDirection: 'row', marginTop: 15, justifyContent: 'center', width: '100%', marginLeft: 50 }}>
+        {
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
+            {
+                (isSearchResult)?
+                <ViewAlertSkeletonScreen/>:
+                <ScrollView>
+                <View style={styles.container}>
+                        <View style={Styles.borderContainer}>
+                        <View style={styles.cQuestion}>
+                            <Text style={styles.tQuestion}>Haga toma de presión y digite los siguienes datos:</Text>
+                            <View style={{ flexDirection: 'row', marginTop: 15, justifyContent: 'center', width: '100%', marginLeft: 50 }}>
 
-                        <View>
-                            <TextInputs
-                                label={'P.Sistólica'}
-                                placeholder={'Ej: 180'}
-                                keyboardType='numeric'
-                                dimension='middle'
-                                onChangeText={(value) => setPSistolica(value)}
-                                value={pSistolica}
-                            />
-                            {(error) ?
-                                (error.pSistolica === '') ? null :
-                                    <Text style={styles.textValid}>{error.pSistolica}</Text> : null
-                            }
-                        </View>
-                        <View>
-                            <TextInputs
-                                label={'P.Diastólica'}
-                                placeholder={'Ej: 90'}
-                                keyboardType='numeric'
-                                dimension='middle'
-                                onChangeText={(value) => setPDiastolica(value)}
-                                value={pDiastolica}
-                            />
-                            {(error) ?
-                                (error.pDiastolica === '') ? null :
-                                    <Text style={styles.textValid}>{error.pDiastolica}</Text> : null
-                            }
+                                <View>
+                                    <TextInputs
+                                        label={'P.Sistólica'}
+                                        placeholder={'Ej: 180'}
+                                        keyboardType='numeric'
+                                        dimension='middle'
+                                        onChangeText={(value) => setPSistolica(value)}
+                                        value={pSistolica}
+                                    />
+                                    {(error) ?
+                                        (error.pSistolica === '') ? null :
+                                            <Text style={styles.textValid}>{error.pSistolica}</Text> : null
+                                    }
+                                </View>
+                                <View>
+                                    <TextInputs
+                                        label={'P.Diastólica'}
+                                        placeholder={'Ej: 90'}
+                                        keyboardType='numeric'
+                                        dimension='middle'
+                                        onChangeText={(value) => setPDiastolica(value)}
+                                        value={pDiastolica}
+                                    />
+                                    {(error) ?
+                                        (error.pDiastolica === '') ? null :
+                                            <Text style={styles.textValid}>{error.pDiastolica}</Text> : null
+                                    }
+                                </View>
+                            </View>
+
                         </View>
                     </View>
-
-                </View>
-            </View>
-            
-            <View style={styles.cButton}>  
-                <Button 
-                    title={"Calcular"}
-                    onPress={()=>handleTest()} 
-                    fill='solid'
-                /> 
-            </View>
-        </View>
-        {
-            (alert) ?
-                <WindowAlert
-                    bool={true}
-                    closeAlert={setAlert}
-                    content={contentAlert}
-                    width={50}
-                    height={3}
-                    btnText={'Aceptar'}
-                    btnFunction={close}
-                    btnClose={'yes'}
                     
-                />
-                : null
+                    <View style={styles.cButton}>  
+                        <Button 
+                            title={"Calcular"}
+                            onPress={()=>handleTest()} 
+                            fill='solid'
+                        /> 
+                    </View>
+                </View>
+                {
+                    (alert) ?
+                        <WindowAlert
+                            bool={true}
+                            closeAlert={setAlert}
+                            content={contentAlert}
+                            width={50}
+                            height={3}
+                            btnText={'Aceptar'}
+                            btnFunction={close}
+                            btnClose={'yes'}
+                            
+                        />
+                        : null
+                }
+                
+                </ScrollView>
+            }
+            </>
         }
         
-        </ScrollView>
-    }
     </>
     
   )

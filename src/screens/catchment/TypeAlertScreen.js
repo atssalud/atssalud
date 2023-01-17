@@ -12,44 +12,47 @@ import Button from '../../components/Button';
 import LoadingScreen from '../LoadingScreen'
 import TypeAlertSkeletonScreen from '../skeleton/TypeAlertSkeletonScreen';
 import { AuthContext } from '../../context/AuthContext';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const TypeAlertScreen = (props) => {
-  const {logOut} = useContext(AuthContext)
+  const navigator = useNavigation()
+  const {logOut,isConnected} = useContext(AuthContext)
 
   const data= props.route.params.data
-  console.log('dataaaa1',data)
-  const navigator = useNavigation()
+  
   const [dataPeople,setDataPeople]=useState()
   const [debouncedValue,setDebouncedValue] = useState(false);
+  const [ netInfo,setNetInfo]=useState(false)
 
-  
+
   useEffect(() => {
-    navigator.setOptions({
-      headerRight:()=>(
-          <TouchableOpacity
-              style={{padding:5}}
-              onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen' })}
-          >
-              <Icon
-                  name="stethoscope"
-                  color= {'white'}
-                  size={25}
-              />
-          </TouchableOpacity>
-      ),
-    })
-    if(data){
-      findPeople()
-    }
-    const timeout = setTimeout(() => {
-      setDebouncedValue(true);
-    },5000);
+      const unsubscribe = isConnected(setNetInfo)
+      navigator.setOptions({
+        headerRight:()=>(
+            <TouchableOpacity
+                style={{padding:5}}
+                onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen' })}
+            >
+                <Icon
+                    name="stethoscope"
+                    color= {'white'}
+                    size={25}
+                />
+            </TouchableOpacity>
+        ),
+      })
+      if(data){
+        findPeople()
+      }
+      const timeout = setTimeout(() => {
+        setDebouncedValue(true);
+      },5000);
 
-  return () => {
-    clearTimeout(timeout);
-  };
+    return () => {
+      unsubscribe
+      clearTimeout(timeout);
+    };
   }, [])
-  console.log('enviodata',data)
 
   const findPeople=async()=>{
 
@@ -152,275 +155,281 @@ const TypeAlertScreen = (props) => {
   
   //Preguntar si la persona fuma o si estuvo expuesto a humo de leña, biomasa
   return (
-    <View style={style.container}>
-      {(debouncedValue)?
-     <>
-      {(nameTestToApplicate.length !== 0)?
-          <ScrollView>
-          {(data.edad>17 && data.edad<71 && !nameTestToApplicate.includes('CARDIOVASCULAR') && !nameTestToApplicate.includes('RIESGO CARDIOVASCULAR OMS'))?
+    <>
+      {
+          (netInfo=== false)? <IsConnectedScreen/>:
+          <View style={style.container}>
+        {(debouncedValue)?
+      <>
+        {(nameTestToApplicate.length !== 0)?
+            <ScrollView>
+            {(data.edad>17 && data.edad<71 && !nameTestToApplicate.includes('CARDIOVASCULAR') && !nameTestToApplicate.includes('RIESGO CARDIOVASCULAR OMS'))?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Cardiovascular'
+              size={25}
+              btnFunction={()=>navigator.replace('FilterTestCardiovascular',{data:dataPeople,datos:data,})}
+              
+            /> 
+            : (data.edad>17 && data.edad<71)?
             <ButtonImage
-            nameImage='check-circle'
-            text='Cardiovascular'
-            size={25}
-            btnFunction={()=>navigator.replace('FilterTestCardiovascular',{data:dataPeople,datos:data,})}
+              nameImage='check-circle'
+              text='Cardiovascular'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            /> :null
+            }
+            {(data.edad>0 && data.edad<8 && !nameTestToApplicate.includes('RIESGO DE ASMA EN NIÑOS'))?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Asma'
+              size={25}
+              btnFunction={()=>navigator.replace('TestAsthmaScreen',{data:dataPeople,datos:data,})}
+            />
+            :(data.edad>0 && data.edad<8)?
+            <ButtonImage
+              nameImage='check-circle'
+              text='Asma'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            />:null
+            }
             
-          /> 
-          : (data.edad>17 && data.edad<71)?
-          <ButtonImage
-            nameImage='check-circle'
-            text='Cardiovascular'
-            size={25}
-            disabled={true}
-            color={Colors.GREY_LIGHT}
-          /> :null
-          }
-          {(data.edad>0 && data.edad<8 && !nameTestToApplicate.includes('RIESGO DE ASMA EN NIÑOS'))?
+            {(data.edad>39 && !nameTestToApplicate.includes('EPOC') && !nameBrandToApplicate.includes('ENFERMEDAD PULMONAR OBSTRUCTIVA CRÓNICA (EPOC)'))?
+              <ButtonImage
+              nameImage='check-circle'
+              text='EPOC'
+              size={25}
+              btnFunction={()=>navigator.replace('FilterTestEpocScreen',{data:dataPeople,datos:data,})}
+            />
+            :(data.edad>39)?
             <ButtonImage
-            nameImage='check-circle'
-            text='Asma'
-            size={25}
-            btnFunction={()=>navigator.replace('TestAsthmaScreen',{data:dataPeople,datos:data,})}
-          />
-          :(data.edad>0 && data.edad<8)?
-          <ButtonImage
-            nameImage='check-circle'
-            text='Asma'
-            size={25}
-            disabled={true}
-            color={Colors.GREY_LIGHT}
-          />:null
-          }
-          
-          {(data.edad>39 && !nameTestToApplicate.includes('EPOC') && !nameBrandToApplicate.includes('ENFERMEDAD PULMONAR OBSTRUCTIVA CRÓNICA (EPOC)'))?
+              nameImage='check-circle'
+              text='EPOC'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            />:null
+            }
+            {(data.edad>=5 && !nameTestToApplicate.includes('SALUD MENTAL'))?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Salud Mental'
+              size={25}
+              btnFunction={()=> (data.edad<12)?navigator.navigate('TestRQC',{data:data,datos:datos,}):navigator.replace('FilterMentalHealth',{data:dataPeople,datos:data,})}
+            />
+            :
+            (data.edad>=5)?
             <ButtonImage
-            nameImage='check-circle'
-            text='EPOC'
-            size={25}
-            btnFunction={()=>navigator.replace('FilterTestEpocScreen',{data:dataPeople,datos:data,})}
-          />
-          :(data.edad>39)?
-          <ButtonImage
-            nameImage='check-circle'
-            text='EPOC'
-            size={25}
-            disabled={true}
-            color={Colors.GREY_LIGHT}
-          />:null
-          }
-          {(data.edad>=5 && !nameTestToApplicate.includes('SALUD MENTAL'))?
+              nameImage='check-circle'
+              text='Salud Mental'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            />:null
+            }
+            {(data.edad>13 && !nameTestToApplicate.includes('DIABETES FINDRISC')&& !nameBrandToApplicate.includes('DIABETES MELLITUS'))?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Diabetes'
+              size={25}
+              btnFunction={()=>navigator.replace('TestDiabetesScreen',{data:dataPeople,datos:data,})}
+            />
+            :
+            (data.edad>13)?
             <ButtonImage
-            nameImage='check-circle'
-            text='Salud Mental'
-            size={25}
-            btnFunction={()=> (data.edad<12)?navigator.navigate('TestRQC',{data:data,datos:datos,}):navigator.replace('FilterMentalHealth',{data:dataPeople,datos:data,})}
-          />
-          :
-          (data.edad>=5)?
-          <ButtonImage
-            nameImage='check-circle'
-            text='Salud Mental'
-            size={25}
-            disabled={true}
-            color={Colors.GREY_LIGHT}
-          />:null
-          }
-          {(data.edad>13 && !nameTestToApplicate.includes('DIABETES FINDRISC')&& !nameBrandToApplicate.includes('DIABETES MELLITUS'))?
+              nameImage='check-circle'
+              text='Diabetes'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            />:null
+            }
+            {(data.edad>17 && !nameTestToApplicate.includes('HIPERTENSIÓN ARTERIAL')&& !nameBrandToApplicate.includes('HIPERTENSIÓN ARTERIAL'))?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Hipertensión Arterial'
+              size={25}
+              btnFunction={()=>navigator.replace('TestHipertensionArterial',{data:dataPeople,datos:data,})}
+            />
+            :
+            (data.edad>17)?
             <ButtonImage
-            nameImage='check-circle'
-            text='Diabetes'
-            size={25}
-            btnFunction={()=>navigator.replace('TestDiabetesScreen',{data:dataPeople,datos:data,})}
-          />
-          :
-          (data.edad>13)?
-          <ButtonImage
-            nameImage='check-circle'
-            text='Diabetes'
-            size={25}
-            disabled={true}
-            color={Colors.GREY_LIGHT}
-          />:null
-          }
-          {(data.edad>17 && !nameTestToApplicate.includes('HIPERTENSIÓN ARTERIAL')&& !nameBrandToApplicate.includes('HIPERTENSIÓN ARTERIAL'))?
+              nameImage='check-circle'
+              text='Hipertensión Arterial'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            />:null
+            }
+            {(data.edad>18 && !nameTestToApplicate.includes('ENFERMEDAD RENAL CRÓNICA') && !nameBrandToApplicate.includes('ENFERMEDAD RENAL CRÓNICA'))?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Enfermedad Renal Crónica'
+              size={25}
+              btnFunction={()=>navigator.replace('FilterTestEnfermedadRenalCronico',{data:dataPeople,datos:data,})}
+            />
+            :
+            (data.edad>18)?
             <ButtonImage
-            nameImage='check-circle'
-            text='Hipertensión Arterial'
-            size={25}
-            btnFunction={()=>navigator.replace('TestHipertensionArterial',{data:dataPeople,datos:data,})}
-          />
-          :
-          (data.edad>17)?
-          <ButtonImage
-            nameImage='check-circle'
-            text='Hipertensión Arterial'
-            size={25}
-            disabled={true}
-            color={Colors.GREY_LIGHT}
-          />:null
-          }
-          {(data.edad>18 && !nameTestToApplicate.includes('ENFERMEDAD RENAL CRÓNICA') && !nameBrandToApplicate.includes('ENFERMEDAD RENAL CRÓNICA'))?
+              nameImage='check-circle'
+              text='Enfermedad Renal Crónica'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            />:null
+            }
+            {(data.edad>17 && !nameTestToApplicate.includes('POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES')&& !nameBrandToApplicate.includes('POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES'))?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Población en riesgo o presencia de alteraciones nutricionales'
+              size={25}
+              btnFunction={()=>navigator.replace('TestPoblacionRiesgo',{data:dataPeople,datos:data,})}
+            />
+            :
+            (data.edad>17)?
             <ButtonImage
-            nameImage='check-circle'
-            text='Enfermedad Renal Crónica'
-            size={25}
-            btnFunction={()=>navigator.replace('FilterTestEnfermedadRenalCronico',{data:dataPeople,datos:data,})}
-          />
-          :
-          (data.edad>18)?
-          <ButtonImage
-            nameImage='check-circle'
-            text='Enfermedad Renal Crónica'
-            size={25}
-            disabled={true}
-            color={Colors.GREY_LIGHT}
-          />:null
-          }
-          {(data.edad>17 && !nameTestToApplicate.includes('POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES')&& !nameBrandToApplicate.includes('POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES'))?
+              nameImage='check-circle'
+              text='Población en riesgo o presencia de alteraciones nutricionales'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            />:null
+            }
+            {(data.edad>13 && data.edad<50 &&  !nameTestToApplicate.includes('SOSPECHA DE EMBARAZO') && data.genero==='F')?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Materno Perinatal'
+              size={25}
+              btnFunction={()=>navigator.replace('FilterItemTestMaternoPerinatal',{data:dataPeople,datos:data,})}
+            />
+            :
+            (data.edad>13  && data.edad<50 && data.genero==='F')?
             <ButtonImage
-            nameImage='check-circle'
-            text='Población en riesgo o presencia de alteraciones nutricionales'
-            size={25}
-            btnFunction={()=>navigator.replace('TestPoblacionRiesgo',{data:dataPeople,datos:data,})}
-          />
-          :
-          (data.edad>17)?
-          <ButtonImage
-            nameImage='check-circle'
-            text='Población en riesgo o presencia de alteraciones nutricionales'
-            size={25}
-            disabled={true}
-            color={Colors.GREY_LIGHT}
-          />:null
-          }
-          {(data.edad>13 && data.edad<50 &&  !nameTestToApplicate.includes('SOSPECHA DE EMBARAZO') && data.genero==='F')?
-            <ButtonImage
-            nameImage='check-circle'
-            text='Materno Perinatal'
-            size={25}
-            btnFunction={()=>navigator.replace('FilterItemTestMaternoPerinatal',{data:dataPeople,datos:data,})}
-          />
-          :
-          (data.edad>13  && data.edad<50 && data.genero==='F')?
-          <ButtonImage
-            nameImage='check-circle'
-            text='Materno Perinatal'
-            size={25}
-            disabled={true}
-            color={Colors.GREY_LIGHT}
-          />:null
-          }
+              nameImage='check-circle'
+              text='Materno Perinatal'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            />:null
+            }
 
-      <View style={style.btnEvaluarPaciente}>
-        <Button
-          title="Evaluar otro paciente"
-          onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen' })}
-          color='secondary'
-          fill='solid'
-        />
-      </View>
-          </ScrollView>
+        <View style={style.btnEvaluarPaciente}>
+          <Button
+            title="Evaluar otro paciente"
+            onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen' })}
+            color='secondary'
+            fill='solid'
+          />
+        </View>
+            </ScrollView>
+            
+        :
+        <ScrollView>
+        {(data.edad>17 && data.edad<71)?
+          <ButtonImage
+          nameImage='check-circle'
+          text='Cardiovascular'
+          size={25}
+          btnFunction={()=>navigator.replace('FilterTestCardiovascular',{data:dataPeople,datos:data,})}
           
-      :
-      <ScrollView>
-      {(data.edad>17 && data.edad<71)?
-        <ButtonImage
-        nameImage='check-circle'
-        text='Cardiovascular'
-        size={25}
-        btnFunction={()=>navigator.replace('FilterTestCardiovascular',{data:dataPeople,datos:data,})}
-        
-      /> 
-      : null
-      }
-      {(data.edad>0 && data.edad<8)?
-        <ButtonImage
-        nameImage='check-circle'
-        text='Asma'
-        size={25}
-        btnFunction={()=>navigator.replace('TestAsthmaScreen',{data:dataPeople,datos:data,})}
-      />
-      :null
-      }
-      
-      {(data.edad>39)?
-        <ButtonImage
-        nameImage='check-circle'
-        text='EPOC'
-        size={25}
-        btnFunction={()=>navigator.replace('FilterTestEpocScreen',{data:dataPeople,datos:data,})}
-      />
-      :null
-      }
-      {(data.edad>=5)?
-        <ButtonImage
-        nameImage='check-circle'
-        text='Salud Mental'
-        size={25}
-        btnFunction={()=> (data.edad<12)?navigator.navigate('TestRQC',{data:dataPeople,datos:data,}):navigator.replace('FilterMentalHealth',{data:dataPeople,datos:data,})}
-      />
-      :null
-      }
-      {(data.edad>13)?
-        <ButtonImage
-        nameImage='check-circle'
-        text='Diabetes'
-        size={25}
-        btnFunction={()=>navigator.replace('TestDiabetesScreen',{data:dataPeople,datos:data,})}
-      />
-      :null
-      }
-      {(data.edad>17)?
-       <ButtonImage
-       nameImage='check-circle'
-       text='Hipertensión Arterial'
-       size={25}
-       btnFunction={()=>navigator.replace('TestHipertensionArterial',{data:dataPeople,datos:data,})}
-     />
-      :null
-      }
-      {(data.edad>18)?
-       <ButtonImage
-       nameImage='check-circle'
-       text='Enfermedad Renal Crónica'
-       size={25}
-       btnFunction={()=>navigator.replace('FilterTestEnfermedadRenalCronico',{data:dataPeople,datos:data,})}
-     />
-      :null
-      }
-      {(data.edad>17)?
-       <ButtonImage
-       nameImage='check-circle'
-       text='Población en riesgo o presencia de alteraciones nutricionales'
-       size={25}
-       btnFunction={()=>navigator.replace('TestPoblacionRiesgo',{data:dataPeople,datos:data,})}
-     />
-      :null
-      }
-      {(data.edad>13 && data.edad<50 && data.genero==='F')?
-       <ButtonImage
-       nameImage='check-circle'
-       text='Materno Perinatal'
-       size={25}
-       btnFunction={()=>navigator.replace('FilterItemTestMaternoPerinatal',{data:dataPeople,datos:data,})}
-      />
-      :null
-      }
-      <View style={style.btnEvaluarPaciente}>
-        <Button
-          title="Evaluar otro paciente"
-          onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen'})}
-          color='secondary'
-          fill='solid'
+        /> 
+        : null
+        }
+        {(data.edad>0 && data.edad<8)?
+          <ButtonImage
+          nameImage='check-circle'
+          text='Asma'
+          size={25}
+          btnFunction={()=>navigator.replace('TestAsthmaScreen',{data:dataPeople,datos:data,})}
         />
-      </View>
-      </ScrollView>
-    }
+        :null
+        }
+        
+        {(data.edad>39)?
+          <ButtonImage
+          nameImage='check-circle'
+          text='EPOC'
+          size={25}
+          btnFunction={()=>navigator.replace('FilterTestEpocScreen',{data:dataPeople,datos:data,})}
+        />
+        :null
+        }
+        {(data.edad>=5)?
+          <ButtonImage
+          nameImage='check-circle'
+          text='Salud Mental'
+          size={25}
+          btnFunction={()=> (data.edad<12)?navigator.navigate('TestRQC',{data:dataPeople,datos:data,}):navigator.replace('FilterMentalHealth',{data:dataPeople,datos:data,})}
+        />
+        :null
+        }
+        {(data.edad>13)?
+          <ButtonImage
+          nameImage='check-circle'
+          text='Diabetes'
+          size={25}
+          btnFunction={()=>navigator.replace('TestDiabetesScreen',{data:dataPeople,datos:data,})}
+        />
+        :null
+        }
+        {(data.edad>17)?
+        <ButtonImage
+        nameImage='check-circle'
+        text='Hipertensión Arterial'
+        size={25}
+        btnFunction={()=>navigator.replace('TestHipertensionArterial',{data:dataPeople,datos:data,})}
+      />
+        :null
+        }
+        {(data.edad>18)?
+        <ButtonImage
+        nameImage='check-circle'
+        text='Enfermedad Renal Crónica'
+        size={25}
+        btnFunction={()=>navigator.replace('FilterTestEnfermedadRenalCronico',{data:dataPeople,datos:data,})}
+      />
+        :null
+        }
+        {(data.edad>17)?
+        <ButtonImage
+        nameImage='check-circle'
+        text='Población en riesgo o presencia de alteraciones nutricionales'
+        size={25}
+        btnFunction={()=>navigator.replace('TestPoblacionRiesgo',{data:dataPeople,datos:data,})}
+      />
+        :null
+        }
+        {(data.edad>13 && data.edad<50 && data.genero==='F')?
+        <ButtonImage
+        nameImage='check-circle'
+        text='Materno Perinatal'
+        size={25}
+        btnFunction={()=>navigator.replace('FilterItemTestMaternoPerinatal',{data:dataPeople,datos:data,})}
+        />
+        :null
+        }
+        <View style={style.btnEvaluarPaciente}>
+          <Button
+            title="Evaluar otro paciente"
+            onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen'})}
+            color='secondary'
+            fill='solid'
+          />
+        </View>
+        </ScrollView>
+      }
+        
+        </>
+        :<TypeAlertSkeletonScreen/>
+      }
       
-      </>
-      :<TypeAlertSkeletonScreen/>
-    }
-    
-    </View>
+          </View>
+      }
+      
+    </>
   )
 }
 export default TypeAlertScreen

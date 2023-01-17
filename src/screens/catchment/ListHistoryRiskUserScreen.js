@@ -8,9 +8,10 @@ import http from '../../services/http'
 import { Colors } from '../../theme/Colors'
 import { Fonts } from '../../theme/Fonts'
 import { Styles } from '../../theme/GlobalStyle'
+import IsConnectedScreen from '../IsConnectedScreen'
 
 const ListHistoryRiskUserScreen = (props) => {
-    const {logOut} = useContext(AuthContext)
+    const {logOut,isConnected} = useContext(AuthContext)
     const token=props.route.params.token
     console.log('token',token)
 
@@ -35,8 +36,17 @@ const ListHistoryRiskUserScreen = (props) => {
     const [total, setTotal] = useState()
     const [monthYear, setMonthYear] = useState(`${month}-${year}`)
 
+    const [ netInfo,setNetInfo]=useState(false)
+
+    
+
     useEffect(() => {
-      getHistorial()
+        const unsubscribe = isConnected(setNetInfo)
+        getHistorial()
+        return()=>{
+            unsubscribe
+        }
+      
     }, [currentPage,monthId])
 
     const getHistorial=async()=>{
@@ -133,35 +143,41 @@ const ListHistoryRiskUserScreen = (props) => {
 
   return (
     <>
-        <View style={styles.container}>
-            <View style={[Styles.borderContainer,{justifyContent:'center',alignItems:'center',marginTop:35,marginBottom:10}]}>
-            <InputDate
-                label='Filtro mes y año'
-                dateSelect={filterSelect}
-                type={'date'}
-                text={monthYear}
-                monthYear='yes'
-                
-            />
-            </View>
-        </View>
         {
-            (Object.keys(historyRisk).length === 0)?
-            <View style={styles.cTest}>
-                <Text style={styles.title2}>No ha realizado ningún registro</Text>
-                <Text style={styles.title2}>de pacientes</Text>
+            (netInfo=== false)? <IsConnectedScreen/>:
+            <>
+            <View style={styles.container}>
+                <View style={[Styles.borderContainer,{justifyContent:'center',alignItems:'center',marginTop:35,marginBottom:10}]}>
+                <InputDate
+                    label='Filtro mes y año'
+                    dateSelect={filterSelect}
+                    type={'date'}
+                    text={monthYear}
+                    monthYear='yes'
+                    
+                />
+                </View>
             </View>
-            :
+            {
+                (Object.keys(historyRisk).length === 0)?
+                <View style={styles.cTest}>
+                    <Text style={styles.title2}>No ha realizado ningún registro</Text>
+                    <Text style={styles.title2}>de pacientes</Text>
+                </View>
+                :
 
-            <FlatList
-                data={historyRisk}
-                renderItem={renderItem}
-                keyExtractor={(item,id)=> id}
-                ListFooterComponent={renderLoader}
-                onEndReached={loadMoreItem}
-                onEndReachedThreshold={0}
-            />
+                <FlatList
+                    data={historyRisk}
+                    renderItem={renderItem}
+                    keyExtractor={(item,id)=> id}
+                    ListFooterComponent={renderLoader}
+                    onEndReached={loadMoreItem}
+                    onEndReachedThreshold={0}
+                />
+            }
+            </>
         }
+        
     </>
 
   )

@@ -14,15 +14,17 @@ import ViewAlertSkeletonScreen from '../skeleton/ViewAlertSkeletonScreen';
 import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import IsConnectedScreen from '../IsConnectedScreen';
 
 const TestRiskScreen = (props) => {
-    
-    const idTest=props.route.params.id
+    const navigator=useNavigation()
+    const {isConnected} = useContext(AuthContext)
 
-    const {logOut} = useContext(AuthContext)
+    const idTest=props.route.params.id
+    const dataPatient = props.route.params.data
+
     const [answer,setAnswer]=useState()
     const [answerCriteria,setAnswerCriteria]=useState()
-    const [change,setChange]=useState()
     const [questions,setQuestions]=useState()
     const [criteria,setCriteria]=useState()
     const [token,setToken]=useState()
@@ -33,39 +35,36 @@ const TestRiskScreen = (props) => {
     const [checkBoxCriteria, setCheckBoxCriteria] = useState()
     const [alert, setAlert] = useState(false)
     const [alertSearchResult, setAlertSearchResult] = useState(false)
+    const [ netInfo,setNetInfo]=useState(false)
 
-    
-    const dataPatient = props.route.params.data
+    useEffect(()=> {
 
-    console.log('datos',dataPatient)
-
-    const navigator=useNavigation()
-
-    useEffect(() => {
-      getToken()
-      navigator.setOptions({
-        headerLeft:()=>(
-            <TouchableOpacity
-                onPress={()=> navigator.replace('TypeRiskScreen2',{data: dataPatient})}
-            >
-                <Icon
-                    name="chevron-left"
-                    color= {'white'}
-                    size={18}
-                />
-            </TouchableOpacity>
-        ),
-    
+        const unsubscribe = isConnected(setNetInfo)
+        getToken()
+        navigator.setOptions({
+            headerLeft:()=>(
+                <TouchableOpacity
+                    onPress={()=> navigator.replace('TypeRiskScreen2',{data: dataPatient})}
+                >
+                    <Icon
+                        name="chevron-left"
+                        color= {'white'}
+                        size={18}
+                    />
+                </TouchableOpacity>
+            ),})
+        return()=>{
+            unsubscribe
+        }
         
-    })
     }, [])
-    
+
     const getToken =async()=>{
         const userToken = await AsyncStorage.getItem('token')
         getQuestion()
         setToken(userToken)
-    
     }
+
     const getQuestion=async()=>{
         
         try {
@@ -85,7 +84,8 @@ const TestRiskScreen = (props) => {
             console.log('error',error)
         }
     }
-//Arma el arreglo de los checkbox de forma automatica por defecto en falso
+
+    //Arma el arreglo de los checkbox de forma automatica por defecto en falso
     const listCkeckBox =(length)=>{
         const list=[]
         for (let i = 0; i < length; i++) {
@@ -242,52 +242,31 @@ const TestRiskScreen = (props) => {
             </View>
         </View>
     return (
-
         <>
-        {
-            (isSearch)?
-            <TestSkeletonScreen/>
-            :(isSearchResult)?
-            <ViewAlertSkeletonScreen/>:
-            <ScrollView>
-            {(questions)?
-                <View style={styles.container}>
-                    <View style={Styles.borderContainer}>
-                        <View style={styles.cQuestion}>
-                            <Text style={styles.tQuestion}>{questions.name}</Text>
-                        </View>
-                        <View>
-                            {
-                                questions.options.map((option,id)=>{
-                                    return(
-                                        <View style={{marginBottom:15}} key={id}>
-                                            <CheckBox
-                                                text={option.name}
-                                                value={checkBox[id].item}
-                                                onValueChange={(newValue) => itemCheckboxSelected(id,option.name)}
-                                            />
-                                        </View>
-                                    )
-                                })
-                            }
-                        </View>
-                    </View>
-                    {
-                        (criteria)?
-
+            {
+                (netInfo=== false)? <IsConnectedScreen/>:
+                <>
+            {
+                (isSearch)?
+                <TestSkeletonScreen/>
+                :(isSearchResult)?
+                <ViewAlertSkeletonScreen/>:
+                <ScrollView>
+                {(questions)?
+                    <View style={styles.container}>
                         <View style={Styles.borderContainer}>
                             <View style={styles.cQuestion}>
-                                <Text style={styles.tQuestion}>{criteria.name}</Text>
+                                <Text style={styles.tQuestion}>{questions.name}</Text>
                             </View>
                             <View>
                                 {
-                                    criteria.options.map((option,id)=>{
+                                    questions.options.map((option,id)=>{
                                         return(
                                             <View style={{marginBottom:15}} key={id}>
                                                 <CheckBox
                                                     text={option.name}
-                                                    value={checkBoxCriteria[id].item}
-                                                    onValueChange={(newValue) => itemCheckboxCriteriaSelected(id,option.name)}
+                                                    value={checkBox[id].item}
+                                                    onValueChange={(newValue) => itemCheckboxSelected(id,option.name)}
                                                 />
                                             </View>
                                         )
@@ -295,51 +274,77 @@ const TestRiskScreen = (props) => {
                                 }
                             </View>
                         </View>
+                        {
+                            (criteria)?
 
-                        :null
-                    }
-                
-                
-                <View style={styles.cButton}>  
-                    <Button 
-                        title={"Marcar"}
-                        onPress={()=>sendValidator()} 
-                        fill='solid'
-                    /> 
+                            <View style={Styles.borderContainer}>
+                                <View style={styles.cQuestion}>
+                                    <Text style={styles.tQuestion}>{criteria.name}</Text>
+                                </View>
+                                <View>
+                                    {
+                                        criteria.options.map((option,id)=>{
+                                            return(
+                                                <View style={{marginBottom:15}} key={id}>
+                                                    <CheckBox
+                                                        text={option.name}
+                                                        value={checkBoxCriteria[id].item}
+                                                        onValueChange={(newValue) => itemCheckboxCriteriaSelected(id,option.name)}
+                                                    />
+                                                </View>
+                                            )
+                                        })
+                                    }
+                                </View>
+                            </View>
+
+                            :null
+                        }
+                    
+                    
+                    <View style={styles.cButton}>  
+                        <Button 
+                            title={"Marcar"}
+                            onPress={()=>sendValidator()} 
+                            fill='solid'
+                        /> 
+                    </View>
                 </View>
-            </View>
-            :null}
-            {
-                (alert) ?
-                    <WindowAlert
-                        bool={true}
-                        closeAlert={setAlert}
-                        content={contentAlert}
-                        width={50}
-                        height={3}
-                        btnText={'Aceptar'}
-                        btnFunction={close}
-                        btnClose={'yes'}
-                        
-                    />
-                    : null
+                :null}
+                {
+                    (alert) ?
+                        <WindowAlert
+                            bool={true}
+                            closeAlert={setAlert}
+                            content={contentAlert}
+                            width={50}
+                            height={3}
+                            btnText={'Aceptar'}
+                            btnFunction={close}
+                            btnClose={'yes'}
+                            
+                        />
+                        : null
+                }
+                {
+                    (alertSearchResult) ?
+                        <WindowAlert
+                            bool={true}
+                            closeAlert={setAlertSearchResult}
+                            content={contentAlertResult}
+                            width={50}
+                            height={3}
+                            btnText={'Aceptar'}
+                            btnFunction={closeAlert}
+                        />
+                        : null
+                }
+                
+                </ScrollView>
             }
-            {
-                (alertSearchResult) ?
-                    <WindowAlert
-                        bool={true}
-                        closeAlert={setAlertSearchResult}
-                        content={contentAlertResult}
-                        width={50}
-                        height={3}
-                        btnText={'Aceptar'}
-                        btnFunction={closeAlert}
-                    />
-                    : null
+                </>
             }
             
-            </ScrollView>
-        }
         </>
         
       )
