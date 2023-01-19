@@ -180,7 +180,7 @@ const CatchmentScreen = () => {
                                     style={styles.Btn}
                                     onPress={() => send()}
                                 >
-                                    <Text style={styles.tBtn}>Busqueda</Text>
+                                    <Text style={styles.tBtn}>Buscar</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>

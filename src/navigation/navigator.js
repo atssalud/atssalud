@@ -59,6 +59,8 @@ import PymentScreen from '../screens/profile/PymentScreen';
 import TestSchizophrenia from '../screens/catchment/MentalHealth/TestSchizophrenia';
 import ViewAlertScreen2 from '../screens/catchment/ViewAlertScreen2';
 import ChangePasswordScreen from '../screens/profile/myData/ChangePasswordScreen';
+import TestRiskCancerScreen from '../screens/catchment/TestRiskCancerScreen';
+import TestRiskInfecciontvScreen from '../screens/catchment/TestRiskInfecciontvScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -157,6 +159,8 @@ const Navigator = () => {
               <Stack.Screen name="TestSchizophrenia" component={TestSchizophrenia} options={{  title: 'Test Esquizofrenia'}}/>
               <Stack.Screen name="ViewAlertScreen2" component={ViewAlertScreen2} options={{  title: 'Resultado Test', headerLeft: null}}/>
               <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{  title: 'Cambiar Contraseña'}}/>
+              <Stack.Screen name="TestRiskCancerScreen" component={TestRiskCancerScreen} options={{  title: 'Marca en Salud'}}/>
+              <Stack.Screen name="TestRiskInfecciontvScreen" component={TestRiskInfecciontvScreen} options={{  title: 'Marca en Salud'}}/>
 
             </>
           )
