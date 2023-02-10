@@ -93,7 +93,8 @@ const TypeAlertScreen = (props) => {
           'ENFERMEDAD RENAL CRÓNICA',
           'RIESGO CARDIOVASCULAR OMS',
           'SOSPECHA DE EMBARAZO',
-          'POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES'
+          'POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES',
+          'CANCER DE MAMA'
       ];
       let brandsToEvaluate = [
           'DIABETES MELLITUS',
@@ -113,6 +114,7 @@ const TypeAlertScreen = (props) => {
           'CONSUMIDOR DE SUSTACIAS PSICOACTIVAS',
           'VICTIMA DEL CONFLICTO ARMADO',
           'VICTIMA DE VIOLENCIA DE GENERO',
+          'CANCER DE MAMA',
 
       ];
       testsToEvaluate.map((testToEvaluate)=>{
@@ -315,6 +317,23 @@ const TypeAlertScreen = (props) => {
               color={Colors.GREY_LIGHT}
             />:null
             }
+            {(data.edad>18 &&  !nameTestToApplicate.includes('CANCER DE MAMA') && data.genero==='F')?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Cancer de mama'
+              size={25}
+              btnFunction={()=>navigator.replace('TestBreastCancer',{data:dataPeople,datos:data,})}
+            />
+            :
+            (data.edad>17 && data.edad<70 && data.genero==='F')?
+            <ButtonImage
+              nameImage='check-circle'
+              text='Cancer de mama'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            />:null
+            }
 
         <View style={style.btnEvaluarPaciente}>
           <Button
@@ -408,6 +427,15 @@ const TypeAlertScreen = (props) => {
         text='Materno Perinatal'
         size={25}
         btnFunction={()=>navigator.replace('FilterItemTestMaternoPerinatal',{data:dataPeople,datos:data,})}
+        />
+        :null
+        }
+        {(data.edad>17 && data.edad<70 && data.genero==='F')?
+        <ButtonImage
+        nameImage='check-circle'
+        text='Cancer de mama'
+        size={25}
+        btnFunction={()=>navigator.replace('TestBreastCancer',{data:dataPeople,datos:data,})}
         />
         :null
         }

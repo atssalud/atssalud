@@ -56,7 +56,7 @@ export const HomeScreen = () => {
         const user = await AsyncStorage.getItem('user');
         const { id } =  JSON.parse(user);
         try {
-            const resp=await http('get',Endpoint.getStatisticsMonth(id,monthId,year))
+            const resp= await http('get',Endpoint.getStatisticsMonth(id,monthId,year))
             console.log('getStatisticsMonth',resp)
             if(resp.data.length>0){
                 setStatisticMonth(resp)
@@ -98,45 +98,47 @@ export const HomeScreen = () => {
         {
             (netInfo=== false)? <IsConnectedScreen/>:
             <>
-        <View style={[Styles.borderContainer,{justifyContent:'center',alignItems:'center',marginTop:35,marginBottom:10,marginHorizontal:20}]}>
-            <InputDate
-                label='Filtro mes y año'
-                dateSelect={filterSelect}
-                type={'date'}
-                text={monthYear}
-                monthYear='yes'
-                
-            />
-        </View>
     {
         (statisticMonth && statisticTotal)?
-        <ScrollView >
-            <View style={{justifyContent:'center',marginHorizontal:10,alignItems:'center'}}>
-               
-            <View style={styles.container}>
-                <View style={styles.box}>
-                    <Text style={styles.title}>Acumulado Total</Text>
-                    <Text style={styles.number}>{statisticTotal}</Text>
-                    <Text style={styles.text}>Tamizajes</Text>
-                </View>
-                <View style={styles.box}>
-                    <Text style={styles.title}>Confirmados</Text>
-                    <Text style={styles.number}>{confirm}</Text>
-                    <Text style={styles.text}>Tamizajes</Text>
-                </View>
-                <View style={styles.box}>
-                    <Text style={styles.title}>Descartados</Text>
-                    <Text style={styles.number}>{discarded}</Text>
-                    <Text style={styles.text}>Tamizajes</Text>
-                </View>
-                <View style={styles.box}>
-                    <Text style={styles.title}>No verificados</Text>
-                    <Text style={styles.number}>{no_verified}</Text>
-                    <Text style={styles.text}>Tamizajes</Text>
-                </View>
+        <>
+            <View style={[Styles.borderContainer,{justifyContent:'center',alignItems:'center',marginTop:35,marginBottom:10,marginHorizontal:20}]}>
+                <InputDate
+                    label='Filtro mes y año'
+                    dateSelect={filterSelect}
+                    type={'date'}
+                    text={monthYear}
+                    monthYear='yes'
+                    
+                />
             </View>
-            </View>
-        </ScrollView>
+            <ScrollView >
+                <View style={{justifyContent:'center',marginHorizontal:10,alignItems:'center'}}>
+                
+                <View style={styles.container}>
+                    <View style={styles.box}>
+                        <Text style={styles.title}>Acumulado Total</Text>
+                        <Text style={styles.number}>{statisticTotal}</Text>
+                        <Text style={styles.text}>Tamizajes</Text>
+                    </View>
+                    <View style={styles.box}>
+                        <Text style={styles.title}>Confirmados</Text>
+                        <Text style={styles.number}>{confirm}</Text>
+                        <Text style={styles.text}>Tamizajes</Text>
+                    </View>
+                    <View style={styles.box}>
+                        <Text style={styles.title}>Descartados</Text>
+                        <Text style={styles.number}>{discarded}</Text>
+                        <Text style={styles.text}>Tamizajes</Text>
+                    </View>
+                    <View style={styles.box}>
+                        <Text style={styles.title}>No verificados</Text>
+                        <Text style={styles.number}>{no_verified}</Text>
+                        <Text style={styles.text}>Tamizajes</Text>
+                    </View>
+                </View>
+                </View>
+            </ScrollView>
+        </>
     :
         <LoadingScreen/>
     }

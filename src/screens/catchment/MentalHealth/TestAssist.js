@@ -54,8 +54,9 @@ const TestAssist = (props) => {
         const userToken = await AsyncStorage.getItem('token')
         getQuestion(userToken)
         setToken(userToken)
-    
+
     }
+
     const getQuestion=async()=>{
         
         try {

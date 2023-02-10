@@ -1,4 +1,4 @@
-import React,{useState,useContext,useEffect} from 'react'
+import React,{useState,useContext,useEffect, useCallback} from 'react'
 import {View,Image,Text,StyleSheet,TouchableOpacity,ScrollView,KeyBoard,Alert,Linking, StatusBar, Dimensions} from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
@@ -15,6 +15,7 @@ import Button from '../../components/Button';
 import ListOptions from '../../components/ListOptions';
 import http from '../../services/http';
 import IsConnectedScreen from '../IsConnectedScreen';
+import Checkbox from '../../components/CheckBox';
 
 const UsuarioRegisterScreen = () => {
 
@@ -107,46 +108,52 @@ const UsuarioRegisterScreen = () => {
     }
 
     const register = async()=>{
-        
-        const send={
-            "dni":userRegister.dni.trim(),
-            "dni_type":userRegister.dni_type,
-            "first_name":userRegister.first_name.trim(),
-            "last_name":userRegister.last_name.trim(),
-            "address":userRegister.address.trim(),
-            "city":userRegister.city,
-            "state":userRegister.state,
-            "movile":userRegister.phone.trim(),
-            "profession":userRegister.profession,
-            "company":userRegister.company,
-            "email":userRegister.email.trim(),
-            "password":userRegister.password.trim(),
-            "same_password":userRegister.same_password.trim(),
-            "role":"2"
-        }
 
-        console.log(send)
-
-        try {
-            const resp = await http('post',Endpoint.signUp, send);
-            console.log('resp',resp)
-            if(resp.errors){
-                setError(resp.errors)
-            }else{
-                if(resp.success===false){
-                    setMessage(resp.message)
-                    setErrorAlert(true)
+        if(aceptarPoliticas){
+            const send={
+                "dni":userRegister.dni.trim(),
+                "dni_type":userRegister.dni_type,
+                "first_name":userRegister.first_name.trim(),
+                "last_name":userRegister.last_name.trim(),
+                "address":userRegister.address.trim(),
+                "city":userRegister.city,
+                "state":userRegister.state,
+                "movile":userRegister.phone.trim(),
+                "profession":userRegister.profession,
+                "company":userRegister.company,
+                "email":userRegister.email.trim(),
+                "password":userRegister.password.trim(),
+                "same_password":userRegister.same_password.trim(),
+                "role":"2"
+            }
+    
+            console.log(send)
+    
+            try {
+                const resp = await http('post',Endpoint.signUp, send);
+                console.log('resp',resp)
+                if(resp.errors){
+                    setError(resp.errors)
                 }else{
-                    setAlert(true)
+                    if(resp.success===false){
+                        setMessage(resp.message)
+                        setErrorAlert(true)
+                    }else{
+                        setAlert(true)
+                    }
+                    
                 }
                 
+    
+            } catch (error) {
+                console.log('error',error)
+                setErrorAlert(true)
             }
-            
-
-        } catch (error) {
-            console.log('error',error)
-            setErrorAlert(true)
+        }else{
+            Alert.alert('Alerta','Debes aceptar las politicas de la empresa')
         }
+        
+        
     }
 
     const contentErrorAlert=
@@ -198,6 +205,25 @@ const UsuarioRegisterScreen = () => {
 
     var {height}=Dimensions.get('window')
     var dimension=height/3
+
+    const OpenURLButton = ({url, children}) => {
+        const handlePress = useCallback(async () => {
+          const supported = await Linking.openURL(url);
+        //   console.log({supported})
+      
+        //   if (supported) {
+        //     await Linking.openURL(url);
+        //   } else {
+        //     Alert.alert(`Don't know how to open this URL: ${url}`);
+        //   }
+        }, [url]);
+      
+        return <TouchableOpacity title={children} onPress={handlePress}>
+          <Text style={{fontFamily:Fonts.BOLD,color:Colors.FONT_COLOR,fontSize:15}}>ver</Text>  
+        </TouchableOpacity>;
+      };
+
+    const [aceptarPoliticas, setaAceptarPoliticas] = useState(false)
 
   return (
     <>
@@ -354,6 +380,18 @@ const UsuarioRegisterScreen = () => {
                     <Text style={styles.textValid}>{error.same_password}</Text>: null   
                 }
             </View>
+            
+            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                <Checkbox
+                    text={'Aceptar terminos y condiciones  '}
+                    value={aceptarPoliticas}
+                    disabled={false}
+                    onValueChange={() => setaAceptarPoliticas(!aceptarPoliticas)}
+                />
+                <OpenURLButton url={'https://www.atssalud.com/app/privacy/'}>ver</OpenURLButton>
+
+            </View>
+            
 
             <View style={styles.cButton}>  
                 <Button 

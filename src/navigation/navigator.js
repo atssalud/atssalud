@@ -61,6 +61,7 @@ import ViewAlertScreen2 from '../screens/catchment/ViewAlertScreen2';
 import ChangePasswordScreen from '../screens/profile/myData/ChangePasswordScreen';
 import TestRiskCancerScreen from '../screens/catchment/TestRiskCancerScreen';
 import TestRiskInfecciontvScreen from '../screens/catchment/TestRiskInfecciontvScreen';
+import TestBreastCancer from '../screens/catchment/Cancer/TestBreastCancer';
 
 
 const Stack = createNativeStackNavigator();
@@ -161,6 +162,7 @@ const Navigator = () => {
               <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{  title: 'Cambiar Contraseña'}}/>
               <Stack.Screen name="TestRiskCancerScreen" component={TestRiskCancerScreen} options={{  title: 'Marca en Salud'}}/>
               <Stack.Screen name="TestRiskInfecciontvScreen" component={TestRiskInfecciontvScreen} options={{  title: 'Marca en Salud'}}/>
+              <Stack.Screen name="TestBreastCancer" component={TestBreastCancer} options={{  title: 'Test Cancer Mama'}}/>
 
             </>
           )

@@ -67,10 +67,12 @@ export const Endpoint = {
     sendTestAssist: `${NODE_BASEURL}/tests/assist`,
     listTestTestSchizophrenia: `${NODE_BASEURL}/tests/34`,
     sendTestSchizophrenia: `${NODE_BASEURL}/tests/schizophrenia`,
-    getStatisticsMonth:(user_id,month,year) => { return `${NODE_BASEURL}/kpis/${user_id}?${(month)?`month=${month}&year=${year}`:`year=${year}`}`; },
+    getStatisticsMonth:(user_id,month,year) => { return `${NODE_BASEURL}/kpis/${user_id}?month=${month}&year=${year}`; },
     getStatisticsTotal:(user_id,year) => { return `${NODE_BASEURL}/kpis/${user_id}?year=${year}`;},
     // validateToken:`${NODE_BASEURL}/token`,
     changePassword: (author_id) => { return `${NODE_BASEURL}/users/password/${author_id}`; },
+    listTestBreastCancer: `${NODE_BASEURL}/tests/39`,
+    sendTestBreastCancer: `${NODE_BASEURL}/tests/breastcancer`,
 }
 
 const Api = axios.create(Endpoint)

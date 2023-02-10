@@ -53,24 +53,30 @@ const ViewAlertScreen = (props) => {
 
       {
         (data.risk_level === "" || data.risk_level === 'BAJO') ?
+        <View style={{justifyContent:'center',alignItems:'center'}}>
           <Image
             source={require("../../assets/images/bajo.png")}
             style={styles.image}
-          /> : null
+          />
+          </View> : null
       }
       {
         (data.risk_level === 'MODERADO'|| data.risk_level === 'MEDIO') ?
+        <View style={{justifyContent:'center',alignItems:'center'}}>
           <Image
             source={require("../../assets/images/medio.png")}
             style={styles.image}
-          /> : null
+          />
+          </View> : null
       }
       {
         (data.risk_level === 'MUY ALTO' || data.risk_level === 'ALTO') ?
+        <View style={{justifyContent:'center',alignItems:'center'}}>
           <Image
             source={require("../../assets/images/alto.png")}
             style={styles.image}
-          /> : null
+          />
+          </View> : null
       }
       <View style={styles.cText}>
         <Text style={styles.text}>{(data.risk_percentage) ? data.risk_percentage: data.risk_message}</Text>
