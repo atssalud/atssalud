@@ -26,9 +26,13 @@ const TestBreastCancer = (props) => {
     const [ questions,setQuestions]=useState()
     const [ answer,setAnswer]=useState()
     const [change,setChange]=useState()
+    const [noAnwer,setNoAnwer]=useState()
 
     const data = props.route.params.data
     const datos = props.route.params.datos
+
+    console.log({data})
+    console.log({datos})
 
     useEffect(()=> {
 
@@ -69,28 +73,30 @@ const TestBreastCancer = (props) => {
         const lista2=[]
         datos.map(i=>{
             if (i.extra_values ==='1'){
-                var id =i.id
-                var question=i.name
-                var answer=i.options[1].value
-                lista1.push({id,question,answer})
+                var question_id =i.id
+                var extra_values=i.extra_values
+                var value=i.options[1].value
+                lista1.push({question_id,extra_values,value})
                 question1.push(i)
             }
             if (i.extra_values ==='2'){
-                var id =i.id
-                    var question=i.name
-                    var answer=i.options[1].value
-                    lista2.push({id,question,answer})
-                    question2.push(i)
+                var question_id =i.id
+                var extra_values=i.extra_values
+                var value=i.options[1].value
+                lista2.push({question_id,extra_values,value})
+                question2.push(i)
             }   
         })
 
         if(data.age<50){
             setAnswer(lista1)
             setQuestions(question1)
+            setNoAnwer(lista2)
             console.log({lista1})
         }else{
             setAnswer(lista2)
             setQuestions(question2)
+            setNoAnwer(lista1)
             console.log({lista2})
         }
         
@@ -99,14 +105,14 @@ const TestBreastCancer = (props) => {
 
     const itemCheckboxSelected = (id, value)=>{
         if(id===0 && value ==='0'){
-            answer[id].answer=value
-            answer[1].answer=value
+            answer[id].value=value
+            answer[1].value=value
         }
         if(id===2 && value ==='0'){
-            answer[id].answer=value
-            answer[3].answer=value
+            answer[id].value=value
+            answer[3].value=value
         }
-        answer[id].answer=value
+        answer[id].value=value
         console.log({answer})
         if(change===false){
             setChange(true)
@@ -116,21 +122,22 @@ const TestBreastCancer = (props) => {
     }
 
     const itemCheckboxSelected2 = (id, value)=>{
+        console.log(id)
         if(id===0){
             if(value==='1'){
-                answer[id].answer=value
+                answer[id].value=value
             }else{
                 answer.map((index,i)=>{
-                    answer[i].answer=value
+                    answer[i].value=value
                 })
             }
         }else{
             answer.map((index,i)=>{
                 if(i!==0 && value==='1'){
                     if(i===id){
-                        answer[i].answer=value
+                        answer[i].value=value
                     }else{
-                        answer[i].answer='0'
+                        answer[i].value='0'
                     }
                 }
             })
@@ -141,6 +148,36 @@ const TestBreastCancer = (props) => {
             setChange(true)
         }else{
             setChange(false)
+        }
+    }
+
+    const send=async()=>{
+        setIsSearchResult(true)
+        const user = await AsyncStorage.getItem('user');
+        const { id } =  JSON.parse(user);
+        console.log(user);
+        const send={
+            "dni": data.dni,
+            "author_id": String(id),
+            "test": [{
+                "question_id": 280,
+                "value": String(data.age),
+                "extra_values": "0"
+            },...answer,...noAnwer]
+        }
+        console.log(JSON.stringify(send));
+        try {
+            const resp= await http('post',Endpoint.sendTestBreastCancer,send)
+            console.log({resp})
+            if(resp.errors){
+                setError(resp.errors)
+            }else{
+                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Riesgo Cancer de mama'})
+                setIsSearchResult(false)
+            }
+            
+        } catch (error) {
+            console.log('error',error)
         }
     }
 
@@ -163,7 +200,7 @@ const TestBreastCancer = (props) => {
                                 (data.age<50)?
                                 <>
                                     {(questions)?questions.map((item,id)=>{
-                                        if(id !== 1 && id !== 3 && answer[0].answer==='0'&& answer[2].answer==='0'){
+                                        if(id !== 1 && id !== 3 && answer[0].value==='0'&& answer[2].value==='0'){
                                 
                                         return(
                                             <View style={Styles.borderContainer} key={id}>
@@ -173,13 +210,13 @@ const TestBreastCancer = (props) => {
                                                 <View style={styles.cCheckBox}>
                                                     <Checkbox
                                                         text={item.options[0].name}
-                                                        value={(answer[id].answer=== '1')?true:false}
+                                                        value={(answer[id].value=== '1')?true:false}
                                                         disabled={false}
                                                         onValueChange={(newValue) => itemCheckboxSelected(id,'1')}
                                                     />
                                                     <Checkbox
                                                         text={item.options[1].name}
-                                                        value={(answer[id].answer !== '1')?true:false}
+                                                        value={(answer[id].value !== '1')?true:false}
                                                         disabled={false}
                                                         onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value))}
                                                     />
@@ -188,24 +225,24 @@ const TestBreastCancer = (props) => {
                                         )
                                 
                                         }
-                                        if(id==1 && answer[0].answer==='1'){
+                                        if(id==1 && answer[0].value==='1'){
                                             const itemAnterior=questions[id-1]
                                             return(
-                                                <>
-                                                    <View style={Styles.borderContainer} key={id-1}>
+                                                <View key={id*6}>
+                                                    <View style={Styles.borderContainer}>
                                                         <View style={styles.cQuestion}>
                                                             <Text style={styles.tQuestion}>{itemAnterior.name}</Text>
                                                         </View>
                                                         <View style={styles.cCheckBox}>
                                                             <Checkbox
                                                                 text={itemAnterior.options[0].name}
-                                                                value={(answer[id-1].answer=== '1')?true:false}
+                                                                value={(answer[id-1].value=== '1')?true:false}
                                                                 disabled={false}
                                                                 onValueChange={(newValue) => itemCheckboxSelected(id-1,'1')}
                                                             />
                                                             <Checkbox
                                                                 text={itemAnterior.options[1].name}
-                                                                value={(answer[id-1].answer !== '1')?true:false}
+                                                                value={(answer[id-1].value !== '1')?true:false}
                                                                 disabled={false}
                                                                 onValueChange={(newValue) => itemCheckboxSelected(id-1,String(itemAnterior.options[1].value))}
                                                             />
@@ -218,40 +255,40 @@ const TestBreastCancer = (props) => {
                                                         <View style={styles.cCheckBox}>
                                                             <Checkbox
                                                                 text={item.options[0].name}
-                                                                value={(answer[id].answer=== '1')?true:false}
+                                                                value={(answer[id].value=== '1')?true:false}
                                                                 disabled={false}
                                                                 onValueChange={(newValue) => itemCheckboxSelected(id,'1')}
                                                             />
                                                             <Checkbox
                                                                 text={item.options[1].name}
-                                                                value={(answer[id].answer !== '1')?true:false}
+                                                                value={(answer[id].value !== '1')?true:false}
                                                                 disabled={false}
                                                                 onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value))}
                                                             />
                                                         </View>
                                                     </View>
-                                                </>
+                                                </View>
                                             )
                                 
                                             }
-                                        if(id==3 && answer[2].answer==='1'){
+                                        if(id==3 && answer[2].value==='1'){
                                             const itemAnterior=questions[id-1]
                                             return(
-                                                <>
-                                                    <View style={Styles.borderContainer} key={id-1}>
+                                                <View key={id*9}>
+                                                    <View style={Styles.borderContainer}>
                                                         <View style={styles.cQuestion}>
                                                             <Text style={styles.tQuestion}>{itemAnterior.name}</Text>
                                                         </View>
                                                         <View style={styles.cCheckBox}>
                                                             <Checkbox
                                                                 text={itemAnterior.options[0].name}
-                                                                value={(answer[id-1].answer=== '1')?true:false}
+                                                                value={(answer[id-1].value=== '1')?true:false}
                                                                 disabled={false}
                                                                 onValueChange={(newValue) => itemCheckboxSelected(id-1,'1')}
                                                             />
                                                             <Checkbox
                                                                 text={itemAnterior.options[1].name}
-                                                                value={(answer[id-1].answer !== '1')?true:false}
+                                                                value={(answer[id-1].value !== '1')?true:false}
                                                                 disabled={false}
                                                                 onValueChange={(newValue) => itemCheckboxSelected(id-1,String(itemAnterior.options[1].value))}
                                                             />
@@ -264,19 +301,19 @@ const TestBreastCancer = (props) => {
                                                         <View style={styles.cCheckBox}>
                                                             <Checkbox
                                                                 text={item.options[0].name}
-                                                                value={(answer[id].answer=== '1')?true:false}
+                                                                value={(answer[id].value=== '1')?true:false}
                                                                 disabled={false}
                                                                 onValueChange={(newValue) => itemCheckboxSelected(id,'1')}
                                                             />
                                                             <Checkbox
                                                                 text={item.options[1].name}
-                                                                value={(answer[id].answer !== '1')?true:false}
+                                                                value={(answer[id].value !== '1')?true:false}
                                                                 disabled={false}
                                                                 onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value))}
                                                             />
                                                         </View>
                                                     </View>
-                                                </>
+                                                </View>
                                             )
                                             
                                         }
@@ -301,13 +338,13 @@ const TestBreastCancer = (props) => {
                                                 <View style={styles.cCheckBox}>
                                                     <Checkbox
                                                         text={item.options[0].name}
-                                                        value={(answer[id].answer=== '1')?true:false}
+                                                        value={(answer[id].value=== '1')?true:false}
                                                         disabled={false}
                                                         onValueChange={(newValue) => itemCheckboxSelected2(id,'1')}
                                                     />
                                                     <Checkbox
                                                         text={item.options[1].name}
-                                                        value={(answer[id].answer !== '1')?true:false}
+                                                        value={(answer[id].value !== '1')?true:false}
                                                         disabled={false}
                                                         onValueChange={(newValue) => itemCheckboxSelected2(id,String(item.options[1].value))}
                                                     />
@@ -315,7 +352,7 @@ const TestBreastCancer = (props) => {
                                             </View>
                                             )
                                         }
-                                        if(id !== 0 && answer[0].answer === '1'){
+                                        if(id !== 0 && answer[0].value === '1'){
                                             return(
                                                 <View style={Styles.borderContainer} key={id}>
                                                     <View style={styles.cQuestion}>
@@ -324,13 +361,13 @@ const TestBreastCancer = (props) => {
                                                     <View style={styles.cCheckBox}>
                                                         <Checkbox
                                                             text={item.options[0].name}
-                                                            value={(answer[id].answer=== '1')?true:false}
+                                                            value={(answer[id].value=== '1')?true:false}
                                                             disabled={false}
                                                             onValueChange={(newValue) => itemCheckboxSelected2(id,'1')}
                                                         />
                                                         <Checkbox
                                                             text={item.options[1].name}
-                                                            value={(answer[id].answer !== '1')?true:false}
+                                                            value={(answer[id].value !== '1')?true:false}
                                                             disabled={false}
                                                             onValueChange={(newValue) => itemCheckboxSelected2(id,String(item.options[1].value))}
                                                         />

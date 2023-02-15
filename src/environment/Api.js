@@ -72,7 +72,7 @@ export const Endpoint = {
     // validateToken:`${NODE_BASEURL}/token`,
     changePassword: (author_id) => { return `${NODE_BASEURL}/users/password/${author_id}`; },
     listTestBreastCancer: `${NODE_BASEURL}/tests/39`,
-    sendTestBreastCancer: `${NODE_BASEURL}/tests/breastcancer`,
+    sendTestBreastCancer: `${NODE_BASEURL}/tests/breastCancer`,
 }
 
 const Api = axios.create(Endpoint)
