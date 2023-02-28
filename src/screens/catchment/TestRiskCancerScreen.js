@@ -15,6 +15,7 @@ import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IsConnectedScreen from '../IsConnectedScreen';
+import FailedService from './FailedService';
 
 const TestRiskCancerScreen = (props) => {
     const navigator=useNavigation()
@@ -36,6 +37,7 @@ const TestRiskCancerScreen = (props) => {
     const [alert, setAlert] = useState(false)
     const [alertSearchResult, setAlertSearchResult] = useState(false)
     const [ netInfo,setNetInfo]=useState(false)
+    const [errorAlert, setErrorAlert] = useState(false)
 
     useEffect(()=> {
 
@@ -218,6 +220,7 @@ const TestRiskCancerScreen = (props) => {
             
         } catch (error) {
             console.log('error',error)
+            setErrorAlert(true)
         }
     }
 
@@ -252,7 +255,7 @@ const TestRiskCancerScreen = (props) => {
             {
                 (isSearch)?
                 <TestSkeletonScreen/>
-                :(isSearchResult)?
+                :(errorAlert)?<FailedService/>:(isSearchResult)?
                 <ViewAlertSkeletonScreen/>:
                 <ScrollView>
                 {(questions)?

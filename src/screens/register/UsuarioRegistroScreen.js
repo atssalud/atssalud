@@ -388,7 +388,9 @@ const UsuarioRegisterScreen = () => {
                     disabled={false}
                     onValueChange={() => setaAceptarPoliticas(!aceptarPoliticas)}
                 />
-                <OpenURLButton url={'https://www.atssalud.com/app/privacy/'}>ver</OpenURLButton>
+                <View  style={{marginRight:15}}>
+                    <OpenURLButton url={'https://www.atssalud.com/app/privacy/'}>ver</OpenURLButton>
+                </View>
 
             </View>
             

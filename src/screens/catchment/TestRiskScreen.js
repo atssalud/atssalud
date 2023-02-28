@@ -15,6 +15,7 @@ import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IsConnectedScreen from '../IsConnectedScreen';
+import FailedService from './FailedService';
 
 const TestRiskScreen = (props) => {
     const navigator=useNavigation()
@@ -22,6 +23,7 @@ const TestRiskScreen = (props) => {
 
     const idTest=props.route.params.id
     const dataPatient = props.route.params.data
+    const title = props.route.params.title
 
     const [answer,setAnswer]=useState()
     const [answerCriteria,setAnswerCriteria]=useState()
@@ -36,6 +38,7 @@ const TestRiskScreen = (props) => {
     const [alert, setAlert] = useState(false)
     const [alertSearchResult, setAlertSearchResult] = useState(false)
     const [ netInfo,setNetInfo]=useState(false)
+    const [errorAlert, setErrorAlert] = useState(false)
 
     useEffect(()=> {
 
@@ -81,7 +84,8 @@ const TestRiskScreen = (props) => {
             }
             setIsSearch(false)
         } catch (error) {
-            console.log('error',error)
+            console.log('error getQuestion',error)
+            setErrorAlert(true)
         }
     }
 
@@ -215,6 +219,7 @@ const TestRiskScreen = (props) => {
             
         } catch (error) {
             console.log('error',error)
+            setErrorAlert(true)
         }
     }
 
@@ -249,11 +254,14 @@ const TestRiskScreen = (props) => {
             {
                 (isSearch)?
                 <TestSkeletonScreen/>
-                :(isSearchResult)?
+                :(errorAlert)?<FailedService/>:(isSearchResult)?
                 <ViewAlertSkeletonScreen/>:
                 <ScrollView>
                 {(questions)?
                     <View style={styles.container}>
+                        <View style={styles.cTitle}>
+                                <Text style={styles.tQuestion}>{title}</Text>
+                        </View>
                         <View style={Styles.borderContainer}>
                             <View style={styles.cQuestion}>
                                 <Text style={styles.tQuestion}>{questions.name}</Text>
@@ -401,4 +409,8 @@ const styles= StyleSheet.create({
         fontSize: 18,
         color: 'black'
     },
+    cTitle:{
+        justifyContent:'center',
+        alignItems:'center',
+    }
 })

@@ -84,12 +84,14 @@ const styles = StyleSheet.create({
         fontFamily:Fonts.REGULAR,
         color:Colors.GREY_LIGHT,
         paddingBottom:15,
+        flex:1
     },
     text2:{
         fontSize: 16,
         paddingBottom:15,
         fontFamily:Fonts.REGULAR,
-        color:Colors.FONT_COLOR
+        color:Colors.FONT_COLOR,
+        flex:1
         
     },
     touchableOpacity:{

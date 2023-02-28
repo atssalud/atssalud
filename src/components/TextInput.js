@@ -18,7 +18,7 @@ const TextInputs = ({
     dimension='all'
 }) => {
   return (
-    <View style={[(line==='grey')?styles.line:styles.line2,(dimension==='all')?null:styles.dimension]}>
+    <View style={[(line==='grey')?styles.line:styles.line2,(dimension==='all')?null:styles.dimension,27]}>
         <Text style={styles.label}>{label}</Text>
         <TextInput
             placeholder= {placeholder}
@@ -50,7 +50,8 @@ const styles=StyleSheet.create({
   text:{
     fontFamily:Fonts.LIGHT,
     fontSize:16,
-    color:Colors.FONT_COLOR
+    color:Colors.FONT_COLOR,
+    
   },
   line:{
     borderBottomWidth:2,

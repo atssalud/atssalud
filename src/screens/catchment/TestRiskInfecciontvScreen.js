@@ -15,6 +15,7 @@ import { AuthContext } from '../../context/AuthContext';
 import WindowAlert from '../../components/WindowAlert';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IsConnectedScreen from '../IsConnectedScreen';
+import FailedService from './FailedService';
 
 const TestRiskInfecciontvScreen = (props) => {
     const navigator=useNavigation()
@@ -36,6 +37,7 @@ const TestRiskInfecciontvScreen = (props) => {
     const [alert, setAlert] = useState(false)
     const [alertSearchResult, setAlertSearchResult] = useState(false)
     const [ netInfo,setNetInfo]=useState(false)
+    const [errorAlert, setErrorAlert] = useState(false)
 
     useEffect(()=> {
 
@@ -193,7 +195,7 @@ const TestRiskInfecciontvScreen = (props) => {
         navigator.replace('TypeRiskScreen2',{data:dataPatient})
     }
     const send=async()=>{
-        setIsSearchResult(true)
+        // setIsSearchResult(true)
         const user = await AsyncStorage.getItem('user');
         const { id } =  JSON.parse(user);
         const answerTest=(answerCriteria)?answer.concat(answerCriteria):answer
@@ -218,6 +220,7 @@ const TestRiskInfecciontvScreen = (props) => {
             
         } catch (error) {
             console.log('error',error)
+            setErrorAlert(true)
         }
     }
 
@@ -252,7 +255,7 @@ const TestRiskInfecciontvScreen = (props) => {
             {
                 (isSearch)?
                 <TestSkeletonScreen/>
-                :(isSearchResult)?
+                :(errorAlert)?<FailedService/>:(isSearchResult)?
                 <ViewAlertSkeletonScreen/>:
                 <ScrollView>
                 {(questions)?
@@ -286,24 +289,35 @@ const TestRiskInfecciontvScreen = (props) => {
                                 </View>
                                 <View>
                                     {
-                                        (checkBox[1].item===true)?null:
+                                        (checkBox[2].item===true || checkBox[3].item===true|| checkBox[4].item===true)?
                                         <View style={{marginBottom:15}}>
+                                            <CheckBox
+                                                text={criteria.options[7].name}
+                                                value={checkBoxCriteria[7].item}
+                                                onValueChange={(newValue) => itemCheckboxCriteriaSelected(7,criteria.options[7].name)}
+                                            />
+                                        </View>:null
+                                    }
+                                    {
+                                        (checkBox[0].item===true)?
+                                        <>
+                                            <View style={{marginBottom:15}}>
+                                                <CheckBox
+                                                    text={criteria.options[1].name}
+                                                    value={checkBoxCriteria[1].item}
+                                                    onValueChange={(newValue) => itemCheckboxCriteriaSelected(1,criteria.options[1].name)}
+                                                />
+                                            </View>
+                                            <View style={{marginBottom:15}}>
                                             <CheckBox
                                                 text={criteria.options[0].name}
                                                 value={checkBoxCriteria[0].item}
                                                 onValueChange={(newValue) => itemCheckboxCriteriaSelected(0,criteria.options[0].name)}
                                             />
                                         </View>
-                                    }
-                                    {
-                                        (checkBox[0].item===true)?
-                                        <View style={{marginBottom:15}}>
-                                            <CheckBox
-                                                text={criteria.options[1].name}
-                                                value={checkBoxCriteria[1].item}
-                                                onValueChange={(newValue) => itemCheckboxCriteriaSelected(1,criteria.options[1].name)}
-                                            />
-                                        </View>:null
+                                        
+                                        </>:null
+                                        
                                     }
                                     {
                                         (checkBox[1].item===true)?
@@ -350,6 +364,13 @@ const TestRiskInfecciontvScreen = (props) => {
                                                     text={criteria.options[6].name}
                                                     value={checkBoxCriteria[6].item}
                                                     onValueChange={(newValue) => itemCheckboxCriteriaSelected(6,criteria.options[6].name)}
+                                                />
+                                            </View>
+                                            <View style={{marginBottom:15}}>
+                                                <CheckBox
+                                                    text={criteria.options[8].name}
+                                                    value={checkBoxCriteria[8].item}
+                                                    onValueChange={(newValue) => itemCheckboxCriteriaSelected(8,criteria.options[8].name)}
                                                 />
                                             </View>
                                         </>

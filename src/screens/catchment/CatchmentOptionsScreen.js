@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext, useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { ButtonImage } from '../../components/ButtonImage'
 import { Endpoint } from '../../environment/Api'
@@ -20,6 +20,20 @@ const CatchmentOptionsScreen = (props) => {
     useEffect(()=> {
 
         const unsubscribe = isConnected(setNetInfo)
+        navigator.setOptions({
+            headerRight:()=>(
+                <TouchableOpacity
+                    style={{padding:5}}
+                    onPress={() => navigator.replace('Tabs', { screen: 'CatchmentScreen' })}
+                >
+                    <Icon
+                        name="stethoscope"
+                        color= {'white'}
+                        size={25}
+                    />
+                </TouchableOpacity>
+            ),
+          })
         return()=>{
             unsubscribe
         }
@@ -64,14 +78,14 @@ const CatchmentOptionsScreen = (props) => {
                 <ScrollView style={style.container}>
                 <ButtonImage
                     nameImage='file-text-o'
-                    text='Tamizaje'
+                    text='Tamizar'
                     size={30}
                     btnFunction={() => searchListTest('tamizaje')}
 
                 />
                 <ButtonImage
                     nameImage='check-square-o'
-                    text='Marcación'
+                    text='Marcar'
                     size={30}
                     btnFunction={() => searchListTest('marca')}
 

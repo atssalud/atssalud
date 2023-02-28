@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         opacity:0.7,
         color:'black',
         paddingVertical:10,
-        fontFamily:Fonts.REGULAR
+        fontFamily:Fonts.REGULAR,
     },
     option:{
         alignItems:'flex-start',

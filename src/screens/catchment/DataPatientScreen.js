@@ -54,7 +54,9 @@ const DataPatientScreen = (props) => {
             'ALTO RIESGO REPRODUCTIVO',
             'DEMENCIA',
             'ASSIST',
-            'EZQUIZOFRENIA'
+            'EZQUIZOFRENIA',
+            'ARTRITIS REUMATOIDEA',
+            'CANCER DE MAMA'
 
         ];
         let brandsToEvaluate = [
@@ -108,7 +110,7 @@ const DataPatientScreen = (props) => {
     {
         (data)?
         <View style={Styles.borderContainer}>
-            <View style={styles.cData}>
+            <View style={[styles.cData]}>
                 <Text style={styles.textCampo}>Nombre: </Text>
                 <Text style={styles.textData}>{data.first_name} {data.last_name}</Text>
             </View>
@@ -192,7 +194,7 @@ const styles = StyleSheet.create({
         borderBottomWidth:1,
         borderBottomColor: '#CFD2CF',
         paddingVertical:20,
-        paddingHorizontal:14
+        // paddingHorizontal:10
     },
     cData2:{
         flexDirection:'row',
@@ -203,7 +205,9 @@ const styles = StyleSheet.create({
         color:Colors.FONT_COLOR,
         fontFamily:Fonts.REGULAR,
         fontSize:15,
-        marginTop:1
+        marginTop:1,
+        flex:1
+        
     },
     textCampo:{
         color:Colors.FONT_COLOR,

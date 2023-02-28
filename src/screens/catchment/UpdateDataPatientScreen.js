@@ -261,7 +261,7 @@ const UpdateDataPatientScreen = (props) => {
     }
     const departamentSelect=(key,value)=>{
         console.log(key,value)
-        setUserRegister({...userRegister, departamento_id:key,departamento:value})
+        setUserRegister({...userRegister, departamento_id:key,departamento:value,ciudad_id:'',ciudad:''})
         getCities(key) 
     }
     const etniaSelect=(key,value)=>{

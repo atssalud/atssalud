@@ -12,9 +12,9 @@ const Checkbox = ({text,disabled,value,onValueChange}) => {
             value={value}
             tintColors={{'true':Colors.PRIMARY_COLOR}}
             onValueChange={onValueChange}
-            // style={styles.checkbox}
         />
         <Text style={styles.text}>{text}</Text>
+        
     </View>
   )
 }
@@ -23,11 +23,13 @@ export default Checkbox;
 const styles=StyleSheet.create({
     container:{
         flexDirection:'row',
-        alignItems:'center'
+        alignItems:'center',
+        flex:1,
     },
     text:{
       fontFamily:Fonts.REGULAR,
       color:Colors.FONT_COLOR,
-      fontSize:13
+      fontSize:13,
+      flex:1,
     }
 })

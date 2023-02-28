@@ -49,54 +49,63 @@ export const AuthProvider = ({children})=>{
             "email":email,
             "password":password
         }
-        
 
-        try {
-            const resp = await http('post',Endpoint.login,dato)
-            console.log('resp',resp)
-            if (resp.message){
+        if(email=== undefined || password===undefined){
+            dispatch({
+                type:'addError',
+                payload:'Usuario o Contraseña incorrecta',
+            })
+        }else{
+            try {
+                const resp = await http('post',Endpoint.login,dato)
+                console.log('resp',resp)
+                if (resp.errors){
+                    dispatch({
+                        type:'addError',
+                        payload:error.errors|| 'Usuario o Contraseña incorrecta',
+                    })
+                }else{
+                    AsyncStorage.setItem('token',resp.token)
+                    dispatch({
+                        type:'signUp',
+                        payload:{
+                            token:resp.token,
+                            user:resp.user,
+                        }
+                    })
+                    if (isSelected === true){
+                        
+                        AsyncStorage.setItem('email', email)
+                        AsyncStorage.setItem('password',password)
+                        AsyncStorage.setItem('isSelected',String(isSelected))
+                        
+                    }else{
+                        const cedula= await AsyncStorage.getItem('usuario')
+                        const password = await AsyncStorage.getItem('password')
+                        if(cedula && password){
+                            AsyncStorage.removeItem('usuario')
+                            AsyncStorage.removeItem('password')
+                            AsyncStorage.setItem('isSelected',String(isSelected))
+                        }
+                    }
+        
+                    AsyncStorage.setItem('token',resp.token);
+                    AsyncStorage.setItem('user',JSON.stringify(resp.user));
+                }
+                
+                
+    
+            } catch (error) {
+                console.log('errrrr',error)
                 dispatch({
                     type:'addError',
                     payload:error.errors|| 'Usuario o Contraseña incorrecta',
                 })
-            }else{
-                AsyncStorage.setItem('token',resp.token)
-                dispatch({
-                    type:'signUp',
-                    payload:{
-                        token:resp.token,
-                        user:resp.user,
-                    }
-                })
-                if (isSelected === true){
-                    
-                    AsyncStorage.setItem('email', email)
-                    AsyncStorage.setItem('password',password)
-                    AsyncStorage.setItem('isSelected',String(isSelected))
-                    
-                }else{
-                    const cedula= await AsyncStorage.getItem('usuario')
-                    const password = await AsyncStorage.getItem('password')
-                    if(cedula && password){
-                        AsyncStorage.removeItem('usuario')
-                        AsyncStorage.removeItem('password')
-                        AsyncStorage.setItem('isSelected',String(isSelected))
-                    }
-                }
-    
-                AsyncStorage.setItem('token',resp.token);
-                AsyncStorage.setItem('user',JSON.stringify(resp.user));
             }
-            
-            
-
-        } catch (error) {
-            console.log('errrrr',error)
-            dispatch({
-                type:'addError',
-                payload:error.errors|| 'Usuario o Contraseña incorrecta',
-            })
         }
+        
+
+        
     }
 
 
