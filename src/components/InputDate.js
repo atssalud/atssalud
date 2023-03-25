@@ -33,16 +33,21 @@ const InputDate = (props) => {
         let year =data[0]
         let monthYear=`${month}-${year}`
 
+        var completeData=fDate.split('-')
+        completeData=completeData.map((n,index)=>(index===1 || index===2)?(n<10)?`0${n}`:n:n)
+
         if(props.monthYear){
             setTextData(monthYear)
         }else{
-            setTextData(fDate)
+            setTextData(completeData.join('-'))
         }
 
         
         setTextTime(fTime)
         if(props.type === 'date'){
-            props.dateSelect(fDate,typeSelect,monthYear)
+            var date=fDate.split('-')
+            
+            props.dateSelect(completeData.join('-'),typeSelect,monthYear)
         }else{
             props.timeSelect(fTime)
         }

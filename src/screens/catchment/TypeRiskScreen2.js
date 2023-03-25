@@ -395,20 +395,20 @@ const TypeRiskScreen2 = (props) => {
                     color={Colors.GREY_LIGHT}
                   />:null
                   }
-                  {(data.edad>=0 && !nameBrandToApplicate.includes('INFECCIONES TRANSMISION SEXUAL'))?
+                  {(data.edad>=0 && !nameBrandToApplicate.includes('INFECCIONESS TRANSMISION SEXUAL'))?
                     <ButtonImage
                     fontSize={14}
                     nameImage='check-circle'
-                    text='INFECCIONES TRANSMISION SEXUAL'
+                    text='INFECCIONES'
                     size={25}
-                    btnFunction={()=>navigator.replace('TestRiskInfecciontvScreen', { id: 35, data: data, title: 'INFECCIONES TV' })}
+                    btnFunction={()=>navigator.replace('TestRiskInfecciontvScreen', { id: 35, data: data, title: 'INFECCIONES' })}
                   />
                   :
                   (data.edad>=0)?
                   <ButtonImage
                   fontSize={14}
                     nameImage='check-circle'
-                    text='INFECCIONES TRANSMISION SEXUAL'
+                    text='INFECCIONES'
                     size={25}
                     disabled={true}
                     color={Colors.GREY_LIGHT}
@@ -437,7 +437,7 @@ const TypeRiskScreen2 = (props) => {
                     <ButtonImage
                     fontSize={14}
                     nameImage='check-circle'
-                    text='POBLACION CON RIESGO O TRASTORNOS DEGENERATIVOS,NEUROPATIAS Y AUTOINMUNES'
+                    text='POBLACION TRASTORNOS DEGENERATIVOS,NEUROPATIAS Y AUTOINMUNES'
                     size={25}
                     btnFunction={()=>navigator.replace('TestRiskScreen', { id: 36, data: data, title: 'POBLACION CON RIESGO O TRASTORNOS DEGENERATIVOS,NEUROPATIAS Y AUTOINMUNES' })}
                   />
@@ -446,17 +446,17 @@ const TypeRiskScreen2 = (props) => {
                   <ButtonImage
                   fontSize={14}
                     nameImage='check-circle'
-                    text='POBLACION CON RIESGO O TRASTORNOS DEGENERATIVOS,NEUROPATIAS Y AUTOINMUNES'
+                    text='POBLACION CON TRASTORNOS DEGENERATIVOS,NEUROPATIAS Y AUTOINMUNES'
                     size={25}
                     disabled={true}
                     color={Colors.GREY_LIGHT}
                   />:null
                   }
-                  {(data.edad>=0 && !nameBrandToApplicate.includes('POBLACIÓN CON RIESGO O ALTERACIONES EN SALUD BUCAL'))?
+                  {(data.edad>=0 && !nameBrandToApplicate.includes('POBLACIÓN CON RIESGO O ALTERACIONESS EN SALUD BUCAL'))?
                     <ButtonImage
                     fontSize={14}
                     nameImage='check-circle'
-                    text='POBLACIÓN CON RIESGO O ALTERACIONES EN SALUD BUCAL'
+                    text='POBLACIÓN CON ALTERACIONES EN SALUD BUCAL'
                     size={25}
                     btnFunction={()=>navigator.replace('TestRiskScreen', { id: 12, data: data, title: 'POBLACIÓN CON RIESGO O ALTERACIONES EN SALUD BUCAL' })}
                   />
@@ -465,17 +465,17 @@ const TypeRiskScreen2 = (props) => {
                   <ButtonImage
                   fontSize={14}
                     nameImage='check-circle'
-                    text='POBLACIÓN CON RIESGO O ALTERACIONES EN SALUD BUCAL'
+                    text='POBLACIÓN CON ALTERACIONES EN SALUD BUCAL'
                     size={25}
                     disabled={true}
                     color={Colors.GREY_LIGHT}
                   />:null
                   }
-                  {(data.edad>=0 && !nameBrandToApplicate.includes('POBLACIÓN CON RIESGO O PRESENCIA DE CÁNCER'))?
+                  {(data.edad>=0 && !nameBrandToApplicate.includes('POBLACIÓN CON RIESGO O PRESENCIAA DE CÁNCER'))?
                     <ButtonImage
                     fontSize={14}
                     nameImage='check-circle'
-                    text='POBLACIÓN CON RIESGO O PRESENCIA DE CÁNCER'
+                    text='POBLACIÓN CON PRESENCIA DE CÁNCER'
                     size={25}
                     btnFunction={()=>navigator.replace('TestRiskCancerScreen', { id: 14, data: data, title: 'POBLACIÓN CON RIESGO O PRESENCIA DE CÁNCER' })}
                   />
@@ -484,17 +484,17 @@ const TypeRiskScreen2 = (props) => {
                   <ButtonImage
                   fontSize={14}
                     nameImage='check-circle'
-                    text='POBLACIÓN CON RIESGO O PRESENCIA DE CÁNCER'
+                    text='POBLACIÓN CON PRESENCIA DE CÁNCER'
                     size={25}
                     disabled={true}
                     color={Colors.GREY_LIGHT}
                   />:null
                   }
-                  {(data.edad>=0 && !nameBrandToApplicate.includes('POBLACIÓN CON RIESGO O TRANSTORNOS VISUALES Y AUDITIVOS'))?
+                  {(data.edad>=0 && !nameBrandToApplicate.includes('POBLACIÓN CON RIESGO O TRANSTORNOSS VISUALES Y AUDITIVOS'))?
                     <ButtonImage
                     fontSize={14}
                     nameImage='check-circle'
-                    text='POBLACIÓN CON RIESGO O TRANSTORNOS VISUALES Y AUDITIVOS'
+                    text='POBLACIÓN CON TRANSTORNOS VISUALES Y AUDITIVOS'
                     size={25}
                     btnFunction={()=>navigator.replace('TestRiskScreen', { id: 15, data: data, title: 'POBLACIÓN CON RIESGO O TRANSTORNOS VISUALES Y AUDITIVOS' })}
                   />
@@ -503,7 +503,7 @@ const TypeRiskScreen2 = (props) => {
                   <ButtonImage
                   fontSize={14}
                     nameImage='check-circle'
-                    text='POBLACIÓN CON RIESGO O TRANSTORNOS VISUALES Y AUDITIVOS'
+                    text='POBLACIÓN CON TRANSTORNOS VISUALES Y AUDITIVOS'
                     size={25}
                     disabled={true}
                     color={Colors.GREY_LIGHT}

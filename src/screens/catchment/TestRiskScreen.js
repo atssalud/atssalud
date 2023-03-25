@@ -16,6 +16,7 @@ import WindowAlert from '../../components/WindowAlert';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IsConnectedScreen from '../IsConnectedScreen';
 import FailedService from './FailedService';
+import InputDate from '../../components/InputDate';
 
 const TestRiskScreen = (props) => {
     const navigator=useNavigation()
@@ -39,6 +40,10 @@ const TestRiskScreen = (props) => {
     const [alertSearchResult, setAlertSearchResult] = useState(false)
     const [ netInfo,setNetInfo]=useState(false)
     const [errorAlert, setErrorAlert] = useState(false)
+    const [fecha, setfecha] = useState('')
+    const [errorFecha, setErrorFecha] = useState({
+        fecha: '',
+    })
 
     useEffect(()=> {
 
@@ -66,6 +71,24 @@ const TestRiskScreen = (props) => {
         const userToken = await AsyncStorage.getItem('token')
         getQuestion()
         setToken(userToken)
+    }
+    const dateSelect =(date)=>{
+        console.log(date)
+        setfecha(date)
+    }
+
+    const handleTest = () => {
+        console.log({fecha})
+        const error = []
+        if (fecha.trim().length === 0) {
+            error.fecha = 'Campo Obligatorio'
+        }
+      
+        if (fecha.trim().length>0) {
+          send()
+        }
+
+        setErrorFecha(error)
     }
 
     const getQuestion=async()=>{
@@ -167,7 +190,11 @@ const TestRiskScreen = (props) => {
                 if(criteria){
                     if(answerCriteria){
                         if(answerCriteria.length>0){
-                            setAlert(true)
+                            if(title==='INTENTO SUICIDA'){
+                                handleTest()
+                            }else{
+                                setAlert(true)
+                            }
                         }else{
                             Alert.alert('Alerta','Debe seleccionar el criterio de marca')
                         }
@@ -282,6 +309,25 @@ const TestRiskScreen = (props) => {
                                 }
                             </View>
                         </View>
+                        {
+                            (title==='INTENTO SUICIDA')?
+                            <View style={Styles.borderContainer}>
+                                <View style={styles.cQuestion}>
+                                    <Text style={styles.tQuestion}>¿Cuál fue la fecha de su ultimo intento?</Text>
+                                    <View>
+                                        <InputDate
+                                            dateSelect={dateSelect}
+                                            type={'date'}
+                                            dimension='middle'
+                                        />
+                                        {(errorFecha)?
+                                            (errorFecha.fecha==='')?null:
+                                            <Text style={styles.textValid}>{errorFecha.fecha}</Text>: null
+                                        }
+                                    </View>
+                                </View>
+                            </View>:null
+                        }
                         {
                             (criteria)?
 
@@ -412,5 +458,11 @@ const styles= StyleSheet.create({
     cTitle:{
         justifyContent:'center',
         alignItems:'center',
-    }
+    },
+    textValid: {
+        fontSize: 14,
+        fontFamily: Fonts.BOLD,
+        color: "#ff5d2f",
+        marginBottom: 10,
+    },
 })

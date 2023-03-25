@@ -230,21 +230,21 @@ const TestSuspectedPregnancy = (props) => {
                 (answer)?
                     (answer[0].name ==='SI')?
                     <View style={Styles.borderContainer}>
-                    <View style={styles.cQuestion}>
-                        <Text style={styles.tQuestion}>¿Cuál es la fecha de su ultima menstruación (FUM)?</Text>
-                        <View>
-                        <InputDate
-                                dateSelect={dateSelect}
-                                type={'date'}
-                                dimension='middle'
-                            />
-                            {(error)?
-                                (error.fecha==='')?null:
-                                <Text style={styles.textValid}>{error.fecha}</Text>: null
-                            }
-                    </View>
-                    </View>
-                </View>:null
+                        <View style={styles.cQuestion}>
+                            <Text style={styles.tQuestion}>¿Cuál es la fecha de su ultima menstruación (FUM)?</Text>
+                            <View>
+                                <InputDate
+                                    dateSelect={dateSelect}
+                                    type={'date'}
+                                    dimension='middle'
+                                />
+                                {(error)?
+                                    (error.fecha==='')?null:
+                                    <Text style={styles.textValid}>{error.fecha}</Text>: null
+                                }
+                            </View>
+                        </View>
+                    </View>:null
                 :null
                 }
                 

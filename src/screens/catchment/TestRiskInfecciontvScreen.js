@@ -38,6 +38,7 @@ const TestRiskInfecciontvScreen = (props) => {
     const [alertSearchResult, setAlertSearchResult] = useState(false)
     const [ netInfo,setNetInfo]=useState(false)
     const [errorAlert, setErrorAlert] = useState(false)
+    
 
     useEffect(()=> {
 
@@ -66,6 +67,8 @@ const TestRiskInfecciontvScreen = (props) => {
         getQuestion()
         setToken(userToken)
     }
+
+    
 
     const getQuestion=async()=>{
         
