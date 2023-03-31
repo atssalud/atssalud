@@ -509,6 +509,24 @@ const TypeRiskScreen2 = (props) => {
                     color={Colors.GREY_LIGHT}
                   />:null
                   }
+                  {(data.edad>13 && data.edad<50 &&  !nameTestToApplicate.includes('POBLACION EN CONDICION MATERNO - PERINATAL') && data.genero==='F')?
+                    <ButtonImage
+                    fontSize={14}
+                    nameImage='check-circle'
+                    text='POBLACION EN CONDICION MATERNO - PERINATAL'
+                    size={25}
+                    btnFunction={()=>navigator.replace('RiskMaternoPerinatal',{data:data})}
+                  />
+                  :
+                  (data.edad>13 && data.edad<50 && data.genero==='F')?
+                  <ButtonImage
+                    nameImage='check-circle'
+                    text='POBLACION EN CONDICION MATERNO - PERINATAL'
+                    size={25}
+                    disabled={true}
+                    color={Colors.GREY_LIGHT}
+                  />:null
+                  }
                   {(data.edad>=0 && !nameBrandToApplicate.includes('VICTIMA DE VIOLENCIA DE GENERO'))?
                     <ButtonImage
                     fontSize={14}

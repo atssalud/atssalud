@@ -124,7 +124,7 @@ const TypeAlertScreen = (props) => {
           'CONSUMIDOR DE SUSTACIAS PSICOACTIVAS',
           'VICTIMA DEL CONFLICTO ARMADO',
           'VICTIMA DE VIOLENCIA DE GENERO',
-          'CANCER DE MAMA',
+          // 'CANCER DE MAMA',
           'ARTRITIS REUMATOIDEA'
 
       ];
