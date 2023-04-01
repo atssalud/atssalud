@@ -166,7 +166,7 @@ const Navigator = () => {
               <Stack.Screen name="TestRiskInfecciontvScreen" component={TestRiskInfecciontvScreen} options={{  title: 'Marca en Salud'}}/>
               <Stack.Screen name="TestBreastCancer" component={TestBreastCancer} options={{  title: 'Test Cancer Mama'}}/>
               <Stack.Screen name="TestRheumatoidArthritis" component={TestRheumatoidArthritis} options={{  title: 'Test Artritis Reumatoidea'}}/>
-              <Stack.Screen name="RiskMaternoPerinatal" component={RiskMaternoPerinatal} options={{  title: 'Test Artritis Reumatoidea'}}/>
+              <Stack.Screen name="RiskMaternoPerinatal" component={RiskMaternoPerinatal} options={{  title: 'Materno Perinatal'}}/>
 
             </>
           )

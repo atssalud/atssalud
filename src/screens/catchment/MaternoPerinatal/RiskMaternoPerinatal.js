@@ -1,15 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, ScrollView, StyleSheet,TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
-import { Styles } from '../../../theme/GlobalStyle';
 import { Fonts } from '../../../theme/Fonts';
 import { Colors } from '../../../theme/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ButtonImage } from '../../../components/ButtonImage';
 import http from '../../../services/http';
 import { Endpoint } from '../../../environment/Api';
-import Button from '../../../components/Button';
-import LoadingScreen from '../../LoadingScreen'
 import TypeAlertSkeletonScreen from '../../skeleton/TypeAlertSkeletonScreen';
 import { AuthContext } from '../../../context/AuthContext';
 import IsConnectedScreen from '../../IsConnectedScreen';
@@ -188,13 +185,67 @@ const RiskMaternoPerinatal = (props) => {
               {(nameBrandToApplicate.length !== 0)?
                   <ScrollView>
                     
+                  {(data.edad>13 && data.edad<50 &&  !nameTestToApplicate.includes('BAJO PESO AL NACER - PREMATUREZ') && data.genero==='F')?
+                    <ButtonImage
+                    fontSize={14}
+                    nameImage='check-circle'
+                    text='BAJO PESO AL NACER - PREMATUREZ'
+                    size={25}
+                    btnFunction={()=>navigator.replace('TestRiskScreen', { id: 46, data: data, title: 'BAJO PESO AL NACER - PREMATUREZ' })}
+                  />
+                  :
+                  (data.edad>13 && data.edad<50 && data.genero==='F')?
+                  <ButtonImage
+                    nameImage='check-circle'
+                    text='BAJO PESO AL NACER - PREMATUREZ'
+                    size={25}
+                    disabled={true}
+                    color={Colors.GREY_LIGHT}
+                  />:null
+                  }
+                  {(data.edad>13 && data.edad<50 &&  !nameTestToApplicate.includes('ENFERMEDAD CONGENITA') && data.genero==='F')?
+                    <ButtonImage
+                    fontSize={14}
+                    nameImage='check-circle'
+                    text='ENFERMEDAD CONGENITA'
+                    size={25}
+                    btnFunction={()=>navigator.replace('TestRiskScreen', { id: 48, data: data, title: 'ENFERMEDAD CONGENITA' })}
+                  />
+                  :
+                  (data.edad>13 && data.edad<50 && data.genero==='F')?
+                  <ButtonImage
+                    nameImage='check-circle'
+                    text='ENFERMEDAD CONGENITA'
+                    size={25}
+                    disabled={true}
+                    color={Colors.GREY_LIGHT}
+                  />:null
+                  }
+                  {(data.edad>13 && data.edad<50 &&  !nameTestToApplicate.includes('EMBARAZO') && data.genero==='F')?
+                    <ButtonImage
+                    fontSize={14}
+                    nameImage='check-circle'
+                    text='EMBARAZO'
+                    size={25}
+                    btnFunction={()=>navigator.replace('TestRiskScreen', { id: 44, data: data, title: 'EMBARAZO' })}
+                  />
+                  :
+                  (data.edad>13 && data.edad<50 && data.genero==='F')?
+                  <ButtonImage
+                    nameImage='check-circle'
+                    text='EMBARAZO'
+                    size={25}
+                    disabled={true}
+                    color={Colors.GREY_LIGHT}
+                  />:null
+                  }
                   {(data.edad>13 && data.edad<50 &&  !nameTestToApplicate.includes('PREECLAMPSIA') && data.genero==='F')?
                     <ButtonImage
                     fontSize={14}
                     nameImage='check-circle'
                     text='PREECLAMPSIA'
                     size={25}
-                    btnFunction={()=>navigator.replace('TestRiskScreen', { id: 46, data: data, title: 'PREECLAMPSIA' })}
+                    btnFunction={()=>navigator.replace('TestRiskScreen', { id: 45, data: data, title: 'PREECLAMPSIA' })}
                   />
                   :
                   (data.edad>13 && data.edad<50 && data.genero==='F')?
@@ -206,6 +257,9 @@ const RiskMaternoPerinatal = (props) => {
                     color={Colors.GREY_LIGHT}
                   />:null
                   }
+
+
+
                   </ScrollView>
                  
               :null
