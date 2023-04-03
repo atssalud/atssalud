@@ -211,6 +211,23 @@ const TypeAlertScreen = (props) => {
               color={Colors.GREY_LIGHT}
             />:null
             }
+            {(data.edad>17 && data.edad<70 &&  !nameTestToApplicate.includes('CANCER DE CERVIX') && data.genero==='F')?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Cancer de cervix'
+              size={25}
+              btnFunction={()=>(data.edad>25)?navigator.replace('FilterTestCervicalCancer',{data:dataPeople,datos:data,}):navigator.replace('TestCervicalCancer',{data:dataPeople,datos:data,})}
+            />
+            :
+            (data.edad>17 && data.edad<70 && data.genero==='F')?
+            <ButtonImage
+              nameImage='check-circle'
+              text='Cancer de cervix'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            />:null
+            }
             {(data.edad>17 && data.edad<70 &&  !nameTestToApplicate.includes('CANCER DE MAMA') && data.genero==='F')?
               <ButtonImage
               nameImage='check-circle'

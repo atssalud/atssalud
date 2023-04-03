@@ -73,6 +73,8 @@ export const Endpoint = {
     changePassword: (author_id) => { return `${NODE_BASEURL}/users/password/${author_id}`; },
     listTestBreastCancer: `${NODE_BASEURL}/tests/39`,
     sendTestBreastCancer: `${NODE_BASEURL}/tests/breastCancer`,
+    listTestCervicalCancer: `${NODE_BASEURL}/tests/42`,
+    sendTestCervicalCancer: `${NODE_BASEURL}/tests/cervicalCancer`,
     listTestRheumatoidArthritis: `${NODE_BASEURL}/tests/40`,
     sendTestRheumatoidArthritis: `${NODE_BASEURL}/tests/rheumatoidArthritis`,
 }
