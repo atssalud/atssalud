@@ -29,7 +29,7 @@ const RiskMaternoPerinatal = (props) => {
       }
       const timeout = setTimeout(() => {
         setDebouncedValue(true);
-      },3000);
+      },1500);
       navigator.setOptions({
         headerRight:()=>(
             <TouchableOpacity
@@ -82,50 +82,14 @@ const RiskMaternoPerinatal = (props) => {
 
       //Condicion previa caracterización.
       let testsToEvaluate = [
-        'DIABETES FINDRISC',
-        'EPOC',
-        'CARDIOVASCULAR',
-        'RIESGO DE ASMA EN NIÑOS',
-        'HIPERTENSIÓN ARTERIAL',
-        'ENFERMEDAD RENAL CRÓNICA',
-        'RIESGO CARDIOVASCULAR OMS',
         'SOSPECHA DE EMBARAZO',
-        'POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES',
-        'CANCER DE MAMA',
-        'ARTRITIS REUMATOIDEA',
-        'EZQUIZOFRENIA',
-        'ASSIST',
-        'DEMENCIA',
-        'ALTO RIESGO REPRODUCTIVO',
-        'SALUD MENTAL - RQC',
-        'SALUD MENTAL - SRQ',
-        'ASMA EN NIÑOS',
-        'ANEMIA'
+        
       ];
       let brandsToEvaluate = [
-          'DIABETES MELLITUS',
-          'ENFERMEDAD PULMONAR OBSTRUCTIVA CRÓNICA (EPOC)',
-          'ENFERMEDAD CEREBROVASCULAR',
-          'RIESGO DE ASMA EN NIÑOS',
-          'HIPERTENSIÓN ARTERIAL',
-          'ENFERMEDAD CEREBROVASCULAR',
-          'ENFERMEDAD RENAL CRÓNICA',
-          'POBLACIÓN CON RIESGO O ALTERACIONES EN SALUD BUCAL',
-          'ENFERMEDADES RARAS',
-          'POBLACIÓN CON RIESGO O PRESENCIA DE CÁNCER',
-          'POBLACIÓN CON RIESGO O TRANSTORNOS VISUALES Y AUDITIVOS',
-          'DEPRESIÓN',
-          'DEMENCIA',
-          'ESQUIZOFRENIA',
-          'INTENTO SUICIDA',
-          'CONSUMIDOR DE SUSTANCIAS PSICOACTIVAS',
-          'VICTIMA DEL CONFLICTO ARMADO',
-          'VICTIMA DE VIOLENCIA DE GENERO',
-          'INFECCIONES TRANSMISION SEXUAL',
-          'POBLACION CON RIESGO O TRASTORNOS DEGENERATIVOS,NEUROPATIAS Y AUTOINMUNES',
-          'POBLACION EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES',
-          'ANEMIA',
-          'ARTRITIS REUMATOIDEA',
+          'EMBARAZO',
+          'PREECLAMPSIA',
+          'BAJO PESO AL NACER - PREMATUREZ',
+          'ENFERMEDAD CONGENITA',
 
       ];
       console.log(brandsToEvaluate.sort())
@@ -185,7 +149,7 @@ const RiskMaternoPerinatal = (props) => {
               {(nameBrandToApplicate.length !== 0)?
                   <ScrollView>
                     
-                  {(data.edad>13 && data.edad<50 &&  !nameTestToApplicate.includes('BAJO PESO AL NACER - PREMATUREZ') && data.genero==='F')?
+                  {(data.edad>13 && data.edad<50 &&  !nameTestToApplicate.includes('BAJO PESO AL NACER - PREMATUREZ') &&  !nameBrandToApplicate.includes('BAJO PESO AL NACER - PREMATUREZ') && data.genero==='F')?
                     <ButtonImage
                     fontSize={14}
                     nameImage='check-circle'

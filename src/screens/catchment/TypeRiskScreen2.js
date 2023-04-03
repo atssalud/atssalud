@@ -129,6 +129,7 @@ const TypeRiskScreen2 = (props) => {
           'POBLACION EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES',
           'ANEMIA',
           'ARTRITIS REUMATOIDEA',
+          'DESNUTRICION'
 
       ];
       console.log(brandsToEvaluate.sort())
@@ -258,6 +259,25 @@ const TypeRiskScreen2 = (props) => {
                   fontSize={14}
                     nameImage='check-circle'
                     text='DEPRESIÓN'
+                    size={25}
+                    disabled={true}
+                    color={Colors.GREY_LIGHT}
+                  />:null
+                  }
+                  {(data.edad>=0 && data.edad<5 && !nameBrandToApplicate.includes('DESNUTRICION'))?
+                    <ButtonImage
+                    fontSize={14}
+                    nameImage='check-circle'
+                    text='DESNUTRICION'
+                    size={25}
+                    btnFunction={()=>navigator.replace('TestRiskScreen', { id: 43, data: data, title: 'DESNUTRICION' })}
+                  />
+                  :
+                  (data.edad>=0 && data.edad<5)?
+                  <ButtonImage
+                  fontSize={14}
+                    nameImage='check-circle'
+                    text='DESNUTRICION'
                     size={25}
                     disabled={true}
                     color={Colors.GREY_LIGHT}
