@@ -66,6 +66,8 @@ import TestRheumatoidArthritis from '../screens/catchment/TestRheumatoidArthriti
 import RiskMaternoPerinatal from '../screens/catchment/MaternoPerinatal/RiskMaternoPerinatal';
 import { TestCervicalCancer } from '../screens/catchment/Cancer/TestCervicalCancer';
 import FilterTestCervicalCancer from '../screens/catchment/Cancer/FilterTestCervicalCancer';
+import FilterTestProstateCancer from '../screens/catchment/Cancer/FilterTestProstateCancer';
+import { TestProstateCancer } from '../screens/catchment/Cancer/TestProstateCancer';
 
 
 const Stack = createNativeStackNavigator();
@@ -109,7 +111,7 @@ const Navigator = () => {
 
             </>
           )
-
+          
           : (
             <>
               {/* <Stack.Screen name="FilterTestEpocScreen" component={FilterTestEpocScreen} options={{  title: 'Filtro Test EPOC'  }} /> */}
@@ -171,6 +173,8 @@ const Navigator = () => {
               <Stack.Screen name="RiskMaternoPerinatal" component={RiskMaternoPerinatal} options={{  title: 'Materno Perinatal'}}/>
               <Stack.Screen name="TestCervicalCancer" component={TestCervicalCancer} options={{  title: 'Test Cancer Cervical'}}/>
               <Stack.Screen name="FilterTestCervicalCancer" component={FilterTestCervicalCancer} options={{  title: 'Filtro Test Cancer Cervical'}}/>
+              <Stack.Screen name="FilterTestProstateCancer" component={FilterTestProstateCancer} options={{  title: 'Filtro Test Cancer Prostata'}}/>
+              <Stack.Screen name="TestProstateCancer" component={TestProstateCancer} options={{  title: 'Test Cancer Prostata'}}/>
 
             </>
           )

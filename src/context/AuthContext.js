@@ -12,7 +12,8 @@ const authInitialState={
     status:"checking",
     token:null,
     errorMessage:"",
-    user:""
+    user:"",
+    
 }
 
 
@@ -44,7 +45,7 @@ export const AuthProvider = ({children})=>{
 
     const signIn = async (email,password,isSelected)=>{
 
-       
+       console.log({email})
         const dato={
             "email":email,
             "password":password
@@ -63,6 +64,12 @@ export const AuthProvider = ({children})=>{
                     dispatch({
                         type:'addError',
                         payload:error.errors|| 'Usuario o Contraseña incorrecta',
+                    })
+                }
+                if (resp.message){
+                    dispatch({
+                        type:'addError',
+                        payload:error.message|| 'Usuario o Contraseña incorrecta',
                     })
                 }else{
                     AsyncStorage.setItem('token',resp.token)

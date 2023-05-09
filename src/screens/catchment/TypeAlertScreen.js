@@ -94,7 +94,7 @@ const TypeAlertScreen = (props) => {
           'RIESGO CARDIOVASCULAR OMS',
           'SOSPECHA DE EMBARAZO',
           'POBLACIÓN EN RIESGO O PRESENCIA DE ALTERACIONES NUTRICIONALES',
-          'CANCER DE MAMA',
+          // 'CANCER DE MAMA',
           'ARTRITIS REUMATOIDEA',
           'EZQUIZOFRENIA',
           'ASSIST',
@@ -240,6 +240,23 @@ const TypeAlertScreen = (props) => {
             <ButtonImage
               nameImage='check-circle'
               text='Cancer de mama'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            />:null
+            }
+            {(data.edad>39 && data.edad<71 &&  !nameTestToApplicate.includes('CANCER DE PROSTATA') && data.genero==='M')?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Cancer de prostata'
+              size={25}
+              btnFunction={()=>data.edad <50 ? navigator.replace('FilterTestProstateCancer',{data:dataPeople,datos:data,}):navigator.replace('TestProstateCancer',{data:dataPeople,datos:data,})}
+            />
+            :
+            (data.edad>30 && data.edad<71 && data.genero==='M')?
+            <ButtonImage
+              nameImage='check-circle'
+              text='Cancer de prostata'
               size={25}
               disabled={true}
               color={Colors.GREY_LIGHT}

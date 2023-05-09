@@ -77,6 +77,8 @@ export const Endpoint = {
     sendTestCervicalCancer: `${NODE_BASEURL}/tests/cervicalCancer`,
     listTestRheumatoidArthritis: `${NODE_BASEURL}/tests/40`,
     sendTestRheumatoidArthritis: `${NODE_BASEURL}/tests/rheumatoidArthritis`,
+    listTestProstateCancer: `${NODE_BASEURL}/tests/49`,
+    sendTestProstateCancer: `${NODE_BASEURL}/tests/prostateCancer`,
 }
 
 const Api = axios.create(Endpoint)
