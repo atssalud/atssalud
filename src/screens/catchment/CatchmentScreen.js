@@ -26,7 +26,7 @@ const CatchmentScreen = () => {
     AsyncStorage.removeItem('talla');
 
     const navigator = useNavigation()
-    const { logOut,isConnected } = useContext(AuthContext)
+    const { logOut, isConnected } = useContext(AuthContext)
 
     const [alert, setAlert] = useState(false)
     const [errorAlert, setErrorAlert] = useState(false)
@@ -34,26 +34,26 @@ const CatchmentScreen = () => {
     const [dniTypes, setDniTypes] = useState()
     const [token, setToken] = useState()
     const [isSearch, setIsSearch] = useState(false)
-    const [netInfo,setNetInfo]=useState(false)
+    const [netInfo, setNetInfo] = useState(false)
 
     const { typeDni, idDni, numberDni, onChange } = useForm({
         typeDni: 'CC',
         idDni: '1',
-        numberDni: ''
+        numberDni: '27742094'
     })
 
     const [error, setError] = useState()
 
-    useEffect(()=> {
+    useEffect(() => {
 
         const unsubscribe = isConnected(setNetInfo)
         getDniTypes()
         getToken()
 
-        return()=>{
+        return () => {
             unsubscribe
         }
-        
+
     }, [])
 
     const getDniTypes = async () => {
@@ -84,13 +84,13 @@ const CatchmentScreen = () => {
         try {
             setIsSearch(true)
             const resp = await http('post', Endpoint.findPeople, send)
-            
+
             if (resp.message === 'token no válido') {
                 logOut()
             }
-            console.log('resss',resp)
-            if(resp === 'timeout') return <FailedService/>
-            
+            console.log('resss', resp)
+            if (resp === 'timeout') return <FailedService />
+
             if (resp.errors) {
                 setError(resp.errors)
             } else {
@@ -144,65 +144,65 @@ const CatchmentScreen = () => {
     return (
         <>
             {
-                (netInfo === false)?<IsConnectedScreen/>:
-            <>
-            {
-                (isSearch) ?
-                    (errorAlert)?<FailedService/>:
-                    <LoadingScreen />
-                    :
-                    <View style={styles.container}>
-                        <View style={styles.cTitulo}>
-                            <Text style={styles.titulo}>Buscar Paciente</Text>
-                        </View>
-                        <View style={Styles.borderContainer}>
-                            <ListOptions
-                                label='Tipo de documento'
-                                options={dniTypes}
-                                itemSelect={itemSelect}
-                                placeholder={typeDni}
-                                isSelect={true}
-                            />
-                            <TextInput
-                                label='Número de documento'
-                                value={numberDni}
-                                name='correo'
-                                onChangeText={(value) => onChange(value, 'numberDni')}
-                                placeholder='1042143543'
-                                line='blue'
-                            />
-                            {(error) ?
-                                (error.dni === '') ? null :
-                                    <Text style={styles.textValid}>{error.dni}</Text> : null
-                            }
-                            <View style={styles.cBtn}>
-                                <TouchableOpacity
-                                    style={styles.Btn}
-                                    onPress={() => send()}
-                                >
-                                    <Text style={styles.tBtn}>Buscar</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-
+                (netInfo === false) ? <IsConnectedScreen /> :
+                    <>
                         {
-                            (alert) ?
-                                <WindowAlert
-                                    bool={true}
-                                    closeAlert={setAlert}
-                                    content={contentAlert}
-                                    width={50}
-                                    height={3}
-                                    btnText={'Aceptar'}
-                                    btnFunction={close}
-                                />
-                                : null
+                            (isSearch) ?
+                                (errorAlert) ? <FailedService /> :
+                                    <LoadingScreen />
+                                :
+                                <View style={styles.container}>
+                                    <View style={styles.cTitulo}>
+                                        <Text style={styles.titulo}>Buscar Paciente</Text>
+                                    </View>
+                                    <View style={Styles.borderContainer}>
+                                        <ListOptions
+                                            label='Tipo de documento'
+                                            options={dniTypes}
+                                            itemSelect={itemSelect}
+                                            placeholder={typeDni}
+                                            isSelect={true}
+                                        />
+                                        <TextInput
+                                            label='Número de documento'
+                                            value={numberDni}
+                                            name='correo'
+                                            onChangeText={(value) => onChange(value, 'numberDni')}
+                                            placeholder='1042143543'
+                                            line='blue'
+                                        />
+                                        {(error) ?
+                                            (error.dni === '') ? null :
+                                                <Text style={styles.textValid}>{error.dni}</Text> : null
+                                        }
+                                        <View style={styles.cBtn}>
+                                            <TouchableOpacity
+                                                style={styles.Btn}
+                                                onPress={() => send()}
+                                            >
+                                                <Text style={styles.tBtn}>Buscar</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+
+
+                                    {
+                                        (alert) ?
+                                            <WindowAlert
+                                                bool={true}
+                                                closeAlert={setAlert}
+                                                content={contentAlert}
+                                                width={50}
+                                                height={3}
+                                                btnText={'Aceptar'}
+                                                btnFunction={close}
+                                            />
+                                            : null
+                                    }
+                                </View>
                         }
-                    </View>
+                    </>
             }
-            </>
-        }
         </>
     )
 }

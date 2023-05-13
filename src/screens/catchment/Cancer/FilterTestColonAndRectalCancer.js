@@ -15,7 +15,7 @@ import TestSkeletonScreen from '../../skeleton/TestSkeletonScreen'
 import ViewAlertSkeletonScreen from '../../skeleton/ViewAlertSkeletonScreen'
 import TextInputs from '../../../components/TextInput'
 
-export const TestProstateCancer = (props) => {
+export const FilterTestColonAndRectalCancer = (props) => {
 
     const navigator=useNavigation()
     const {logOut,isConnected} = useContext(AuthContext)
@@ -55,7 +55,7 @@ export const TestProstateCancer = (props) => {
     const getQuestion =async()=>{
         try {
             setIsSearch(true)
-            const resp = await http('get',Endpoint.listTestProstateCancer)
+            const resp = await http('get',Endpoint.listTestColonAndRectalCancer)
             if(resp.message==='token no válido'){
                 logOut()
             }
@@ -72,36 +72,18 @@ export const TestProstateCancer = (props) => {
         const lista1=[]
         const question1=[]
         datos.map(i=>{
-            if(i.id !== 317 && i.id !==318){
-                if(i.id === 315){
-                    var question_id =i.id
-                    var extra_values="0"
-                    var value=i.options[0].value
-                    lista1.push({question_id,extra_values,value})
-                    question1.push(i) 
-                }else{
-                    var question_id =i.id
-                    var extra_values="0"
-                    var value=i.options[1].value
-                    lista1.push({question_id,extra_values,value})
-                    question1.push(i) 
-                }
-                
+            if(i.id !== 319){
+                var question_id =i.id
+                var extra_values=i.extra_values
+                var value=i.options[1].value
+                lista1.push({question_id,extra_values,value})
+                question1.push(i) 
             }else{
-                if(i.id ===317){
-                    var question_id =i.id
-                    var extra_values="0"
-                    var value="0"
-                    lista1.push({question_id,extra_values,value})
-                    question1.push(i) 
-                }else{
-                    var question_id =i.id
-                    var extra_values="0"
-                    var value=data.age
-                    lista1.push({question_id,extra_values,value})
-                    question1.push(i) 
-                    
-                }
+                var question_id =i.id
+                var extra_values=i.extra_values
+                var value=data.age
+                lista1.push({question_id,extra_values,value})
+                question1.push(i) 
             }
             
         })
@@ -114,16 +96,27 @@ export const TestProstateCancer = (props) => {
     }
 
     const itemCheckboxSelected = (id, value)=>{
-        console.log({id})
         answer[id].value = value
-        if(id===0 && value==='0'){
-            answer[1].value = '1'
-        }
         console.log(answer[id])
         if (change === false) {
             setChange(true)
         } else {
             setChange(false)
+        }
+    }
+
+    const validate=()=>{
+        let count=0
+        answer.map(item=>{
+            if(item.value==='1'){
+                send()
+                console.log('entro')
+            }else{
+                count+=1
+            }
+        })
+        if(count===13){
+            navigator.navigate('TestColonAndRectalCancer',{data:data,datos:datos,answer:answer,questions:questions})
         }
     }
 
@@ -139,12 +132,12 @@ export const TestProstateCancer = (props) => {
         }
         console.log(JSON.stringify(send));
         try {
-            const resp= await http('post',Endpoint.sendTestProstateCancer,send)
+            const resp= await http('post',Endpoint.sendTestColonAndRectalCancer,send)
             console.log({resp})
             if(resp.errors){
                 setError(resp.errors)
             }else{
-                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Riesgo Cancer de Prostata'})
+                navigator.replace('ViewAlertScreen',{data:resp.data,datos:datos,nameRisk:'Riesgo Cancer de colon y recto'})
                 setIsSearchResult(false)
             }
             
@@ -153,23 +146,7 @@ export const TestProstateCancer = (props) => {
         }
     }
 
-    const handleTest = () => {
-
-        const error = []
-        if (spa.trim().length === 0) {
-            error.spa = 'Campo Obligatorio'
-        }
-
-        const vspa = spa.includes(',')
-        if (vspa) {
-            error.spa = 'Use punto'
-        }
-        if ((spa.trim().length>0 ||answer[2].value === '0' ) && (vspa === false)) {
-            send()
-        }
-
-        setError(error)
-    }
+    
 
 
 
@@ -189,7 +166,7 @@ export const TestProstateCancer = (props) => {
                             {
                                 <>
                                     {(questions)?questions.map((item,id)=>{
-                                        if(item.id !== 317 && item.id !== 318 && item.id !==315){
+                                        if(item.id !== 319 && item.id !== 330 && item.id !==331){
                                                 return(
                                                     <View style={Styles.borderContainer} key={id}>
                                                         <View style={styles.cQuestion}>
@@ -224,67 +201,6 @@ export const TestProstateCancer = (props) => {
                                             
                                             
                                         }
-                                        if(item.id ===315 && answer[0].value === '1'){
-                                            return(
-                                                <View style={Styles.borderContainer} key={id}>
-                                                    <View style={styles.cQuestion}>
-                                                        <Text style={styles.tQuestion}>{item.name}</Text>
-                                                    </View>
-                                                    <View>
-                                                        <Checkbox
-                                                            text={item.options[0].name}
-                                                            value={(answer[id].value === item.options[0].value)?true:false}
-                                                            disabled={false}
-                                                            onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[0].value))}
-                                                        />
-                                                        <Checkbox
-                                                            text={item.options[1].name}
-                                                            value={(answer[id].value === item.options[1].value)?true:false}
-                                                            disabled={false}
-                                                            onValueChange={(newValue) => itemCheckboxSelected(id,String(item.options[1].value))}
-                                                        />
-                                                        {
-                                                            (item.options.length >= 3) ?
-                                                                <Checkbox
-                                                                    text={item.options[2].name}
-                                                                    value={(answer[id].value === item.options[2].value) ? true : false}
-                                                                    disabled={false}
-                                                                    onValueChange={(newValue) => itemCheckboxSelected(id, String(item.options[2].value))}
-                                                                /> : null
-                                                        }
-                                                        
-                                                    </View>
-                                                </View>
-                                            )
-                                        }
-                                        if(item.id === 317 &&  answer[2].value === '1'){
-                                            return(
-                                                <View style={Styles.borderContainer} key={item.id}>
-                                                <View style={styles.cQuestion}>
-                                                    {/* <Text style={styles.tQuestion}>¿Ha fumado 30 o más paquetes de productos derivados del tabaco? </Text> */}
-                                                    <View style={{ flexDirection: 'row', marginTop: 15, justifyContent: 'center', width: '100%', }}>
-
-                                                        <View>
-                                                            <TextInputs
-                                                                label={'Digite Antigeno Prostático Específico'}
-                                                                placeholder={'2.5'}
-                                                                keyboardType='numeric'
-                                                                dimension='all'
-                                                                onChangeText={(value) => setspa(value)}
-                                                                value={spa}
-                                                            />
-                                                            {(error) ?
-                                                                (error.spa === '') ? null :
-                                                                    <Text style={styles.textValid}>{error.spa}</Text> : null
-                                                            }
-                                                        </View>
-                                                    </View>
-
-                                                </View>
-                                                </View>
-                                            )
-
-                                        }
                                     }):null
                                     }
                                 </>
@@ -292,8 +208,8 @@ export const TestProstateCancer = (props) => {
                         
                         <View style={styles.cButton}>  
                             <Button 
-                                title={"Calcular"}
-                                onPress={()=>handleTest()} 
+                                title={data.age>49?"Siguiente":"Calcular"}
+                                onPress={()=>data.age>49?validate():send()} 
                                 fill='solid'
                             /> 
                         </View>

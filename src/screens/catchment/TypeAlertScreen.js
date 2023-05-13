@@ -228,6 +228,23 @@ const TypeAlertScreen = (props) => {
               color={Colors.GREY_LIGHT}
             />:null
             }
+            {(data.edad>39 && data.edad<76 &&  !nameTestToApplicate.includes('CANCER DE COLON Y RECTO'))?
+              <ButtonImage
+              nameImage='check-circle'
+              text='Cancer de colon y recto'
+              size={25}
+              btnFunction={()=>navigator.replace('FilterTestColonAndRectalCancer',{data:dataPeople,datos:data,})}
+            />
+            :
+            (data.edad>39 && data.edad<76)?
+            <ButtonImage
+              nameImage='check-circle'
+              text='Cancer de colon y recto'
+              size={25}
+              disabled={true}
+              color={Colors.GREY_LIGHT}
+            />:null
+            }
             {(data.edad>17 && data.edad<70 &&  !nameTestToApplicate.includes('CANCER DE MAMA') && data.genero==='F')?
               <ButtonImage
               nameImage='check-circle'
