@@ -19,8 +19,8 @@ const FilterTestProstateCancer = (props) => {
 
     const navigator = useNavigation()
 
-    // const data = props.route.params.data
-    // const datos = props.route.params.datos
+    const data = props.route.params.data
+    const datos = props.route.params.datos
 
     const [etnia,setEtnia]=useState(false)
     const [antecedentesPrimer,setAntecedentesPrimer]=useState(false)
