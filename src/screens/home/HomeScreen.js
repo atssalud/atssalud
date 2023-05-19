@@ -32,6 +32,9 @@ export const HomeScreen = () => {
     const [year, setYear] = useState(año)
     const [monthYear, setMonthYear] = useState(`${month}-${year}`)
     const [ netInfo,setNetInfo]=useState(false)
+    const [ isStatisticsMonth,setIsStatisticsMonth]=useState(false)
+    const [ isStatisticsTotal,setIsStatisticsTotal]=useState(false)
+
 
     useEffect(() => {
         const unsubscribe = isConnected(setNetInfo)
@@ -69,7 +72,7 @@ export const HomeScreen = () => {
                 setNo_verified('0')
             }
             
-            
+        setIsStatisticsMonth(true)
         } catch (error) {
             console.log({error})
         }
@@ -87,6 +90,7 @@ export const HomeScreen = () => {
             }else{
                 setStatisticTotal('0')
             }
+            setIsStatisticsTotal(true)
             
         } catch (error) {
             console.log({error})
@@ -99,7 +103,7 @@ export const HomeScreen = () => {
             (netInfo=== false)? <IsConnectedScreen/>:
             <>
     {
-        (statisticMonth && statisticTotal)?
+        (isStatisticsMonth && isStatisticsTotal)?
         <>
             <View style={[Styles.borderContainer,{justifyContent:'center',alignItems:'center',marginTop:35,marginBottom:10,marginHorizontal:20}]}>
                 <InputDate
